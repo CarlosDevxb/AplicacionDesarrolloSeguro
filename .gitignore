@@ -1,0 +1,38 @@
+# Archivos generados por editores y sistemas operativos
+.DS_Store
+*.log
+.vscode/
+
+# -------------------------------------------
+# REGLAS PARA EL BACKEND (Node.js)
+# -------------------------------------------
+
+# La carpeta de dependencias, ¡nunca se sube!
+backend/node_modules/
+
+# El archivo con las variables de entorno y secretos
+backend/.env
+
+# Archivos de compilación de TypeScript (si lo usaras)
+backend/dist/
+
+# -------------------------------------------
+# REGLAS PARA EL FRONTEND (Angular)
+# -------------------------------------------
+
+# La carpeta de dependencias
+frontend/node_modules/
+
+# La carpeta de compilación para producción
+frontend/dist/
+frontend/www/
+
+# Archivos temporales de Angular
+frontend/.angular/
+*.cache
+
+# Archivos de configuración del editor específicos del usuario
+frontend/.vscode/
+
+# Archivos de test y cobertura de código
+frontend/coverage/
