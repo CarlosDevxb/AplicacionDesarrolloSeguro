@@ -42,6 +42,7 @@ export default class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         // Si todo sale bien, navegamos al dashboard
+        alert('Login exitoso, navegando al dashboard...');
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {

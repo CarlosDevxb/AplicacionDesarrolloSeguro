@@ -1,6 +1,6 @@
 // backend/controllers/auth.controller.js
 
-const User = require('../models/user.model');
+const { Usuario } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -10,7 +10,7 @@ const login = async (req, res) => {
  console.log("RECIBIDO DEL FRONTEND:", { email, password });
   try {
     // 1. Buscar al usuario por email, incluyendo el password usando el "scope"
-    const user = await User.scope('withPassword').findOne({ where: { email } });
+   const user = await Usuario.scope('withPassword').findOne({ where: { email } }); 
 
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado.' });

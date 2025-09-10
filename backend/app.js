@@ -10,8 +10,8 @@ const sequelize = require('./config/database');
 const authRoutes = require('./routes/auth.routes');
 
 const app = express();
+const db = require('./models'); // <-- Importa el index.js de models
 
-// Middlewares de Seguridad
 app.use(helmet());
 app.use(cors({ origin: 'http://localhost:4200' }));
 app.use(express.json()); // Para que Express entienda JSON
@@ -25,13 +25,11 @@ const PORT = process.env.PORT || 3000;
 // Iniciar servidor y conectar a la BD
 const startServer = async () => {
   try {
-    // Intenta autenticar la conexión con la base de datos
-    await sequelize.authenticate();
+    await db.sequelize.authenticate(); // <-- Usa db.sequelize
     console.log('✅ Conexión a la base de datos establecida correctamente.');
 
-    // Sincroniza los modelos con la base de datos
-    // await sequelize.sync(); // Puedes descomentar esto para que se creen las tablas automáticamente
-
+    // await db.sequelize.sync({ force: true }); // force: true borra y recrea las tablas
+    
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
     });

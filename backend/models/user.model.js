@@ -1,44 +1,48 @@
-
+// backend/models/usuario.model.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const User = sequelize.define('User', {
-  id: {
+const Usuario = sequelize.define('Usuario', {
+  idUsuario: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
+  },
+  idRol: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  nombre: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    validate: {
-      isEmail: true,
-    },
+    validate: { isEmail: true },
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  // Puedes añadir más campos como 'nombre', 'rol', etc.
-  role: {
+  direccion: {
     type: DataTypes.STRING,
-    defaultValue: 'cliente',
+  },
+  telefono: {
+    type: DataTypes.STRING,
   },
 }, {
-  // Opciones del modelo
-  tableName: 'users',
-  timestamps: true, // Crea createdAt y updatedAt automáticamente
+  tableName: 'Usuario',
+  // Mantenemos los scopes para no exponer la contraseña por defecto
   defaultScope: {
-    // Por seguridad, nunca incluyas el password por defecto en las consultas
     attributes: { exclude: ['password'] },
   },
   scopes: {
-    // Un "scope" para poder pedir el password cuando sí lo necesitemos (en el login)
     withPassword: {
-      attributes: { include: ['password'] },
+      attributes: {},
     },
   },
 });
 
-module.exports = User;
+module.exports = Usuario;
