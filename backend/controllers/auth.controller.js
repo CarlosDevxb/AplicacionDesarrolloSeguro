@@ -15,11 +15,11 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado.' });
     }
- console.log("HASH GUARDADO EN LA BD:", user.password);
+
     // 2. Comparar la contraseña enviada con la hasheada en la BD
-    console.log(bcrypt.hashSync(password, 10));
+ 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
-console.log("¿LA CONTRASEÑA ES CORRECTA?:", isPasswordCorrect);
+
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: 'Credenciales incorrectas.' });
     }
