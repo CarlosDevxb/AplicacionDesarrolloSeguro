@@ -1,0 +1,102 @@
+/* Estilos globales para centrar el contenido */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Contenedor principal del formulario */
+.login-container {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 24px;
+  color: #1c1e21;
+  font-size: 24px;
+}
+
+/* Agrupación de label e input */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #606770;
+}
+
+/* Estilos para los campos de texto */
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dddfe2;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Efecto al hacer clic en un input */
+input:focus {
+  outline: none;
+  border-color: #1877f2; /* Un azul similar al de Facebook */
+  box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+}
+
+/* Botón de envío */
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1877f2;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Efecto al pasar el mouse sobre el botón */
+button:hover {
+  background-color: #166fe5;
+}
+
+/* Estilo del botón cuando está deshabilitado */
+button:disabled {
+  background-color: #a0bdf1;
+  cursor: not-allowed;
+}
+
+/* Estilos para los mensajes de error */
+.error-text {
+  margin-top: 6px;
+}
+
+.error-text small {
+  color: #d93025; /* Un rojo para errores */
+  font-size: 13px;
+}
+
+/* Mensaje de error general del servidor */
+.error-message {
+  background-color: #fbeae9;
+  color: #d93025;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
