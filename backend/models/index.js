@@ -7,7 +7,7 @@ db.sequelize = sequelize;
 
 // Importar todos los modelos
 db.Rol = require('./rol.model.js');
-db.Usuario = require('./user.model.js');
+db.Usuario = require('./usuario.model.js');
 db.Categoria = require('./categoria.model.js');
 db.Producto = require('./producto.model.js');
 // ... importa aquí los demás modelos que crees (Pedido, Carrito, etc.)
