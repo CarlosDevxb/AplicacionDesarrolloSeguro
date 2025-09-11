@@ -1,6 +1,4 @@
-/* frontend/src/app/pages/login/login.css */
-
-/* Define la animación de entrada */
+/* Animación de desvanecimiento y desplazamiento */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -135,4 +133,30 @@ button:disabled {
   border-radius: 8px;
   margin-bottom: 20px;
   font-weight: 500;
+}
+/* frontend/src/app/pages/login/login.css */
+
+/* ... (todos los estilos que ya tenías) ... */
+
+/* Estilo para el mensaje de información (usuario no encontrado) */
+.info-message {
+  background-color: #e3f2fd; /* Un azul claro */
+  color: #0d47a1; /* Un azul oscuro */
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Estilo para el enlace de registro */
+.register-link {
+  color: #1976d2;
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 8px;
+}
+
+.register-link:hover {
+  text-decoration: underline;
 }

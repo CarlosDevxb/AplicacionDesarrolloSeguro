@@ -42,5 +42,5 @@ const login = async (req, res) => {
   }
 };
 
-// Aquí podrías añadir la función de 'register' en el futuro
+// Aquí podrías añadir la función de 'register' en el futuro OWASAP10
 module.exports = { login };
