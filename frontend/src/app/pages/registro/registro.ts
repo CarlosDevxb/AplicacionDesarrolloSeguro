@@ -33,7 +33,9 @@ export default class RegistroComponent {
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required]]
+      confirmPassword: ['', [Validators.required]],
+      direccion: [''], // <-- Añadido (opcional)
+      telefono: ['']   // <-- Añadido (opcional)
     }, { validators: passwordMatchValidator });
   }
 

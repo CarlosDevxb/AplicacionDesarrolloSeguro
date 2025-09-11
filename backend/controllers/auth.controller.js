@@ -7,7 +7,7 @@ const { Usuario, Rol } = require('../models'); // Importa también el modelo Rol
 
 const login = async (req, res) => {
   const { email, password } = req.body;
- console.log("RECIBIDO DEL FRONTEND:", { email, password });
+
   try {
     // 1. Buscar al usuario por email, incluyendo el password usando el "scope"
    const user = await Usuario.scope('withPassword').findOne({ where: { email } }); 
@@ -44,7 +44,7 @@ const login = async (req, res) => {
 
 
 const register = async (req, res) => {
-  const { nombre, email, password } = req.body;
+  const { nombre, email, password, direccion, telefono } = req.body;
 
   try {
     // 1. Verificar si el email ya existe
@@ -68,6 +68,8 @@ const register = async (req, res) => {
       email,
       password: hashedPassword,
       idRol: clienteRol.idRol,
+       direccion, // <-- Añadido
+      telefono   // <-- Añadido
     });
 
     // 5. Devolver una respuesta exitosa (sin el password)
