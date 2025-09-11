@@ -13,6 +13,7 @@ export const routes: Routes = [
     },
     { // <-- AÑADE ESTA NUEVA RUTA
         path: 'registro',
-        loadComponent: () => import('./pages/registro/registro').then(m => m.Registro)
+        loadComponent: () => import('./pages/registro/registro')
     },
+    
 ];

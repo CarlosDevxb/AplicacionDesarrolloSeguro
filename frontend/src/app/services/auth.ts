@@ -28,6 +28,11 @@ export class AuthService {
     );
   }
 
+   register(userData: any): Observable<any> {
+    // Llama al endpoint POST /api/auth/register que creaste en el backend
+    return this.http.post(`${this.apiUrl}/auth/register`, userData);
+  }
+
   logout(): void {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);

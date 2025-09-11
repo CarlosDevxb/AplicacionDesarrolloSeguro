@@ -1,1 +1,65 @@
-<p>registro works!</p>
+<div class="register-container">
+  <h2>Crear una Cuenta</h2>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <label for="nombre">Nombre Completo</label>
+      <div class="input-group">
+        <i class="fa-solid fa-user"></i>
+        <input id="nombre" type="text" formControlName="nombre" placeholder="Tu nombre completo">
+      </div>
+      @if (registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched) {
+        <div class="error-text"><small>El nombre es requerido.</small></div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="email">Correo Electrónico</label>
+      <div class="input-group">
+        <i class="fa-solid fa-envelope"></i>
+        <input id="email" type="email" formControlName="email" placeholder="tu@email.com">
+      </div>
+       @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+        <div class="error-text"><small>Ingresa un correo válido.</small></div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input id="password" type="password" formControlName="password" placeholder="Mínimo 8 caracteres">
+      </div>
+      @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+        <div class="error-text"><small>La contraseña debe tener al menos 8 caracteres.</small></div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirmar Contraseña</label>
+      <div class="input-group">
+        <i class="fa-solid fa-check-double"></i>
+        <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Repite tu contraseña">
+      </div>
+      @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
+        <div class="error-text"><small>Las contraseñas no coinciden.</small></div>
+      }
+    </div>
+    
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <button type="submit" [disabled]="registerForm.invalid">
+      Registrarse
+    </button>
+
+    <div class="login-link">
+      <span>¿Ya tienes una cuenta?</span>
+      <a routerLink="/login">Inicia sesión</a>
+    </div>
+  </form>
+</div>
