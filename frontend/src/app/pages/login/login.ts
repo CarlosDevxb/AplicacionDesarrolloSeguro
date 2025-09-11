@@ -3,9 +3,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router'; // <-- 1. Importa RouterLink
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
-import { HttpErrorResponse } from '@angular/common/http'; // <-- Importa esto para tipar el error
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http'; // <-- Importa esto pa
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink // <-- 2. Añádelo a los imports
+    RouterLink // Asegúrate de que RouterLink está importado
   ],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
@@ -24,7 +24,8 @@ export default class LoginComponent {
   private router = inject(Router);
 
   errorMessage: string | null = null;
-  userNotFound = false; // <-- 3. Nueva propiedad para controlar el mensaje
+  // Esta es la variable clave que controla el mensaje en el HTML
+  userNotFound = false;
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -36,7 +37,7 @@ export default class LoginComponent {
       return;
     }
 
-    // Reseteamos los mensajes de error al iniciar un nuevo intento
+    // Reiniciamos las variables antes de cada intento
     this.errorMessage = null;
     this.userNotFound = false;
 
@@ -44,15 +45,16 @@ export default class LoginComponent {
       next: () => {
         this.router.navigate(['/dashboard']);
       },
-      // 4. Lógica de error mejorada
       error: (err: HttpErrorResponse) => {
+        // Esta es la lógica crucial
         if (err.status === 404) {
-          // Si el servidor responde con 404 (Not Found), el usuario no existe.
+          // Si el error es 404, activamos la variable para la vista
           this.userNotFound = true;
         } else {
-          // Para cualquier otro error (como 401), es una credencial incorrecta.
+          // Para cualquier otro error, mostramos el mensaje de error general
           this.errorMessage = 'La contraseña es incorrecta.';
         }
+        // Este console.log es la prueba de que este bloque se está ejecutando
         console.error('Error en el login:', err);
       }
     });
