@@ -1,1 +1,47 @@
-<p>login works!</p>
+<div class="login-container">
+  <h2>CUCHIPU ENTERTAINMENT</h2>
+  
+  <h2>Iniciar sesion</h2>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <label for="email">Correo Electrónico</label>
+      <div class="input-group">
+        <i class="fa-solid fa-envelope"></i>
+        <input id="email" type="email" formControlName="email" placeholder="tu@email.com">
+      </div>
+      @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+        <div class="error-text"><small>Ingresa un correo válido.</small></div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input id="password" type="password" formControlName="password" placeholder="Tu contraseña">
+      </div>
+       @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+        <div class="error-text"><small>La contraseña es requerida.</small></div>
+      }
+    </div>
+    
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (userNotFound) {
+      <div class="info-message">
+        <span>No existe una cuenta con ese correo.</span>
+        <a routerLink="/registro" class="register-link">Regístrate aquí</a>
+      </div>
+    }
+
+    <button type="submit" [disabled]="loginForm.invalid">
+      Ingresar
+    </button>
+  </form>
+</div>

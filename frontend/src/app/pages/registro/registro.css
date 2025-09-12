@@ -1,38 +1,30 @@
-/* Animación de desvanecimiento y desplazamiento */
+/* frontend/src/app/pages/registro/registro.css */
+
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Estilos globales para el fondo y centrado */
 :host {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 40px 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  /* El degradado azul que pediste */
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
 }
 
-/* Contenedor principal con la animación */
-.login-container {
+.register-container {
   background-color: rgba(255, 255, 255, 0.95);
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   text-align: center;
   backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  /* Aplicamos la animación aquí */
   animation: fadeIn 0.7s ease-out forwards;
 }
 
@@ -55,12 +47,10 @@ label {
   color: #333;
 }
 
-/* Contenedor del icono y el input */
 .input-group {
   position: relative;
 }
 
-/* Estilo del icono dentro del input */
 .input-group i {
   position: absolute;
   left: 15px;
@@ -70,10 +60,9 @@ label {
   transition: color 0.3s;
 }
 
-/* Estilos de los inputs para dejar espacio al icono */
 .input-group input {
   width: 100%;
-  padding: 12px 12px 12px 45px; /* Padding izquierdo para el icono */
+  padding: 12px 12px 12px 45px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 16px;
@@ -81,19 +70,16 @@ label {
   transition: all 0.3s;
 }
 
-/* Efecto de foco en el input y el icono */
+.input-group:focus-within i {
+  color: #2a5298;
+}
+
 .input-group input:focus {
   outline: none;
   border-color: #2a5298;
   box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
 }
 
-.input-group input:focus + i, /* No funciona porque el icono está antes */
-.input-group:focus-within i { /* La forma moderna y correcta de hacerlo */
-  color: #2a5298;
-}
-
-/* Botón de envío con nuevos colores y efectos */
 button {
   width: 100%;
   padding: 14px;
@@ -106,6 +92,7 @@ button {
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 button:hover:not(:disabled) {
@@ -118,7 +105,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Estilos para los mensajes de error */
 .error-text small {
   color: #e53935;
   font-weight: 500;
@@ -126,37 +112,17 @@ button:disabled {
   padding-left: 5px;
 }
 
-.error-message {
-  background-color: #ffebee;
-  color: #c62828;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+.login-link {
   font-weight: 500;
 }
-/* frontend/src/app/pages/login/login.css */
 
-/* ... (todos los estilos que ya tenías) ... */
-
-/* Estilo para el mensaje de información (usuario no encontrado) */
-.info-message {
-  background-color: #e3f2fd; /* Un azul claro */
-  color: #0d47a1; /* Un azul oscuro */
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-weight: 500;
-  text-align: center;
-}
-
-/* Estilo para el enlace de registro */
-.register-link {
+.login-link a {
   color: #1976d2;
   font-weight: 700;
   text-decoration: none;
-  margin-left: 8px;
+  margin-left: 5px;
 }
 
-.register-link:hover {
+.login-link a:hover {
   text-decoration: underline;
 }
