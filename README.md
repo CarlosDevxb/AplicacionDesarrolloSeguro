@@ -1,59 +1,59 @@
-# Frontend
+# AplicacionDesarrolloSeguro 🔒
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.2.
+Repositorio para el proyecto de la materia de Desarrollo Seguro de Software.
 
-## Development server
+## 📝 Descripción del Proyecto
 
-To start a local development server, run:
+(Añade aquí una breve descripción de lo que hace la aplicación. ¿Es una aplicación web, de escritorio? ¿Qué problema resuelve?)
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🚀 Avance Actual
 
-## Code scaffolding
+Aquí puedes detallar el estado actual del proyecto, que es la información que solicitaste.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Funcionalidades Implementadas
+* [X] (Ej. Conexión a la base de datos de forma segura)
+* [X] (Ej. Módulo de Login y Registro con hashing de contraseñas)
+* [ ] (Ej. Panel de administración)
+* [ ] (Ej. Funcionalidad principal X)
 
-```bash
-ng generate component component-name
-```
+### Tareas Pendientes
+* [ ] (Ej. Implementar validación de entradas (input validation) en todos los formularios)
+* [ ] (Ej. Añadir protección contra CSRF)
+* [ ] (Ej. Refactorizar el módulo Y)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## 🛠️ Tecnologías Utilizadas
 
-## Building
+* **Lenguaje:** C#
+* **Framework:** (Ej. .NET 8, ASP.NET Core, MAUI)
+* **Base de Datos:** (Ej. SQL Server, PostgreSQL, SQLite)
+* **Autenticación:** (Ej. Identity Framework, JWT)
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## 🏃 Cómo Ejecutar el Proyecto
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Instrucciones para que alguien más (como el profesor o un compañero) pueda clonar y ejecutar tu proyecto.
 
-## Running unit tests
+1.  Clonar el repositorio:
+    ```bash
+    git clone [https://github.com/PepeCharlesxb/AplicacionDesarrolloSeguro.git](https://github.com/PepeCharlesxb/AplicacionDesarrolloSeguro.git)
+    ```
+2.  Navegar a la carpeta del proyecto:
+    ```bash
+    cd AplicacionDesarrolloSeguro
+    ```
+3.  (Para cargar las librerias):
+    ```bash
+    npm install 
+    ```
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+4.  Ejecutar la aplicación:
+    ```bash
+    * **Backend:** 
+    nodemon app.js
+    
+    ```
