@@ -52,3 +52,5 @@ Repositorio para el proyecto de la materia de Desarrollo Seguro de Software.
     ng serve -o (carpeta-front)
 
     ```
+
+![cuchipu entreteinment](image.png)
