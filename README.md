@@ -53,4 +53,4 @@ Repositorio para el proyecto de la materia de Desarrollo Seguro de Software.
 
     ```
 
-![cuchipu entreteinment](image.png)
+![cuchipu entreteinment](/assets/image.png)
