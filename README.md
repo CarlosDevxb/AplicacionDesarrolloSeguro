@@ -27,10 +27,10 @@ Aquí puedes detallar el estado actual del proyecto, que es la información que 
 
 ## 🛠️ Tecnologías Utilizadas
 
-* **Lenguaje:** C#
-* **Framework:** (Ej. .NET 8, ASP.NET Core, MAUI)
-* **Base de Datos:** (Ej. SQL Server, PostgreSQL, SQLite)
-* **Autenticación:** (Ej. Identity Framework, JWT)
+* **Lenguaje:** Javascript 
+* **Framework:** Angular
+* **Base de Datos:** MySQL
+* **Autenticación:** Express JWT
 
 ---
 
@@ -53,7 +53,7 @@ Instrucciones para que alguien más (como el profesor o un compañero) pueda clo
 
 4.  Ejecutar la aplicación:
     ```bash
-    * **Backend:** 
     nodemon app.js
-    
+    ng serve -o (carpeta-front)
+
     ```
