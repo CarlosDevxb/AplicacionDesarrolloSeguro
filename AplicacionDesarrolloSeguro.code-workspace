@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"name": "AplicacionDesarrolloSeguro",
+			"path": "."
+		},
+		{
+			"name": "Proyecto",
+			"path": "../../Users/Laptop DeLL/Documents/Tec/Semestre 7/Desarrollo seguro/Proyecto"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Proyecto"
+	}
+}
