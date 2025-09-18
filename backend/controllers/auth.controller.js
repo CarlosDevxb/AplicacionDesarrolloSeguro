@@ -3,37 +3,41 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { Usuario, Rol } = require('../models'); // Importa también el modelo Rol
+const { alternatives } = require('joi');
 
 
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // 1. Buscar al usuario por email, incluyendo el password usando el "scope"
-   const user = await Usuario.scope('withPassword').findOne({ where: { email } }); 
+    // 1. Buscar al usuario E INCLUIR el modelo Rol asociado
+    const user = await Usuario.scope('withPassword').findOne({
+      where: { email },
+      include: {
+        model: Rol,
+        attributes: ['nombre'] // Solo queremos el nombre del rol
+      }
+    });
 
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado.' });
     }
 
-    // 2. Comparar la contraseña enviada con la hasheada en la BD
- 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: 'Credenciales incorrectas.' });
     }
 
-    // 3. Si todo es correcto, crear el payload para el token
+    // 2. Crear el payload incluyendo el nombre del rol
     const payload = {
-      id: user.id,
-      role: user.role,
+      id: user.idUsuario, // Usamos idUsuario que es la PK
+      rol: user.Rol.nombre, // <-- Aquí está la magia: user.Rol.nombre
     };
 
-    // 4. Firmar el token con la clave secreta y establecer una expiración
+    // 3. Firmar y enviar el token (esto no cambia)
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
 
-    // 5. Enviar el token al cliente
     res.status(200).json({ token });
 
   } catch (error) {
@@ -41,7 +45,6 @@ const login = async (req, res) => {
     res.status(500).json({ message: 'Error en el servidor.' });
   }
 };
-
 
 const register = async (req, res) => {
   const { nombre, email, password, direccion, telefono } = req.body;

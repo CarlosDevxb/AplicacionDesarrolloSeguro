@@ -7,6 +7,13 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { HttpErrorResponse } from '@angular/common/http';
 
+const decodeToken = (token: string): any => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+};
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -42,8 +49,20 @@ export default class LoginComponent {
     this.userNotFound = false;
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard']);
+       next: (response) => {
+        // 1. Decodificamos el token que acabamos de recibir
+        const decodedToken = decodeToken(response.token);
+        const userRole = decodedToken?.rol;
+
+        // 2. Redirigimos basándonos en el rol
+        if (userRole === 'admin') {
+          this.router.navigate(['/admin/dashboard']);
+        } else if (userRole === 'cliente') {
+          this.router.navigate(['/cliente/dashboard']);
+        } else {
+          // Si el rol no es reconocido, lo mandamos a una página por defecto
+          this.router.navigate(['/login']);
+        }
       },
       error: (err: HttpErrorResponse) => {
         // Esta es la lógica crucial
