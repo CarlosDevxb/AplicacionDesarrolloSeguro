@@ -8,10 +8,10 @@ require('dotenv').config();
 // Importar la conexión a la BD y las rutas
 const sequelize = require('./config/database');
 const authRoutes = require('./routes/auth.routes');
-
+const bcrypt = require('bcryptjs');
 const app = express();
 const db = require('./models'); // <-- Importa el index.js de models
-
+const { hashPassword } = require('./hash');
 app.use(helmet());
 app.use(cors({ origin: 'http://localhost:4200' }));
 app.use(express.json()); // Para que Express entienda JSON
@@ -22,6 +22,14 @@ app.use('/api/auth', authRoutes);
 
 const PORT = process.env.PORT || 3000;
 
+const saltRounds = 10;
+const myPlaintextPassword = '123';
+
+bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
+  // Store hash in your password DB.
+  console.log(hash);
+});
+
 // Iniciar servidor y conectar a la BD
 const startServer = async () => {
   try {
@@ -29,13 +37,16 @@ const startServer = async () => {
     console.log('✅ Conexión a la base de datos establecida correctamente.');
 
     // await db.sequelize.sync({ force: true }); // force: true borra y recrea las tablas
-    
+   
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+     
     });
   } catch (error) {
     console.error('❌ No se pudo conectar a la base de datos:', error);
   }
 };
+
+
 
 startServer();
