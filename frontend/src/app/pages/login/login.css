@@ -22,6 +22,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   /* El degradado azul que pediste */
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  
 }
 
 /* Contenedor principal con la animación */
@@ -162,4 +163,21 @@ button:disabled {
 
 .register-link:hover {
   text-decoration: underline;
+}
+
+.regis{
+  color: #1976d2;
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 8px;
+  display: inline-block;
+  margin-top: 10px;
+
+
+}
+
+.logo{  
+  width: 100px;
+  height: auto;
+  margin-bottom: 10px;
 }
