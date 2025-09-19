@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil del Cliente — Cuchipu Entertainment (DS)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="PerfilCliente.css">
+</head>
+<body>
+  <header class="barra-superior">
+    <div class="logo" style="display: flex; align-items: center;">
+      <img src="imagen/CuchipuEntreteinment(DS)V3.jpg" alt="Logo Cuchipu Entertainment (DS)" style="height:50px;">
+      <span style="font-size:0.85em; font-weight:400; margin-left:10px; opacity:0.7; display: flex; align-items: center;">Cuchipu Entertainment (DS)</span>
+    </div>
+    <div class="busqueda">
+      <input type="text" placeholder="Buscar productos, pedidos..." />
+      <button>🔍</button>
+    </div>
+    <nav class="accesos">
+      <a href="#productos">Productos</a>
+      <a href="#inventario">Inventario</a>
+      <a href="#pedidos">Pedidos</a>
+      <a href="#usuarios">Usuarios</a>
+      <a href="#carrito">Carrito</a>
+      <a href="#envios">Envíos</a>
+    </nav>
+  </header>
+  <div class="perfil-container">
+    <aside class="menu-lateral">
+      <h2>👤 Mi Cuenta</h2>
+      <ul>
+        <li><a href="#datos-personales">Editar perfil</a></li>
+        <li><a href="#direccion-envio">Dirección de envío</a></li>
+        <li><a href="#pedidos">Mis pedidos</a></li>
+        <li><a href="#seguridad">Cambiar contraseña</a></li>
+        <li><a href="#logout">Cerrar sesión</a></li>
+      </ul>
+    </aside>
+
+    <main class="perfil-main">
+      <section id="datos-personales">
+        <h3>📇 Datos Personales</h3>
+        <form>
+          <label>Nombre: <input type="text" name="nombre"></label>
+          <label>Apellido: <input type="text" name="apellido"></label>
+          <label>Email: <input type="email" name="email"></label>
+          <label>Fecha de nacimiento: <input type="date" name="nacimiento"></label>
+        </form>
+      </section>
+
+      <section id="direccion-envio">
+        <h3>📦 Dirección de Envío</h3>
+        <form>
+          <label>Calle: <input type="text" name="calle"></label>
+          <label>Número: <input type="text" name="numero"></label>
+          <label>Colonia: <input type="text" name="colonia"></label>
+          <label>Ciudad: <input type="text" name="ciudad"></label>
+          <label>Estado: <input type="text" name="estado"></label>
+          <label>CP: <input type="text" name="cp"></label>
+          <label>Teléfono: <input type="tel" name="telefono"></label>
+        </form>
+      </section>
+
+      <section id="seguridad">
+        <h3>🔐 Seguridad</h3>
+        <form>
+          <label>Contraseña actual: <input type="password" name="actual"></label>
+          <label>Nueva contraseña: <input type="password" name="nueva"></label>
+          <label>Confirmar nueva: <input type="password" name="confirmar"></label>
+        </form>
+      </section>
+
+      <section id="acciones">
+        <button type="submit">Guardar cambios</button>
+        <button type="reset">Cancelar</button>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
