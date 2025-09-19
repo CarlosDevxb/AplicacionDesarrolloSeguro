@@ -1,6 +1,8 @@
 <div class="login-container">
-  <h2>CUCHIPU ENTERTAINMENT</h2>
-  
+  <img src="assets/CuchipuEntreteinment(DS)V3.jpg" alt="CUCHIPU ENTERTAINMENT Logo" class="logo">
+  <h2>CUCHIPU ENTERTAINMENT </h2>
+
+
   <h2>Iniciar sesion</h2>
 
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -25,6 +27,7 @@
        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
         <div class="error-text"><small>La contraseña es requerida.</small></div>
       }
+      <p>¿No tienes cuenta? <a [routerLink]="['/registro']" routerLinkActive="router-link-active"  class="regis">Registrarse</a></p>
     </div>
     
     @if (errorMessage) {
