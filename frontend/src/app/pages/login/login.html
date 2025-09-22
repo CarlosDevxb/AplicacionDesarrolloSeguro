@@ -1,20 +1,26 @@
 <div class="login-container">
-  <img src="assets/CuchipuEntreteinment(DS)V3.jpg" alt="CUCHIPU ENTERTAINMENT Logo" class="logo">
-  <h2>CUCHIPU ENTERTAINMENT </h2>
+  <img src="assets/CHAFATEC.png" alt="CHAFATEC Logo" class="logo">
+  <h2>CHAFATEC</h2>
 
+  <div class="role-selector">
+    <button type="button" (click)="selectRole('alumno')" [class.active]="selectedRole === 'alumno'">Alumno</button>
+    <button type="button" (click)="selectRole('personal')" [class.active]="selectedRole === 'personal'">Personal</button>
+    <!-- El botón está deshabilitado como se solicitó, pero la lógica está lista para cuando se active -->
+    <button type="button" (click)="selectRole('aspirante')" [class.active]="selectedRole === 'aspirante'">Aspirante</button>
+  </div>
 
-  <h2>Iniciar sesion</h2>
+  <h2>Iniciar Sesión</h2>
 
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    
+
     <div class="form-group">
-      <label for="email">Correo Electrónico</label>
+      <label for="usuario">Número de Control</label>
       <div class="input-group">
-        <i class="fa-solid fa-envelope"></i>
-        <input id="email" type="email" formControlName="email" placeholder="tu@email.com">
+        <i class="fa-solid fa-user"></i>
+        <input id="usuario" type="text" formControlName="usuario" placeholder="Tu número de control">
       </div>
-      @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-        <div class="error-text"><small>Ingresa un correo válido.</small></div>
+      @if (loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched) {
+        <div class="error-text"><small>El número de control es requerido.</small></div>
       }
     </div>
 
@@ -27,9 +33,8 @@
        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
         <div class="error-text"><small>La contraseña es requerida.</small></div>
       }
-      <p>¿No tienes cuenta? <a [routerLink]="['/registro']" routerLinkActive="router-link-active"  class="regis">Registrarse</a></p>
     </div>
-    
+
     @if (errorMessage) {
       <div class="error-message">
         {{ errorMessage }}
@@ -38,7 +43,7 @@
 
     @if (userNotFound) {
       <div class="info-message">
-        <span>No existe una cuenta con ese correo.</span>
+        <span>No existe una cuenta con ese número de control.</span>
         <a routerLink="/registro" class="register-link">Regístrate aquí</a>
       </div>
     }
@@ -46,5 +51,12 @@
     <button type="submit" [disabled]="loginForm.invalid">
       Ingresar
     </button>
+
+    <!-- Mostramos el botón de solicitar ficha solo si el rol es aspirante -->
+    @if (selectedRole === 'aspirante') {
+      <div class="aspirante-actions">
+        <button type="button" class="secondary" routerLink="/registro">Solicitar Ficha</button>
+      </div>
+    }
   </form>
 </div>

@@ -33,9 +33,10 @@ export default class LoginComponent {
   errorMessage: string | null = null;
   // Esta es la variable clave que controla el mensaje en el HTML
   userNotFound = false;
+  selectedRole: 'alumno' | 'personal' | 'aspirante' = 'alumno'; // Rol por defecto
 
   loginForm: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
+    usuario: ['', [Validators.required]],
     password: ['', [Validators.required]]
   });
 
@@ -48,17 +49,25 @@ export default class LoginComponent {
     this.errorMessage = null;
     this.userNotFound = false;
 
-    this.authService.login(this.loginForm.value).subscribe({
+    // Creamos el objeto de credenciales que incluye el rol seleccionado
+    const credentials = {
+      ...this.loginForm.value,
+      rol: this.selectedRole
+    };
+
+    this.authService.login(credentials).subscribe({
        next: (response) => {
         // 1. Decodificamos el token que acabamos de recibir
         const decodedToken = decodeToken(response.token);
         const userRole = decodedToken?.rol;
 
-        // 2. Redirigimos basándonos en el rol
-        if (userRole === 'admin') {
-          this.router.navigate(['/admin/dashboard']);
-        } else if (userRole === 'cliente') {
-          this.router.navigate(['/cliente/dashboard']);
+        // 2. Redirigimos basándonos en los roles de TU base de datos
+        if (userRole === 'alumno') {
+          // Redirige al dashboard del alumno
+          this.router.navigate(['/alumno/dashboard']);
+        } else if (userRole === 'docente' || userRole === 'administrativo') {
+          // Redirige al dashboard del personal
+          this.router.navigate(['/personal/dashboard']);
         } else {
           // Si el rol no es reconocido, lo mandamos a una página por defecto
           this.router.navigate(['/login']);
@@ -71,11 +80,15 @@ export default class LoginComponent {
           this.userNotFound = true;
         } else {
           // Para cualquier otro error, mostramos el mensaje de error general
-          this.errorMessage = 'La contraseña es incorrecta.';
+          this.errorMessage = 'Credenciales incorrectas o rol no válido.';
         }
         // Este console.log es la prueba de que este bloque se está ejecutando
         console.error('Error en el login:', err);
       }
     });
+  }
+
+  selectRole(role: 'alumno' | 'personal' | 'aspirante'): void {
+    this.selectedRole = role;
   }
 }
