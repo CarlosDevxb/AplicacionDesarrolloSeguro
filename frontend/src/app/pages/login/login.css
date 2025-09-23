@@ -1,5 +1,11 @@
-/* Animación de desvanecimiento y desplazamiento */
-@keyframes fadeIn {
+/* Animación para el carrusel de imágenes */
+@keyframes imageFade {
+  0%, 25%, 100% { opacity: 0; }
+  5%, 20% { opacity: 1; }
+}
+
+/* Animación para el contenedor del formulario */
+@keyframes formFadeIn {
   from {
     opacity: 0;
     transform: translateY(-20px);
@@ -17,31 +23,64 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  
-  /* Degradado con tu paleta de colores */
-  background: linear-gradient(135deg, #192f4a 0%, #005691 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  transition: background 0.5s ease;
 }
 
-/* Contenedor principal con la animación */
-.login-container {
-  background-color: #192f4a;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+/* Nuevo contenedor principal que envuelve todo */
+.login-wrapper {
+  display: flex;
   width: 100%;
-  max-width: 400px;
-  text-align: center;
+  max-width: 900px; /* Ancho total aumentado */
+  min-height: 600px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden; /* Para que los bordes redondeados afecten a los hijos */
+  background-color: var(--container-bg);
+  animation: formFadeIn 0.7s ease-out forwards;
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(173, 216, 230, 0.2);
-  /* Aplicamos la animación aquí */
-  animation: fadeIn 0.7s ease-out forwards;
+  border: 1px solid var(--container-border);
+}
+
+/* Contenedor del carrusel (columna izquierda) */
+.carousel-container {
+  flex: 1; /* Ocupa la mitad del espacio */
+  position: relative;
+  background-color: #000; /* Fondo mientras cargan las imágenes */
+}
+
+.carousel-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que la imagen cubra todo el contenedor */
+  opacity: 0;
+  animation: imageFade 12s infinite; /* 12s de duración total para 3 imágenes */
+}
+
+/* Retraso de animación para cada imagen */
+.carousel-image:nth-child(2) { animation-delay: 4s; }
+.carousel-image:nth-child(3) { animation-delay: 8s; }
+
+/* Contenedor del formulario (columna derecha) */
+.login-form-container {
+  flex: 1; /* Ocupa la otra mitad */
+  background-color: var(--container-bg);
+  padding: 40px;
+  text-align: center;
+  transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
 h2 {
   margin-bottom: 24px;
-  color: #add8e6;
+  color: var(--text-primary);
   font-size: 28px;
   font-weight: 700;
+  transition: color 0.5s ease;
 }
 
 .form-group {
@@ -53,7 +92,8 @@ label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #add8e6;
+  color: var(--text-primary);
+  transition: color 0.5s ease;
 }
 
 /* Contenedor del icono y el input */
@@ -67,7 +107,7 @@ label {
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: #0077b6;
+  color: var(--icon-color);
   transition: color 0.3s;
 }
 
@@ -75,33 +115,33 @@ label {
 .input-group input {
   width: 100%;
   padding: 12px 12px 12px 45px; /* Padding izquierdo para el icono */
-  border: 1px solid #005691;
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   font-size: 16px;
   box-sizing: border-box;
   transition: all 0.3s;
-  background-color: #003366;
-  color: #add8e6;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
 }
 
 /* Efecto de foco en el input y el icono */
 .input-group input:focus {
   outline: none;
-  border-color: #0077b6;
-  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.4);
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
 }
 
 .input-group input:focus + i, /* No funciona porque el icono está antes */
 .input-group:focus-within i { /* La forma moderna y correcta de hacerlo */
-  color: #add8e6;
+  color: var(--icon-focus-color);
 }
 
 /* Botón de envío con nuevos colores y efectos */
 button {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, #0077b6 0%, #005691 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--button-gradient-start) 0%, var(--button-gradient-end) 100%);
+  color: var(--button-text);
   border: none;
   border-radius: 8px;
   font-size: 18px;
@@ -117,7 +157,7 @@ button:hover:not(:disabled) {
 }
 
 button:disabled {
-  background: #003366;
+  background: var(--button-disabled-bg);
   cursor: not-allowed;
 }
 
@@ -131,7 +171,7 @@ button:disabled {
 
 .error-message {
   background-color: rgba(229, 57, 53, 0.2);
-  color: #ffcdd2;
+  color: var(--text-primary);
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -141,19 +181,19 @@ button:disabled {
 
 /* Estilo para el mensaje de información (usuario no encontrado) */
 .info-message {
-  background-color: rgba(173, 216, 230, 0.1);
-  color: #add8e6;
+  background-color: rgba(0, 119, 182, 0.1);
+  color: var(--text-accent);
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 20px;
   font-weight: 500;
   text-align: center;
-  border: 1px solid #0077b6;
+  border: 1px solid var(--text-accent);
 }
 
 /* Estilo para el enlace de registro */
 .register-link {
-  color: #0077b6;
+  color: var(--text-accent);
   font-weight: 700;
   text-decoration: none;
   margin-left: 8px;
@@ -162,12 +202,12 @@ button:disabled {
 
 .register-link:hover {
   text-decoration: underline;
-  color: #add8e6;
+  color: var(--text-primary);
 }
 
 .register-link-container {
-  margin-top: 20px;
-  color: #add8e6;
+  margin-top: 20px;  
+  color: var(--text-secondary);
 }
 
 .logo {
@@ -182,7 +222,7 @@ button:disabled {
   display: flex;
   justify-content: center;
   margin-bottom: 24px;
-  background-color: #003366;
+  background-color: var(--role-selector-bg);
   border-radius: 8px;
   padding: 4px;
 }
@@ -192,7 +232,7 @@ button:disabled {
   padding: 10px;
   background: transparent;
   border: none;
-  color: #add8e6;
+  color: var(--text-primary);
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
@@ -200,8 +240,8 @@ button:disabled {
 }
 
 .role-selector button.active {
-  background-color: #0077b6;
-  color: white;
+  background-color: var(--role-selector-active-bg);
+  color: var(--button-text);
   box-shadow: 0 2px 8px rgba(0, 119, 182, 0.5);
 }
 
@@ -216,11 +256,36 @@ button:disabled {
 /* Estilo para el botón secundario (Solicitar Ficha) */
 .aspirante-actions button.secondary {
   background: transparent;
-  border: 2px solid #0077b6;
-  color: #0077b6;
+  border: 2px solid var(--text-accent);
+  color: var(--text-accent);
 }
 
 .aspirante-actions button.secondary:hover {
-  background: #0077b6;
-  color: white;
+  background: var(--text-accent);
+  color: var(--button-text);
+}
+
+/* --- ESTILOS DEL BOTÓN DE TEMA --- */
+.theme-switcher-container {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.theme-toggle {
+  background: none;
+  border: 2px solid var(--input-border);
+  color: var(--text-primary);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+  transform: translateY(0) rotate(15deg); /* Quita el hover del botón principal y añade uno propio */
+  box-shadow: none;
 }

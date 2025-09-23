@@ -1,6 +1,6 @@
 // frontend/src/app/pages/login/login.ts
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, Renderer2, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -25,15 +25,24 @@ const decodeToken = (token: string): any => {
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
-export default class LoginComponent {
+export default class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private renderer = inject(Renderer2);
 
   errorMessage: string | null = null;
   // Esta es la variable clave que controla el mensaje en el HTML
   userNotFound = false;
   selectedRole: 'alumno' | 'personal' | 'aspirante' = 'alumno'; // Rol por defecto
+  currentTheme: 'dark' | 'light' = 'dark';
+
+  ngOnInit(): void {
+    // Opcional: podrías guardar la preferencia del usuario en localStorage
+    // y cargarla aquí. Por ahora, inicia en oscuro.
+    this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
+  }
+
 
   loginForm: FormGroup = this.fb.group({
     usuario: ['', [Validators.required]],
@@ -65,9 +74,12 @@ export default class LoginComponent {
         if (userRole === 'alumno') {
           // Redirige al dashboard del alumno
           this.router.navigate(['/alumno/dashboard']);
-        } else if (userRole === 'docente' || userRole === 'administrativo') {
-          // Redirige al dashboard del personal
-          this.router.navigate(['/personal/dashboard']);
+        } else if (userRole === 'docente') {
+          // Redirige al dashboard del docente
+          this.router.navigate(['/docente/dashboard']);
+        } else if (userRole === 'administrativo') {
+          // Redirige al dashboard del administrativo (admin)
+          this.router.navigate(['/admin/dashboard']);
         } else {
           // Si el rol no es reconocido, lo mandamos a una página por defecto
           this.router.navigate(['/login']);
@@ -90,5 +102,10 @@ export default class LoginComponent {
 
   selectRole(role: 'alumno' | 'personal' | 'aspirante'): void {
     this.selectedRole = role;
+  }
+
+  toggleTheme(): void {
+    this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+    this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
   }
 }
