@@ -1,0 +1,14 @@
+.not-found-container {
+  text-align: center;
+  padding: 50px;
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+h1 {
+  font-size: 3em;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+

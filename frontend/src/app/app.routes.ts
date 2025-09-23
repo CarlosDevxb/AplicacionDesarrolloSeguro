@@ -1,29 +1,46 @@
 // frontend/src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { roleGuard } from './guards/role-guard';
+
 export const routes: Routes = [
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
-    
-    { 
-        path: 'login', 
-        loadComponent: () => import('./pages/login/login').then(m => m.default) 
-    },
-    { 
-        path: 'registro', 
-        loadComponent: () => import('./pages/registro/registro').then(m => m.default) 
-    },
-    
-    // --- RUTAS PROTEGIDAS (TAMBIÉN CON LA CORRECCIÓN) ---
-    {
-        path: 'admin/dashboard',
-        loadComponent: () => import('./pages/dashboard-admin/dashboard-admin').then(m => m.DashboardAdmincomponent),
-        canActivate: [roleGuard],
-        data: { expectedRole: 'admin' }
-    },
-    {
-        path: 'cliente/dashboard',
-        loadComponent: () => import('./pages/dashboard-cliente/dashboard-cliente').then(m => m.DashboardClienteComponent),
-        canActivate: [roleGuard],
-        data: { expectedRole: 'cliente' }
-    }
+  // --- Rutas Públicas ---
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login').then(m => m.default)
+  },
+  {
+    path: 'registro',
+    loadComponent: () => import('./pages/registro/registro').then(m => m.default)
+  },
+  
+  // --- Rutas Protegidas por Módulos ---
+  {
+    path: 'alumno',
+    loadChildren: () => import('./modules/alumno/alumno-module').then(m => m.AlumnoModule),
+    canActivate: [roleGuard],
+    data: { expectedRole: 'alumno' }
+  },
+  {
+    path: 'docente',
+    loadChildren: () => import('./modules/docente/docente-module').then(m => m.DocenteModule),
+    canActivate: [roleGuard],
+    data: { expectedRole: 'docente' }
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./modules/admin/admin-module').then(m => m.AdminModule),
+    canActivate: [roleGuard],
+    data: { expectedRole: 'administrativo' } // El rol en tu DB es 'administrativo'
+  },
+
+  // --- Redirecciones ---
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+  {
+    path: '404',
+    loadComponent: () => import('./components/not-found/not-found').then(m => m.NotFound)
+  },  { path: '**', redirectTo: '/404' }
 ];

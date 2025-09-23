@@ -51,3 +51,10 @@ body[data-theme="light"] {
   --role-selector-bg: #e9f1f6;
   --role-selector-active-bg: #0077b6;
 }
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #e74c3c;
+  --background-color: #f0f0f0;
+  --text-color: #333;
+  --font-family: 'Arial', sans-serif;
+}
