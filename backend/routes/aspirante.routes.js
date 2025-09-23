@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { solicitarFicha } = require('../controllers/aspirante.controller.js');
+const aspiranteController = require('../controllers/aspirante.controller');
 
-// POST /api/aspirantes/solicitar-ficha
-router.post('/solicitar-ficha', solicitarFicha);
+router.get('/carreras', aspiranteController.getCarreras);
+router.post('/solicitar-ficha', aspiranteController.solicitarFicha);
 
 module.exports = router;

@@ -32,6 +32,7 @@ export default class RegistroComponent implements OnInit {
       telefono: [''],
       direccion: [''],
       carrera_id: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 

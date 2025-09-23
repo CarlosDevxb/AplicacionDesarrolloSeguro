@@ -7,7 +7,7 @@ require('dotenv').config();
 
 // Importar la conexión a la BD y las rutas
 const sequelize = require('./config/database');
-const apiRoutes = require('./routes'); // <-- Importa el enrutador principal
+const apiRoutes = require('./routes/index'); // <-- Importa el enrutador principal
 const bcrypt = require('bcryptjs');
 const app = express();
 const db = require('./models'); // <-- Importa el index.js de models
@@ -35,7 +35,8 @@ const startServer = async () => {
     await db.sequelize.authenticate(); // <-- Usa db.sequelize
     console.log('✅ Conexión a la base de datos establecida correctamente.');
 
-    // await db.sequelize.sync({ force: true }); // force: true borra y recrea las tablas
+    // Sincroniza los modelos con la base de datos. alter:true intenta añadir las columnas que faltan.
+    await db.sequelize.sync({ alter: true }); 
    
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);

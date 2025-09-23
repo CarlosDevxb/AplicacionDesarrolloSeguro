@@ -21,8 +21,13 @@ const Usuario = sequelize.define('Usuario', {
     type: DataTypes.STRING(100),
   },
   rol: {
-    type: DataTypes.ENUM('alumno', 'docente', 'administrativo'),
+    type: DataTypes.ENUM('alumno', 'docente', 'administrativo', 'aspirante'),
     allowNull: false,
+  },
+  numero_control: {
+    type: DataTypes.STRING(20),
+    unique: true,
+    allowNull: true, // Es nulo para roles que no son 'alumno'
   },
   correo: {
     type: DataTypes.STRING(100),

@@ -25,10 +25,10 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
       <div class="form-group">
-        <label for="usuario">Número de Control</label>
+        <label for="usuario">{{ selectedRole === 'aspirante' ? 'Correo Electrónico' : 'Número de Control' }}</label>
         <div class="input-group">
           <i class="fa-solid fa-user"></i>
-          <input id="usuario" type="text" formControlName="usuario" placeholder="Tu número de control">
+          <input id="usuario" type="text" formControlName="usuario" [placeholder]="selectedRole === 'aspirante' ? 'Tu correo registrado' : 'Tu número de control'">
         </div>
         @if (loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched) {
           <div class="error-text"><small>El número de control es requerido.</small></div>
@@ -55,7 +55,7 @@
       @if (userNotFound) {
         <div class="info-message">
           <span>No existe una cuenta con ese número de control.</span>
-          <a routerLink="/registro" class="register-link">Regístrate aquí</a>
+          <a routerLink="/registro" class="register-link">Solicita tu ficha aquí</a>
         </div>
       }
 

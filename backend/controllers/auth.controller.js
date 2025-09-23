@@ -2,17 +2,21 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const { Usuario } = require('../models'); // Ya no necesitamos el modelo Rol
+const { Usuario } = require('../models');
 const { alternatives } = require('joi');
+const { Op } = require('sequelize');
 
 
 const login = async (req, res) => {
   const { usuario, password, rol } = req.body; // Ahora también recibimos el rol
 
   try {
-    // 1. Buscar al usuario por el campo 'usuario'
+    // 1. Buscar al usuario.
+    // Si es alumno, puede loguearse con su 'numero_control'.
+    // Los demás, con su campo 'usuario' (que para aspirantes es el email).
+    // Como ambos se guardan en la columna 'usuario', solo necesitamos buscar ahí.
     const user = await Usuario.scope('withPassword').findOne({
-      where: { usuario: usuario }, // Buscamos en la columna 'usuario'
+      where: { usuario: usuario }
     });
 
     if (!user) {

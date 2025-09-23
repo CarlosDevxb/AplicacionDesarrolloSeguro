@@ -2,16 +2,25 @@
 @import url('../login/login.css');
 
 /*
-  La mayoría de los estilos (wrapper, inputs, botones, etc.) se heredan de login.css.
-  Aquí solo añadimos o modificamos lo que es específico para la página de registro.
+  Hacemos que el body ocupe toda la pantalla y centramos su contenido.
+  Esto es clave para que el wrapper se posicione correctamente.
 */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px; /* Añadimos un poco de espacio en los bordes */
+  box-sizing: border-box;
+}
 
 /* Renombramos el contenedor principal para mayor claridad semántica */
 .register-wrapper {
   display: flex;
   width: 100%;
   max-width: 900px;
-  min-height: 600px;
+  /* Eliminamos la altura mínima fija para que se adapte al contenido */
+  /* min-height: 600px; */
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   overflow: hidden;

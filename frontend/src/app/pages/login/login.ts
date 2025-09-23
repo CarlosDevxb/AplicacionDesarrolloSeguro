@@ -80,6 +80,9 @@ export default class LoginComponent implements OnInit {
         } else if (userRole === 'administrativo') {
           // Redirige al dashboard del administrativo (admin)
           this.router.navigate(['/admin/dashboard']);
+        } else if (userRole === 'aspirante') {
+          // Redirige al dashboard del aspirante
+          this.router.navigate(['/aspirante/dashboard']);
         } else {
           // Si el rol no es reconocido, lo mandamos a una página por defecto
           this.router.navigate(['/login']);

@@ -63,6 +63,19 @@
         </div>
       </div>
 
+      <!-- Contraseña -->
+      <div class="form-group">
+        <label for="password">Crea tu Contraseña</label>
+        <div class="input-group">
+          <input id="password" type="password" formControlName="password" placeholder="Mínimo 6 caracteres">
+          <i class="fas fa-lock"></i>
+        </div>
+        <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error-text">
+          <small *ngIf="registerForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</small>
+          <small *ngIf="registerForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</small>
+        </div>
+      </div>
+
       <!-- Selección de Carrera -->
       <div class="form-group">
         <label for="carrera_id">Carrera de Interés</label>

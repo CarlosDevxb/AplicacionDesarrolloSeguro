@@ -1,41 +1,47 @@
 import { Routes } from '@angular/router';
 
-// Importa tus componentes de página
-import LoginComponent from './pages/login/login'; // Componente para la página de login
-import RegistroComponent from './pages/registro/registro'; // Componente para la página de registro
-import { roleGuard } from './guards/role-guard'; // Importamos el guard de roles
+// Importa tus componentes de página y el nuevo componente NotFound
+import LoginComponent from './pages/login/login';
+import NotFoundComponent from './components/not-found/not-found';
+// Importamos los nuevos componentes de dashboard
+import AlumnoDashboardComponent from './pages/alumno/dashboard.component';
+import DocenteDashboardComponent from './pages/docente/dashboard.component';
+import AdminDashboardComponent from './pages/admin/dashboard.component';
+// Importamos el componente de registro que faltaba
+import RegistroComponent from './pages/registro/registro';
+// Importamos nuestro nuevo guard
+import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
   // Ruta por defecto, redirige al login
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
 
-  // Añadimos la propiedad 'title' a cada ruta
-  { path: 'login', component: LoginComponent, title: 'Iniciar Sesión - CHAFATEC' },
-  { path: 'registro', component: RegistroComponent, title: 'Solicitud de Ficha - CHAFATEC' },
+  // Ruta para el componente de login
+  { path: 'login', component: LoginComponent },
 
-  // --- Rutas Modulares con Carga Diferida (Lazy Loading) ---
+  // ¡RUTA AÑADIDA! Ahora Angular sabe qué mostrar en /registro
+  { path: 'registro', component: RegistroComponent },
 
-  // Módulo de Alumno
+  // Rutas de los dashboards ahora protegidas por el roleGuard
   {
-    path: 'alumno',
-    canActivate: [roleGuard], // 1. Protegemos el acceso a todo el módulo
-    data: { expectedRole: 'alumno' }, // 2. Definimos el rol esperado
-    loadChildren: () => import('./pages/alumno/alumno.routes').then(m => m.ALUMNO_ROUTES)
+    path: 'alumno/dashboard',
+    component: AlumnoDashboardComponent,
+    canActivate: [roleGuard],
+    data: { expectedRole: 'alumno' }
+  },
+  {
+    path: 'docente/dashboard',
+    component: DocenteDashboardComponent,
+    canActivate: [roleGuard],
+    data: { expectedRole: 'docente' }
+  },
+  {
+    path: 'admin/dashboard',
+    component: AdminDashboardComponent,
+    canActivate: [roleGuard],
+    data: { expectedRole: 'administrativo' }
   },
 
-  // Módulo de Docente
-  {
-    path: 'docente',
-    canActivate: [roleGuard],
-    data: { expectedRole: 'docente' },
-    loadChildren: () => import('./pages/docente/docente.routes').then(m => m.DOCENTE_ROUTES)
-  },
-
-  // Módulo de Administrador
-  {
-    path: 'admin',
-    canActivate: [roleGuard],
-    data: { expectedRole: 'administrativo' },
-    loadChildren: () => import('./pages/admin/admin.routes').then(m => m.ADMIN_ROUTES)},
-
+  // ¡ESTA ES LA RUTA CLAVE! Debe ser la última.
+  { path: '**', component: NotFoundComponent }
 ];
