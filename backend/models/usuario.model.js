@@ -3,44 +3,49 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Usuario = sequelize.define('Usuario', {
-  idUsuario: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
+  id: {
+    type: DataTypes.STRING(20),
     primaryKey: true,
-  },
-  idRol: {
-    type: DataTypes.INTEGER,
     allowNull: false,
   },
-  nombre: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.STRING,
+  usuario: {
+    type: DataTypes.STRING(50),
     allowNull: false,
     unique: true,
-    validate: { isEmail: true },
   },
-  password: {
-    type: DataTypes.STRING,
+  contrasena: {
+    type: DataTypes.STRING(255),
     allowNull: false,
   },
+  nombre_completo: {
+    type: DataTypes.STRING(100),
+  },
+  rol: {
+    type: DataTypes.ENUM('alumno', 'docente', 'administrativo'),
+    allowNull: false,
+  },
+  correo: {
+    type: DataTypes.STRING(100),
+    validate: { isEmail: true },
+  },
   direccion: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
   },
   telefono: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(20),
+  },
+  foto: {
+    type: DataTypes.STRING(255),
   },
 }, {
-  tableName: 'Usuario',
-  // Mantenemos los scopes para no exponer la contraseña por defecto
+  tableName: 'usuarios',
+  timestamps: false, // Tu esquema no tiene createdAt/updatedAt
   defaultScope: {
-    attributes: { exclude: ['password'] },
+    attributes: { exclude: ['contrasena'] },
   },
   scopes: {
     withPassword: {
-      attributes: {},
+      attributes: { include: ['contrasena'] },
     },
   },
 });

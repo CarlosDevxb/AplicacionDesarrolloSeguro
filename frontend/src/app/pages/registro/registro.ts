@@ -1,17 +1,11 @@
 // frontend/src/app/pages/registro/registro.ts
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth'; // <-- 1. Importa el servicio
 import { HttpErrorResponse } from '@angular/common/http';
-
-// ... (El validador passwordMatchValidator se queda igual) ...
-export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const password = control.get('password');
-    const confirmPassword = control.get('confirmPassword');
-    return password && confirmPassword && password.value !== confirmPassword.value ? { passwordMismatch: true } : null;
-  };
+import { AspiranteService } from '../../services/aspirante.service';
+import { Carrera } from '../../models/carrera.model';
 
 @Component({
   selector: 'app-registro',
@@ -20,23 +14,32 @@ export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): V
   templateUrl: './registro.html',
   styleUrls: ['./registro.css']
 })
-export default class RegistroComponent {
+export default class RegistroComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private authService = inject(AuthService); // <-- 2. Inyecta el servicio
+  private renderer = inject(Renderer2);
+  private aspiranteService = inject(AspiranteService);
 
   registerForm: FormGroup;
-  errorMessage: string | null = null; // <-- Propiedad para manejar errores
+  errorMessage: string | null = null;
+  currentTheme: 'dark' | 'light' = 'dark';
+  carreras: Carrera[] = []; // Para almacenar la lista de carreras
 
   constructor() {
     this.registerForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required]],
-      direccion: [''], // <-- Añadido (opcional)
-      telefono: ['']   // <-- Añadido (opcional)
-    }, { validators: passwordMatchValidator });
+      nombre_completo: ['', [Validators.required, Validators.minLength(3)]],
+      correo: ['', [Validators.required, Validators.email]],
+      telefono: [''],
+      direccion: [''],
+      carrera_id: ['', [Validators.required]],
+    });
+  }
+
+  ngOnInit(): void {
+    this.aspiranteService.getCarreras().subscribe(carreras => {
+      this.carreras = carreras;
+    });
+    this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
   }
 
   onSubmit(): void {
@@ -47,18 +50,16 @@ export default class RegistroComponent {
 
     this.errorMessage = null;
 
-    // 3. Llama al servicio en lugar del console.log
-    this.authService.register(this.registerForm.value).subscribe({
+    this.aspiranteService.solicitarFicha(this.registerForm.value).subscribe({
       next: (response) => {
-        console.log('Registro exitoso:', response);
-        // Opcional: Muestra un mensaje de éxito
-        alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
-        // Redirige al usuario a la página de login
+        console.log('Solicitud enviada:', response);
+        alert('¡Solicitud enviada con éxito! Nos pondremos en contacto contigo.');
         this.router.navigate(['/login']);
       },
       error: (err: HttpErrorResponse) => {
-        // Maneja errores específicos del backend
-        if (err.status === 409) { // 409 Conflict (email ya en uso)
+        if (err.status === 409) {
+          this.errorMessage = err.error.message;
+        } else if (err.status === 404) {
           this.errorMessage = err.error.message;
         } else {
           this.errorMessage = 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo.';
@@ -66,5 +67,10 @@ export default class RegistroComponent {
         console.error('Error en el registro:', err);
       }
     });
+  }
+
+  toggleTheme(): void {
+    this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+    this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
   }
 }

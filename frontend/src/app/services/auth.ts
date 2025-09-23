@@ -18,7 +18,7 @@ export class AuthService {
    * Envía las credenciales al backend para iniciar sesión.
    * Si tiene éxito, guarda el token en localStorage.
    */
-  login(credentials: { email: string, password: string }): Observable<{ token: string }> {
+  login(credentials: { usuario: string, password: string, rol: string }): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap(response => {
         // 'tap' nos permite ejecutar una acción sin modificar la respuesta.
@@ -26,11 +26,6 @@ export class AuthService {
         localStorage.setItem('token', response.token);
       })
     );
-  }
-
-   register(userData: any): Observable<any> {
-    // Llama al endpoint POST /api/auth/register que creaste en el backend
-    return this.http.post(`${this.apiUrl}/auth/register`, userData);
   }
 
   logout(): void {

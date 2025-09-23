@@ -1,46 +1,41 @@
-// frontend/src/app/app.routes.ts
 import { Routes } from '@angular/router';
-import { roleGuard } from './guards/role-guard';
+
+// Importa tus componentes de página
+import LoginComponent from './pages/login/login'; // Componente para la página de login
+import RegistroComponent from './pages/registro/registro'; // Componente para la página de registro
+import { roleGuard } from './guards/role-guard'; // Importamos el guard de roles
 
 export const routes: Routes = [
-  // --- Rutas Públicas ---
-  {
-    path: 'login',
-    loadComponent: () => import('./pages/login/login').then(m => m.default)
-  },
-  {
-    path: 'registro',
-    loadComponent: () => import('./pages/registro/registro').then(m => m.default)
-  },
-  
-  // --- Rutas Protegidas por Módulos ---
+  // Ruta por defecto, redirige al login
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  // Añadimos la propiedad 'title' a cada ruta
+  { path: 'login', component: LoginComponent, title: 'Iniciar Sesión - CHAFATEC' },
+  { path: 'registro', component: RegistroComponent, title: 'Solicitud de Ficha - CHAFATEC' },
+
+  // --- Rutas Modulares con Carga Diferida (Lazy Loading) ---
+
+  // Módulo de Alumno
   {
     path: 'alumno',
-    loadChildren: () => import('./modules/alumno/alumno-module').then(m => m.AlumnoModule),
-    canActivate: [roleGuard],
-    data: { expectedRole: 'alumno' }
-  },
-  {
-    path: 'docente',
-    loadChildren: () => import('./modules/docente/docente-module').then(m => m.DocenteModule),
-    canActivate: [roleGuard],
-    data: { expectedRole: 'docente' }
-  },
-  {
-    path: 'admin',
-    loadChildren: () => import('./modules/admin/admin-module').then(m => m.AdminModule),
-    canActivate: [roleGuard],
-    data: { expectedRole: 'administrativo' } // El rol en tu DB es 'administrativo'
+    canActivate: [roleGuard], // 1. Protegemos el acceso a todo el módulo
+    data: { expectedRole: 'alumno' }, // 2. Definimos el rol esperado
+    loadChildren: () => import('./pages/alumno/alumno.routes').then(m => m.ALUMNO_ROUTES)
   },
 
-  // --- Redirecciones ---
+  // Módulo de Docente
   {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
+    path: 'docente',
+    canActivate: [roleGuard],
+    data: { expectedRole: 'docente' },
+    loadChildren: () => import('./pages/docente/docente.routes').then(m => m.DOCENTE_ROUTES)
   },
+
+  // Módulo de Administrador
   {
-    path: '404',
-    loadComponent: () => import('./components/not-found/not-found').then(m => m.NotFound)
-  },  { path: '**', redirectTo: '/404' }
+    path: 'admin',
+    canActivate: [roleGuard],
+    data: { expectedRole: 'administrativo' },
+    loadChildren: () => import('./pages/admin/admin.routes').then(m => m.ADMIN_ROUTES)},
+
 ];

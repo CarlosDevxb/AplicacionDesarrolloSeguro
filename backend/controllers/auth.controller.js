@@ -2,40 +2,46 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const { Usuario, Rol } = require('../models'); // Importa también el modelo Rol
+const { Usuario } = require('../models'); // Ya no necesitamos el modelo Rol
 const { alternatives } = require('joi');
 
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { usuario, password, rol } = req.body; // Ahora también recibimos el rol
 
   try {
-    // 1. Buscar al usuario E INCLUIR el modelo Rol asociado
+    // 1. Buscar al usuario por el campo 'usuario'
     const user = await Usuario.scope('withPassword').findOne({
-      where: { email },
-      include: {
-        model: Rol,
-        attributes: ['nombre'] // Solo queremos el nombre del rol
-      }
+      where: { usuario: usuario }, // Buscamos en la columna 'usuario'
     });
 
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado.' });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    // 2. Validar que el rol seleccionado coincida con el del usuario
+    // El frontend envía 'personal' para 'docente' y 'administrativo'
+    const isRoleValid = (rol === 'personal' && (user.rol === 'docente' || user.rol === 'administrativo')) || rol === user.rol;
+
+    if (!isRoleValid) {
+      // Usamos 403 Forbidden porque el usuario existe, pero no tiene permiso para acceder con ese rol.
+      return res.status(403).json({ message: 'El rol seleccionado no es correcto para este usuario.' });
+    }
+
+    // 3. Comparamos con la columna 'contrasena'
+    const isPasswordCorrect = await bcrypt.compare(password, user.contrasena);
 
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: 'Credenciales incorrectas.' });
     }
 
-    // 2. Crear el payload incluyendo el nombre del rol
+    // 4. Crear el payload incluyendo el rol del usuario
     const payload = {
-      id: user.idUsuario, // Usamos idUsuario que es la PK
-      rol: user.Rol.nombre, // <-- Aquí está la magia: user.Rol.nombre
+      id: user.id,      // Usamos la nueva PK 'id'
+      rol: user.rol,    // El rol viene directamente del usuario
     };
 
-    // 3. Firmar y enviar el token (esto no cambia)
+    // 5. Firmar y enviar el token (esto no cambia)
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
 
     res.status(200).json({ token });
@@ -46,46 +52,4 @@ const login = async (req, res) => {
   }
 };
 
-const register = async (req, res) => {
-  const { nombre, email, password, direccion, telefono } = req.body;
-
-  try {
-    // 1. Verificar si el email ya existe
-    const existingUser = await Usuario.findOne({ where: { email } });
-    if (existingUser) {
-      return res.status(409).json({ message: 'El correo electrónico ya está en uso.' }); // 409 Conflict
-    }
-
-    // 2. Buscar el rol de 'cliente'
-    const clienteRol = await Rol.findOne({ where: { nombre: 'cliente' } });
-    if (!clienteRol) {
-      return res.status(500).json({ message: 'El rol de cliente no se encuentra configurado.' });
-    }
-
-    // 3. Hashear la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10); // 10 es el número de rondas de salting
-
-    // 4. Crear el nuevo usuario
-    const newUser = await Usuario.create({
-      nombre,
-      email,
-      password: hashedPassword,
-      idRol: clienteRol.idRol,
-       direccion, // <-- Añadido
-      telefono   // <-- Añadido
-    });
-
-    // 5. Devolver una respuesta exitosa (sin el password)
-    const userResponse = newUser.toJSON();
-    delete userResponse.password;
-
-    res.status(201).json({ user: userResponse, message: 'Usuario registrado exitosamente.' });
-
-  } catch (error) {
-    console.error('Error en el registro:', error);
-    res.status(500).json({ message: 'Error en el servidor.' });
-  }
-};
-
-// Aquí podrías añadir la función de 'register' en el futuro OWASAP10
-module.exports = { login, register};
+module.exports = { login };

@@ -1,84 +1,92 @@
-<div class="register-container">
-  <h2>Crear una Cuenta</h2>
+<div class="register-wrapper">
+  <!-- Columna del Carrusel de Imágenes (reutilizada del login) -->
+  <div class="carousel-container">
+    <img src="assets/chavo.png" alt="Imagen descriptiva 3" class="carousel-image">
+    <img src="assets/chaavo2.png" alt="Imagen descriptiva 3" class="carousel-image">
+    <img src="assets/pipi.png" alt="Imagen descriptiva 3" class="carousel-image">
 
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    
-    <div class="form-group">
-      <label for="nombre">Nombre Completo</label>
-      <div class="input-group">
-        <i class="fa-solid fa-user"></i>
-        <input id="nombre" type="text" formControlName="nombre" placeholder="Tu nombre completo">
-      </div>
-      @if (registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched) {
-        <div class="error-text"><small>El nombre es requerido.</small></div>
-      }
+  </div>
+
+  <!-- Columna del Formulario de Registro -->
+  <div class="register-form-container">
+    <img src="assets/CHAFATEC.png" alt="Logo CHAFATEC" class="logo">
+    <h2>Solicitud de Ficha</h2>
+    <p class="subtitle">Completa tus datos para iniciar tu proceso de admisión.</p>
+
+    <!-- Mensaje de Error General -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
     </div>
 
-    <div class="form-group">
-      <label for="email">Correo Electrónico</label>
-      <div class="input-group">
-        <i class="fa-solid fa-envelope"></i>
-        <input id="email" type="email" formControlName="email" placeholder="tu@email.com">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Nombre Completo -->
+      <div class="form-group">
+        <label for="nombre_completo">Nombre Completo</label>
+        <div class="input-group">
+          <input id="nombre_completo" type="text" formControlName="nombre_completo" placeholder="Ingresa tu nombre completo">
+          <i class="fas fa-user"></i>
+        </div>
+        <div *ngIf="registerForm.get('nombre_completo')?.invalid && registerForm.get('nombre_completo')?.touched" class="error-text">
+          <small *ngIf="registerForm.get('nombre_completo')?.errors?.['required']">El nombre es obligatorio.</small>
+          <small *ngIf="registerForm.get('nombre_completo')?.errors?.['minlength']">Debe tener al menos 3 caracteres.</small>
+        </div>
       </div>
-       @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
-        <div class="error-text"><small>Ingresa un correo válido.</small></div>
-      }
+
+      <!-- Correo Electrónico -->
+      <div class="form-group">
+        <label for="correo">Correo Electrónico</label>
+        <div class="input-group">
+          <input id="correo" type="email" formControlName="correo" placeholder="ejemplo@correo.com">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <div *ngIf="registerForm.get('correo')?.invalid && registerForm.get('correo')?.touched" class="error-text">
+          <small *ngIf="registerForm.get('correo')?.errors?.['required']">El correo es obligatorio.</small>
+          <small *ngIf="registerForm.get('correo')?.errors?.['email']">Ingresa un correo válido.</small>
+        </div>
+      </div>
+
+      <!-- Teléfono y Dirección (en una fila) -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="telefono">Teléfono (Opcional)</label>
+          <div class="input-group">
+            <input id="telefono" type="tel" formControlName="telefono" placeholder="Tu número de teléfono">
+            <i class="fas fa-phone"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="direccion">Dirección (Opcional)</label>
+          <div class="input-group">
+            <input id="direccion" type="text" formControlName="direccion" placeholder="Tu dirección">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selección de Carrera -->
+      <div class="form-group">
+        <label for="carrera_id">Carrera de Interés</label>
+        <select id="carrera_id" formControlName="carrera_id" class="custom-select">
+          <option value="" disabled>Selecciona una carrera</option>
+          <option *ngFor="let carrera of carreras" [value]="carrera.id">{{ carrera.nombre }}</option>
+        </select>
+        <div *ngIf="registerForm.get('carrera_id')?.invalid && registerForm.get('carrera_id')?.touched" class="error-text">
+          <small>Debes seleccionar una carrera.</small>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid">Enviar Solicitud</button>
+    </form>
+
+    <div class="login-link-container">
+      <span>¿Ya tienes una cuenta? <a class="login-link" routerLink="/login">Inicia Sesión</a></span>
     </div>
 
-
-    <div class="form-group">
-      <label for="direccion">Dirección (Opcional)</label>
-      <div class="input-group">
-        <i class="fa-solid fa-map-location-dot"></i>
-        <input id="direccion" type="text" formControlName="direccion" placeholder="Tu dirección">
-      </div>
+    <!-- Botón para cambiar el tema -->
+    <div class="theme-switcher-container">
+      <button (click)="toggleTheme()" class="theme-toggle" title="Cambiar tema">
+        <i class="fas" [ngClass]="currentTheme === 'dark' ? 'fa-sun' : 'fa-moon'"></i>
+      </button>
     </div>
-
-    <div class="form-group">
-      <label for="telefono">Teléfono (Opcional)</label>
-      <div class="input-group">
-        <i class="fa-solid fa-phone"></i>
-        <input id="telefono" type="tel" formControlName="telefono" placeholder="Tu número de teléfono">
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="password">Contraseña</label>
-      <div class="input-group">
-        <i class="fa-solid fa-lock"></i>
-        <input id="password" type="password" formControlName="password" placeholder="Mínimo 8 caracteres">
-      </div>
-      @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
-        <div class="error-text"><small>La contraseña debe tener al menos 8 caracteres.</small></div>
-      }
-    </div>
-
-    <div class="form-group">
-      <label for="confirmPassword">Confirmar Contraseña</label>
-      <div class="input-group">
-        <i class="fa-solid fa-check-double"></i>
-        <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Repite tu contraseña">
-      </div>
-      @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
-        <div class="error-text"><small>Las contraseñas no coinciden.</small></div>
-      }
-    </div>
-
-
-    
-    @if (errorMessage) {
-      <div class="error-message">
-        {{ errorMessage }}
-      </div>
-    }
-
-    <button type="submit" [disabled]="registerForm.invalid">
-      Registrarse
-    </button>
-
-    <div class="login-link">
-      <span>¿Ya tienes una cuenta?</span>
-      <a routerLink="/login">Inicia sesión</a>
-    </div>
-  </form>
+  </div>
 </div>

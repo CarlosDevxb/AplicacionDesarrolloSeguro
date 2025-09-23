@@ -7,18 +7,17 @@ require('dotenv').config();
 
 // Importar la conexión a la BD y las rutas
 const sequelize = require('./config/database');
-const authRoutes = require('./routes/auth.routes');
+const apiRoutes = require('./routes'); // <-- Importa el enrutador principal
 const bcrypt = require('bcryptjs');
 const app = express();
 const db = require('./models'); // <-- Importa el index.js de models
 const { hashPassword } = require('./hash');
 app.use(helmet());
-app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(cors({ origin: 'http://localhost:4200' })); // Asegúrate de que el puerto es correcto
 app.use(express.json()); // Para que Express entienda JSON
 
 // --- Registrar Rutas ---
-// Todas las rutas en auth.routes.js tendrán el prefijo /api/auth
-app.use('/api/auth', authRoutes);
+app.use('/api', apiRoutes); // Todas las rutas tendrán el prefijo /api
 
 const PORT = process.env.PORT || 3000;
 

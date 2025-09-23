@@ -88,11 +88,14 @@ export default class LoginComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         // Esta es la lógica crucial
         if (err.status === 404) {
-          // Si el error es 404, activamos la variable para la vista
+          // Usuario no encontrado
           this.userNotFound = true;
+        } else if (err.status === 403) {
+          // Rol incorrecto
+          this.errorMessage = err.error.message || 'El rol seleccionado no es correcto.';
         } else {
-          // Para cualquier otro error, mostramos el mensaje de error general
-          this.errorMessage = 'Credenciales incorrectas o rol no válido.';
+          // Para cualquier otro error (ej. 401 Contraseña incorrecta), mostramos un mensaje general
+          this.errorMessage = 'Credenciales incorrectas.';
         }
         // Este console.log es la prueba de que este bloque se está ejecutando
         console.error('Error en el login:', err);

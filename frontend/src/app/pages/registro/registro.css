@@ -1,127 +1,115 @@
+/* Importamos las animaciones y variables del login para consistencia */
+@import url('../login/login.css');
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/*
+  La mayoría de los estilos (wrapper, inputs, botones, etc.) se heredan de login.css.
+  Aquí solo añadimos o modificamos lo que es específico para la página de registro.
+*/
 
-:host {
+/* Renombramos el contenedor principal para mayor claridad semántica */
+.register-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 40px 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-}
-
-.register-container {
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 40px;
+  width: 100%;
+  max-width: 900px;
+  min-height: 600px;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 420px;
-  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  background-color: var(--container-bg);
+  animation: formFadeIn 0.7s ease-out forwards;
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  animation: fadeIn 0.7s ease-out forwards;
+  border: 1px solid var(--container-border);
 }
 
-h2 {
-  margin-bottom: 24px;
-  color: #1e3c72;
-  font-size: 28px;
-  font-weight: 700;
+.register-form-container {
+  flex: 1;
+  background-color: var(--container-bg);
+  padding: 40px;
+  text-align: center;
+  transition: background-color 0.5s ease, border-color 0.5s ease;
+  /* Habilitamos el scroll si el contenido es muy alto en pantallas pequeñas */
+  overflow-y: auto;
 }
 
-.form-group {
-  margin-bottom: 22px;
-  text-align: left;
+.register-form-container .subtitle {
+  color: var(--text-secondary);
+  margin-top: -15px;
+  margin-bottom: 25px;
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #333;
-}
-
-.input-group {
-  position: relative;
-}
-
-.input-group i {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #aaa;
-  transition: color 0.3s;
-}
-
-.input-group input {
+/*
+  Estilos para el select de carreras, para que se parezca a los inputs.
+*/
+.custom-select {
   width: 100%;
-  padding: 12px 12px 12px 45px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   font-size: 16px;
   box-sizing: border-box;
   transition: all 0.3s;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  -webkit-appearance: none; /* Quita la apariencia nativa en Webkit */
+  -moz-appearance: none; /* Quita la apariencia nativa en Firefox */
+  appearance: none; /* Quita la apariencia nativa estándar */
+  /* Añadimos un icono de flecha personalizado */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236c757d%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+  background-size: 10px;
+  padding-right: 40px; /* Espacio para la flecha */
 }
 
-.input-group:focus-within i {
-  color: #2a5298;
-}
-
-.input-group input:focus {
+.custom-select:focus {
   outline: none;
-  border-color: #2a5298;
-  box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
 }
 
-button {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+/*
+  Contenedor para poner dos campos en la misma fila (Teléfono y Dirección).
+*/
+.form-row {
+  display: flex;
+  gap: 20px; /* Espacio entre los campos */
 }
 
-button:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+.form-row .form-group {
+  flex: 1; /* Cada campo ocupa la mitad del espacio */
 }
 
-button:disabled {
-  background: #a9b8d0;
-  cursor: not-allowed;
-}
-
-.error-text small {
-  color: #e53935;
-  font-weight: 500;
-  font-size: 13px;
-  padding-left: 5px;
+/* Enlace para ir al login */
+.login-link-container {
+  margin-top: 25px;
+  color: var(--text-secondary);
 }
 
 .login-link {
-  font-weight: 500;
-}
-
-.login-link a {
-  color: #1976d2;
+  color: var(--text-accent);
   font-weight: 700;
   text-decoration: none;
-  margin-left: 5px;
+  margin-left: 8px;
+  transition: color 0.3s;
 }
 
-.login-link a:hover {
+.login-link:hover {
   text-decoration: underline;
+  color: var(--text-primary);
+}
+
+/* Ajustes para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .register-wrapper {
+    flex-direction: column;
+    min-height: 100vh;
+    border-radius: 0;
+  }
+  .carousel-container {
+    display: none; /* Ocultamos el carrusel en móviles para dar espacio al formulario */
+  }
+  .form-row {
+    flex-direction: column; /* Apilamos los campos en móvil */
+    gap: 0;
+  }
 }
