@@ -3,7 +3,6 @@ import { Routes } from '@angular/router';
 // Importa tus componentes de página y el nuevo componente NotFound
 import LoginComponent from './pages/login/login';
 import NotFoundComponent from './components/not-found/not-found';
-// Importamos los nuevos componentes de dashboard
 import AlumnoDashboardComponent from './pages/alumno/dashboard.component';
 import DocenteDashboardComponent from './pages/docente/dashboard.component';
 import AdminDashboardComponent from './pages/admin/dashboard.component';
@@ -30,10 +29,12 @@ export const routes: Routes = [
     data: { expectedRole: 'alumno' }
   },
   {
-    path: 'docente/dashboard',
-    component: DocenteDashboardComponent,
+    // Esta es la ruta principal para la sección de docentes
+    path: 'docente',
     canActivate: [roleGuard],
-    data: { expectedRole: 'docente' }
+    data: { expectedRole: 'docente' },
+    // Cargamos las rutas hijas del archivo docente.routes.ts
+    loadChildren: () => import('./pages/docente/docente.routes').then(m => m.DOCENTE_ROUTES)
   },
   {
     path: 'admin/dashboard',

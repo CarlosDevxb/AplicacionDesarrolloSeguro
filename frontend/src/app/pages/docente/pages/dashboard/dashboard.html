@@ -1,1 +1,60 @@
-<p>dashboard works!</p>
+<div class="dashboard-container fade-in" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <!-- Menú Lateral (Sidebar) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <button class="logo-expander" (click)="toggleSidebar()" title="Expandir menú">
+        <img src="assets/CHAFATEC.png" alt="Logo" class="logo" />
+      </button>
+      <h2 class="title">CHAFATEC</h2>
+      <button class="sidebar-toggle" (click)="toggleSidebar()" title="Colapsar menú">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <div class="profile-section">
+      <div class="profile-picture">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name">Nombre del Docente</span>
+        <span class="profile-role">Rol: Docente</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/docente/dashboard" class="menu-item active">
+        <i class="fas fa-home"></i>
+        <span class="menu-text">Inicio</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fas fa-user-circle"></i>
+        <span class="menu-text">Mis Datos</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fas fa-users"></i>
+        <span class="menu-text">Grupos</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fas fa-cog"></i>
+        <span class="menu-text">Opciones</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="menu-item logout-button">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="menu-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="main-content">
+    <section class="content-area">
+      <div class="notice-board">
+        <h2>Cartelera de Avisos</h2>
+        <p>Aquí se mostrarán los avisos importantes de la institución.</p>
+      </div>
+    </section>
+  </main>
+</div>

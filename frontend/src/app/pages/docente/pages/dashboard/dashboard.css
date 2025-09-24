@@ -1,0 +1,294 @@
+/* Importamos las variables de color globales de tu tema */
+@import url('../../../registro/registro.css');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Animación de Fade-in para la carga */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.dashboard-container {
+  display: flex;
+  height: 100%;
+  background-color: #f4f7fa; /* Color de fondo claro para el panel principal */
+  font-family: 'Inter', sans-serif;
+  transition: margin-left 0.3s ease;
+}
+
+/* --- Sidebar (Menú Lateral) --- */
+.sidebar {
+  width: 260px;
+  background-color: #ffffff; /* Menú de color blanco */
+  border-right: 1px solid #e5e9f2;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+  margin: 15px; /* Margen para dar efecto "flotante" */
+  border-radius: 16px; /* Bordes redondeados */
+  height: calc(100vh - 30px); /* Ajustamos la altura por los márgenes */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 18px 20px;
+  gap: 15px;
+  border-bottom: 1px solid #e5e9f2;
+  flex-shrink: 0;
+}
+
+.sidebar-header .logo {
+  height: 40px;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header .logo:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.sidebar-header .title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+  color: #1a202c;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 5px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+  color: var(--text-accent);
+  background-color: #eef2ff;
+  border-color: #e5e9f2;
+}
+
+.logo-expander {
+  display: none; /* Oculto por defecto */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.logo-expander .logo {
+  height: 40px;
+}
+
+.profile-section {
+  padding: 25px 20px;
+  text-align: center;
+  border-bottom: 1px solid #e5e9f2;
+  transition: all 0.3s ease;
+}
+
+.profile-picture {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #eef2ff;
+  color: var(--text-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 2.5rem;
+  border: 3px solid #e5e9f2;
+}
+
+.profile-info {
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+}
+
+.profile-name {
+  display: block;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #1a202c;
+}
+
+.profile-role {
+  display: block;
+  font-size: 0.85rem;
+  color: #718096;
+}
+
+.menu {
+  flex-grow: 1;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #4a5568;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.menu-item i {
+  font-size: 1.2rem;
+  width: 30px;
+  text-align: center;
+  margin-right: 15px;
+  transition: margin 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-item:hover,
+.menu-item.active {
+  background-color: #eef2ff;
+  color: #4338ca;
+}
+
+.menu-item.active {
+  box-shadow: 0 3px 8px -2px var(--accent-shadow);
+}
+
+.sidebar-footer {
+  padding: 20px 10px;
+  border-top: 1px solid #e5e9f2;
+}
+
+.logout-button:hover {
+  background-color: #ff4d4d20;
+  color: #ff4d4d;
+}
+
+/* --- Estilos para el menú colapsado --- */
+.sidebar-collapsed .sidebar {
+  width: 100px;
+}
+
+/* Ocultamos el botón de colapsar y mostramos el logo como botón */
+.sidebar-collapsed .sidebar-toggle {
+  display: none;
+}
+
+.sidebar-collapsed .logo-expander {
+  display: block;
+}
+
+.sidebar-collapsed .sidebar-header {
+  justify-content: center;
+}
+
+.sidebar-collapsed .sidebar-header .title,
+.sidebar-collapsed .profile-info,
+.sidebar-collapsed .menu-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  transition: opacity 0.1s ease;
+}
+
+.sidebar-collapsed .profile-section {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.sidebar-collapsed .menu-item i {
+  margin-right: 0;
+}
+
+.sidebar-collapsed .menu-item {
+  justify-content: center;
+}
+
+/* --- Contenido Principal --- */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto; /* Permitimos scroll solo en el contenido */
+}
+
+.dashboard-container.fade-in .content-area {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.content-area {
+  padding: 40px;
+  flex-grow: 1;
+}
+
+/* --- Cartelera de Avisos --- */
+.notice-board {
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #e5e9f2;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.03);
+}
+
+.notice-board h2 {
+  margin-top: 0;
+  color: var(--text-accent);
+}
+
+/* --- Responsividad --- */
+@media (max-width: 768px) {
+  .dashboard-container {
+    background-color: #ffffff; /* Fondo blanco en móvil */
+  }
+  .sidebar {
+    position: fixed;
+    left: -290px;
+    z-index: 1000;
+    height: 100%;
+    margin: 0;
+    border-radius: 0 16px 16px 0;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dashboard-container:not(.sidebar-collapsed) .sidebar {
+    left: 0;
+  }
+  .content-area {
+    padding: 20px;
+  }
+}
