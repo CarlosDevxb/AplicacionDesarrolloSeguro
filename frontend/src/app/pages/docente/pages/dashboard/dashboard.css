@@ -23,25 +23,25 @@
 .dashboard-container {
   display: flex;
   height: 100%;
-  background-color: #f4f7fa; /* Color de fondo claro para el panel principal */
+  background-color: #ffffff; /* Fondo blanco para el contenido principal */
   font-family: 'Inter', sans-serif;
   transition: margin-left 0.3s ease;
 }
 
 /* --- Sidebar (Menú Lateral) --- */
 .sidebar {
-  width: 260px;
-  background-color: #ffffff; /* Menú de color blanco */
-  border-right: 1px solid #e5e9f2;
+  width: 280px;
+  background-color: #003366; /* Color secundario para el menú */
   display: flex;
   flex-direction: column;
   transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   position: relative;
   margin: 15px; /* Margen para dar efecto "flotante" */
-  border-radius: 16px; /* Bordes redondeados */
-  height: calc(100vh - 30px); /* Ajustamos la altura por los márgenes */
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  border-radius: 18px; /* Bordes redondeados */
+  height: calc(100% - 30px); /* Ajustamos la altura por los márgenes */
+  border: 1px solid rgba(173, 216, 230, 0.1); /* Borde sutil con color de la paleta */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar-header {
@@ -49,7 +49,7 @@
   align-items: center;
   padding: 18px 20px;
   gap: 15px;
-  border-bottom: 1px solid #e5e9f2;
+  border-bottom: 1px solid rgba(173, 216, 230, 0.1);
   flex-shrink: 0;
 }
 
@@ -68,12 +68,12 @@
   font-weight: 700;
   white-space: nowrap;
   transition: opacity 0.2s ease;
-  color: #1a202c;
+  color: #add8e6; /* Texto primario de la paleta */
 }
 
 .sidebar-toggle {
   background: none;
-  border: 1px solid transparent;
+  border: none;
   color: var(--text-secondary);
   font-size: 1rem;
   cursor: pointer;
@@ -87,9 +87,8 @@
 }
 
 .sidebar-toggle:hover {
-  color: var(--text-accent);
-  background-color: #eef2ff;
-  border-color: #e5e9f2;
+  color: #ffffff;
+  background-color: rgba(0, 119, 182, 0.2);
 }
 
 .logo-expander {
@@ -107,41 +106,57 @@
 .profile-section {
   padding: 25px 20px;
   text-align: center;
-  border-bottom: 1px solid #e5e9f2;
+  border-bottom: 1px solid rgba(173, 216, 230, 0.1);
   transition: all 0.3s ease;
 }
 
-.profile-picture {
+.profile-picture-container {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: #eef2ff;
-  color: var(--text-accent);
+  background: linear-gradient(145deg, #005691, #003366);
+  color: #add8e6;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 15px;
   font-size: 2.5rem;
-  border: 3px solid #e5e9f2;
+  border: 2px solid #005691;
+  transition: transform 0.3s ease;
+  position: relative; /* Necesario para posicionar la imagen dentro */
+  overflow: hidden; /* Oculta partes de la imagen que se salgan del círculo */
 }
 
-.profile-info {
-  white-space: nowrap;
-  overflow: hidden;
+.profile-picture-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que la imagen cubra el círculo sin deformarse */
+  border-radius: 50%;
+}
+
+.profile-info  {
+  /* Permite que el texto se divida en múltiples líneas si no cabe */
+  white-space: normal; 
+  word-wrap: break-word; 
   transition: opacity 0.2s ease;
 }
 
 .profile-name {
   display: block;
+    white-space: normal; 
+  word-wrap: break-word; 
+  transition: opacity 0.2s ease;
+  margin: 0;
+  font-size: 1.2rem;
   font-weight: 600;
   font-size: 1.1rem;
-  color: #1a202c;
+  color: #add8e6;
 }
 
 .profile-role {
   display: block;
   font-size: 0.85rem;
-  color: #718096;
+  color: rgba(173, 216, 230, 0.7); /* Texto secundario más sutil */
 }
 
 .menu {
@@ -158,13 +173,14 @@
   padding: 12px 15px;
   border-radius: 8px;
   text-decoration: none;
-  color: #4a5568;
+  color: #add8e6a6; /* Color de texto más sutil */
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
   white-space: nowrap;
   cursor: pointer;
   background: none;
   border: none;
+  position: relative;
   width: 100%;
   text-align: left;
   font-size: 1rem;
@@ -180,17 +196,19 @@
 
 .menu-item:hover,
 .menu-item.active {
-  background-color: #eef2ff;
-  color: #4338ca;
+  background-color: #004a80; /* Un poco más oscuro para el hover */
+  color: #ffffff;
+  transform: translateX(5px);
 }
 
 .menu-item.active {
-  box-shadow: 0 3px 8px -2px var(--accent-shadow);
+  background: linear-gradient(90deg, #005691, #004a80);
+  box-shadow: 0 5px 15px rgba(0, 86, 145, 0.4);
 }
 
 .sidebar-footer {
   padding: 20px 10px;
-  border-top: 1px solid #e5e9f2;
+  border-top: 1px solid rgba(173, 216, 230, 0.1);
 }
 
 .logout-button:hover {
@@ -200,7 +218,7 @@
 
 /* --- Estilos para el menú colapsado --- */
 .sidebar-collapsed .sidebar {
-  width: 100px;
+  width: 95px;
 }
 
 /* Ocultamos el botón de colapsar y mostramos el logo como botón */
@@ -222,7 +240,7 @@
   opacity: 0;
   width: 0;
   overflow: hidden;
-  transition: opacity 0.1s ease;
+  transition: opacity 0.1s ease, width 0.2s ease;
 }
 
 .sidebar-collapsed .profile-section {
@@ -247,27 +265,98 @@
   overflow-y: auto; /* Permitimos scroll solo en el contenido */
 }
 
+.dashboard-container.fade-in .content-header,
 .dashboard-container.fade-in .content-area {
   animation: fadeIn 0.5s ease-out forwards;
 }
 
+.dashboard-container.fade-in .content-header {
+  animation-delay: 0.1s;
+}
+
+.dashboard-container.fade-in .content-area {
+  animation-delay: 0.2s;
+}
+
+.content-header {
+  padding: 30px 40px 20px 40px;
+  color: #1a202c; /* Texto oscuro para fondo claro */
+}
+
+.content-header h1 {
+  margin: 0 0 5px 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.content-header p {
+  margin: 0;
+  font-size: 1rem;
+  color: #718096;
+}
+
+/* --- Estilos para las tarjetas de resumen --- */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  padding: 0 40px;
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-delay: 0.15s;
+}
+
+.card {
+  background-color: #f8fafc; /* Blanco más oscuro (gris muy claro) */
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07);
+}
+
+.card-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.card h3 {
+  margin: 0 0 8px 0;
+  color: #1e293b;
+}
+.card p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
 .content-area {
-  padding: 40px;
+  padding: 0 40px 40px 40px;
   flex-grow: 1;
 }
 
 /* --- Cartelera de Avisos --- */
 .notice-board {
-  background-color: #ffffff;
+  background-color: #f8fafc; /* Mismo color que las tarjetas */
   padding: 25px;
   border-radius: 12px;
-  border: 1px solid #e5e9f2;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  margin-top: 30px;
 }
 
 .notice-board h2 {
   margin-top: 0;
-  color: var(--text-accent);
+  color: #1e293b;
 }
 
 /* --- Responsividad --- */
@@ -288,7 +377,40 @@
   .dashboard-container:not(.sidebar-collapsed) .sidebar {
     left: 0;
   }
-  .content-area {
+  .summary-cards {
+    padding: 0 20px;
+  }
+  .content-header {
     padding: 20px;
   }
+  .content-area {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+/* Estilos para la interacción de subida de foto */
+.upload-label {
+  cursor: pointer;
+  position: relative;
+}
+
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+}
+
+.upload-label:hover .upload-overlay {
+  opacity: 1;
 }

@@ -4,7 +4,6 @@ import { Routes } from '@angular/router';
 import LoginComponent from './pages/login/login';
 import NotFoundComponent from './components/not-found/not-found';
 import AlumnoDashboardComponent from './pages/alumno/dashboard.component';
-import DocenteDashboardComponent from './pages/docente/dashboard.component';
 import AdminDashboardComponent from './pages/admin/dashboard.component';
 // Importamos el componente de registro que faltaba
 import RegistroComponent from './pages/registro/registro';
@@ -35,6 +34,13 @@ export const routes: Routes = [
     data: { expectedRole: 'docente' },
     // Cargamos las rutas hijas del archivo docente.routes.ts
     loadChildren: () => import('./pages/docente/docente.routes').then(m => m.DOCENTE_ROUTES)
+  },
+  {
+    path: 'aspirante',
+    canActivate: [roleGuard],
+    data: { expectedRole: 'aspirante' },
+    // Cargamos las rutas hijas para el aspirante
+    loadChildren: () => import('./pages/aspirante/aspirante.routes').then(m => m.ASPIRANTE_ROUTES)
   },
   {
     path: 'admin/dashboard',

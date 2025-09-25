@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -17,15 +17,17 @@ const decodeToken = (token: string): any => {
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private apiUrl = 'http://localhost:3000/api/auth'; // Asegúrate que la URL sea correcta
+  private authApiUrl = 'http://localhost:3000/api/auth';
+  private usersApiUrl = 'http://localhost:3000/api/users';
 
   login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
+    return this.http.post(`${this.authApiUrl}/login`, credentials).pipe(
       tap((response: any) => {
         // Al hacer login, guardamos el token en localStorage
         localStorage.setItem('token', response.token);
       })
     );
+    
   }
 
   logout(): void {
@@ -48,5 +50,26 @@ export class AuthService {
       return null;
     }
     return decodeToken(token)?.rol;
+  }
+
+  getProfile(): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get(`${this.usersApiUrl}/profile`, { headers });
+  }
+
+  uploadProfilePicture(file: File): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    const formData = new FormData();
+    formData.append('profilePicture', file, file.name);
+
+    return this.http.post(`${this.usersApiUrl}/profile/picture`, formData, { headers });
   }
 }

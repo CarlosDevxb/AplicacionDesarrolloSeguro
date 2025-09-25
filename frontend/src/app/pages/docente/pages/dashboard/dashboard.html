@@ -2,22 +2,26 @@
   <!-- Menú Lateral (Sidebar) -->
   <aside class="sidebar">
     <div class="sidebar-header">
-      <button class="logo-expander" (click)="toggleSidebar()" title="Expandir menú">
-        <img src="assets/CHAFATEC.png" alt="Logo" class="logo" />
-      </button>
-      <h2 class="title">CHAFATEC</h2>
-      <button class="sidebar-toggle" (click)="toggleSidebar()" title="Colapsar menú">
-        <i class="fas fa-bars"></i>
-      </button>
+     
     </div>
 
     <div class="profile-section">
-      <div class="profile-picture">
-        <i class="fas fa-user-tie"></i>
-      </div>
+      <!-- Hacemos que toda la sección de la imagen sea un label para el input oculto -->
+      <label for="profile-picture-upload" class="profile-picture-container upload-label">
+        <i *ngIf="!docente?.foto" class="fas fa-user-tie"></i>
+        <img *ngIf="docente?.foto" [src]="docente.foto" alt="Foto de perfil" class="profile-picture-img" (error)="$event.target.src='assets/default-profile.png'">
+        <div class="upload-overlay"><i class="fas fa-camera"></i></div>
+      </label>
+      <!-- Input de archivo oculto -->
+      <input type="file" id="profile-picture-upload" (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+      
       <div class="profile-info">
-        <span class="profile-name">Nombre del Docente</span>
-        <span class="profile-role">Rol: Docente</span>
+        <!-- Mostramos el nombre corto si ya se cargaron los datos -->
+        <span class="profile-name" *ngIf="docente">Ing. {{docente.nombre_completo}}</span>
+        <!-- Mostramos un texto de carga mientras se obtienen los datos -->
+        <span class="profile-name" *ngIf="!docente">Cargando...</span>
+        
+        <span class="profile-role">Rol: {{ docente?.rol | titlecase }}</span>
       </div>
     </div>
 
@@ -50,6 +54,40 @@
 
   <!-- Contenido Principal -->
   <main class="main-content">
+    <!-- Cabecera de Bienvenida -->
+    <header class="content-header">
+      <div class="header-text">
+        <!-- Usamos el nombre completo del docente en el saludo -->
+        <h1>Bienvenido de nuevo, {{ docente?.nombre_completo || 'Docente' }}</h1>
+        <p>Aquí tienes un resumen de tu actividad y notificaciones.</p>
+      </div>
+    </header>
+
+    <!-- Sección de Tarjetas de Resumen -->
+    <section class="summary-cards">
+      <div class="card">
+        <div class="card-icon" style="background-color: #e0f2fe;">
+          <i class="fas fa-book-open" style="color: #0ea5e9;"></i>
+        </div>
+        <h3>Mis Cursos</h3>
+        <p>Gestiona tus materias y contenido.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background-color: #e0fdf4;">
+          <i class="fas fa-users" style="color: #10b981;"></i>
+        </div>
+        <h3>Estudiantes</h3>
+        <p>Consulta la lista de tus alumnos.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background-color: #fef3c7;">
+          <i class="fas fa-clipboard-list" style="color: #f59e0b;"></i>
+        </div>
+        <h3>Tareas</h3>
+        <p>Revisa y califica las entregas.</p>
+      </div>
+    </section>
+
     <section class="content-area">
       <div class="notice-board">
         <h2>Cartelera de Avisos</h2>

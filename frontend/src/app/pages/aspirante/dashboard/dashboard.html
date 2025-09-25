@@ -1,0 +1,96 @@
+<div class="dashboard-container fade-in" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <!-- Menú Lateral (Sidebar) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+     
+      <h2 class="title">Aspirante</h2>
+    </div>
+
+    <div class="profile-section">
+      <!-- Hacemos que toda la sección de la imagen sea un label para el input oculto -->
+      <label for="profile-picture-upload" class="profile-picture-container upload-label">
+        <i *ngIf="!aspirante?.foto" class="fas fa-user-graduate"></i>
+        <img *ngIf="aspirante?.foto" [src]="aspirante.foto" alt="Foto de perfil" class="profile-picture-img" (error)="$event.target.src='assets/default-profile.png'">
+        <div class="upload-overlay"><i class="fas fa-camera"></i></div>
+      </label>
+      <!-- Input de archivo oculto -->
+      <input type="file" id="profile-picture-upload" (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+
+      <div class="profile-info">
+        <span class="profile-name" *ngIf="aspirante">{{ aspirante.nombre_completo }}</span>
+        <span class="profile-name" *ngIf="!aspirante">Cargando...</span>
+        <span class="profile-role">Rol: {{ aspirante?.rol | titlecase }}</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/aspirante/dashboard" class="menu-item active">
+        <i class="fas fa-home"></i>
+        <span class="menu-text">Inicio</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="menu-item logout-button">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="menu-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="main-content">
+    <header class="content-header">
+      <div class="header-text">
+        <h1>Bienvenido, {{ aspirante?.nombre_completo || 'Aspirante' }}</h1>
+        <p>Consulta el estado de tu proceso de admisión y tu información.</p>
+      </div>
+    </header>
+
+    <section class="content-area">
+      <div class="status-card">
+        <h2 *ngIf="aspirante">Estatus de Admisión: {{ aspirante.estado | titlecase }}</h2>
+        <h2 *ngIf="!aspirante">Cargando estatus...</h2>
+
+        <!-- Contenedor que cambiará dinámicamente -->
+        <div *ngIf="aspirante" [ngSwitch]="aspirante.estado" class="status-container">
+          <!-- Caso: Enviado (Nuevo) -->
+          <div *ngSwitchCase="'Enviado'">
+            <div class="status-indicator en-revision">
+              <i class="fas fa-paper-plane"></i>
+              <span>Enviado</span>
+            </div>
+            <p class="status-description">Hemos recibido tu solicitud. Pronto será revisada por nuestro personal administrativo.</p>
+          </div>
+
+          <!-- Caso: En Revisión -->
+          <div *ngSwitchCase="'En Revisión'">
+            <div class="status-indicator en-revision">
+              <i class="fas fa-hourglass-half"></i>
+              <span>En Revisión</span>
+            </div>
+            <p class="status-description">Tu solicitud y documentos están siendo revisados. Recibirás una notificación cuando haya una actualización.</p>
+          </div>
+
+          <!-- Caso: Aceptado -->
+          <div *ngSwitchCase="'Aceptado'">
+            <div class="status-indicator aceptado">
+              <i class="fas fa-check-circle"></i>
+              <span>¡Felicidades, has sido aceptado!</span>
+            </div>
+            <p class="status-description">Revisa tu correo electrónico para conocer los siguientes pasos para tu inscripción.</p>
+          </div>
+
+          <!-- Caso: Rechazado -->
+          <div *ngSwitchCase="'Rechazado'">
+            <div class="status-indicator rechazado">
+              <i class="fas fa-times-circle"></i>
+              <span>Solicitud no aceptada</span>
+            </div>
+            <p class="status-description">Lamentamos informarte que tu solicitud no ha sido aceptada en esta ocasión. Te deseamos éxito en tus futuros proyectos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

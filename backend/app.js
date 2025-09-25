@@ -12,9 +12,15 @@ const bcrypt = require('bcryptjs');
 const app = express();
 const db = require('./models'); // <-- Importa el index.js de models
 const { hashPassword } = require('./hash');
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 app.use(cors({ origin: 'http://localhost:4200' })); // Asegúrate de que el puerto es correcto
 app.use(express.json()); // Para que Express entienda JSON
+
+// --- Servir archivos estáticos ---
+// Hacemos que la carpeta 'uploads' sea accesible públicamente en la ruta /uploads
+app.use('/uploads', express.static('uploads'));
 
 // --- Registrar Rutas ---
 app.use('/api', apiRoutes); // Todas las rutas tendrán el prefijo /api

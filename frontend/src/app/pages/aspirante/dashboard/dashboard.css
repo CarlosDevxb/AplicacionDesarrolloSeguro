@@ -1,0 +1,97 @@
+/* Reutilizamos los estilos base del dashboard del docente */
+@import url('../../docente/pages/dashboard/dashboard.css');
+
+/* --- Estilos específicos para el panel del aspirante --- */
+
+.status-card {
+  background-color: #f8fafc;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+.status-card h2 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: #1e293b;
+  font-size: 1.5rem;
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 25px;
+  border-radius: 50px; /* Forma de píldora */
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.status-indicator i {
+  font-size: 1.3rem;
+}
+
+/* --- Colores de Estatus (Ejemplos) --- */
+
+/* Estatus: En Revisión */
+.status-indicator.en-revision {
+  background-color: #fef3c7; /* Amarillo claro */
+  color: #ca8a04; /* Amarillo oscuro */
+}
+
+/* Estatus: Aceptado (puedes usarlo en el futuro) */
+.status-indicator.aceptado {
+  background-color: #dcfce7; /* Verde claro */
+  color: #16a34a; /* Verde oscuro */
+}
+
+/* Estatus: Rechazado (puedes usarlo en el futuro) */
+.status-indicator.rechazado {
+  background-color: #fee2e2; /* Rojo claro */
+  color: #dc2626; /* Rojo oscuro */
+}
+
+.status-description {
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Ajuste para el ícono de perfil del aspirante */
+.profile-picture-container {
+  background: linear-gradient(145deg, #0077b6, #005691);
+  border-color: #0077b6;
+}
+
+/* Estilos para la interacción de subida de foto */
+.upload-label {
+  cursor: pointer;
+  position: relative;
+}
+
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+}
+
+.upload-label:hover .upload-overlay {
+  opacity: 1;
+}

@@ -1,49 +1,35 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../../services/auth';
+import { AuthService } from '../../../services/auth';
 
 @Component({
-  selector: 'app-docente-dashboard',
+  selector: 'app-aspirante-dashboard',
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
-export default class DocenteDashboardComponent implements OnInit {
+export default class AspiranteDashboardComponent implements OnInit {
   authService = inject(AuthService);
 
+  aspirante: any = null;
   isSidebarCollapsed = false;
-  docente: any = null; // Para almacenar los datos del docente
 
   ngOnInit(): void {
     this.authService.getProfile().subscribe({
       next: (data) => {
-        this.docente = data;
+        this.aspirante = data;
       },
       error: (err) => {
-        console.error('Error al obtener el perfil del docente', err);
-        // Opcional: si falla, podríamos redirigir al login
+        console.error('Error al obtener el perfil del aspirante', err);
         this.authService.logout();
       }
     });
   }
 
-  toggleSidebar() {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
-  }
-
   logout() {
     this.authService.logout();
-  }
-
-  // Función para obtener el primer nombre y primer apellido
-  getShortName(fullName: string): string {
-    if (!fullName) return '';
-    const parts = fullName.split(' ');
-    const firstName = parts[0] || '';
-    const lastName = parts.length > 1 ? parts[1] : '';
-    return `${firstName} ${lastName}`;
   }
 
   onFileSelected(event: Event): void {
@@ -58,12 +44,14 @@ export default class DocenteDashboardComponent implements OnInit {
     this.authService.uploadProfilePicture(file).subscribe({
       next: (response) => {
         // Actualizamos la foto en el objeto local para que se refleje en la UI al instante
-        if (this.docente) {
-          this.docente.foto = response.filePath;
+        if (this.aspirante) {
+          this.aspirante.foto = response.filePath;
         }
+        // Opcional: mostrar un mensaje de éxito
       },
       error: (err) => {
         console.error('Error al subir la imagen', err);
+        // Opcional: mostrar un mensaje de error
       }
     });
   }
