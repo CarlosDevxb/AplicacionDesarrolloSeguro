@@ -12,11 +12,17 @@ const login = async (req, res) => {
 
   try {
     // 1. Buscar al usuario.
-    // Si es alumno, puede loguearse con su 'numero_control'.
-    // Los demás, con su campo 'usuario' (que para aspirantes es el email).
-    // Como ambos se guardan en la columna 'usuario', solo necesitamos buscar ahí.
+    // Si el rol es 'alumno' o 'personal', se busca por el campo 'id' (No. de Control / ID de Empleado).
+    // Si el rol es 'aspirante', se busca por el campo 'usuario' (que es su correo).
+    let searchCondition;
+    if (rol === 'alumno' || rol === 'personal') {
+      searchCondition = { numero_control: usuario };
+    } else { // aspirante
+      searchCondition = { usuario: usuario };
+    }
+
     const user = await Usuario.scope('withPassword').findOne({
-      where: { usuario: usuario }
+      where: searchCondition
     });
 
     if (!user) {

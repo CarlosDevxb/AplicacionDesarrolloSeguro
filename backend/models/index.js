@@ -1,21 +1,33 @@
 // backend/models/index.js
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
 const sequelize = require('../config/database.js');
+const basename = path.basename(__filename);
 
 const db = {};
 
+// Lee todos los archivos del directorio actual, excepto este mismo archivo.
+fs
+  .readdirSync(__dirname)
+  .filter(file => {
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+  })
+  .forEach(file => {
+    // Para cada archivo, importa el modelo y lo inicializa con sequelize.
+    const model = require(path.join(__dirname, file))(sequelize, require('sequelize').DataTypes);
+    db[model.name] = model;
+  });
+
+// Después de cargar todos los modelos, ejecuta el método 'associate' si existe.
+// Esto asegura que las relaciones se creen correctamente.
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
+
 db.sequelize = sequelize;
-
-// Importar todos los modelos
-db.Usuario = require('./usuario.model.js');
-db.Carrera = require('./carrera.model.js');
-db.Aspirante = require('./aspirante.model.js');
-// ... importa aquí los demás modelos de tu nuevo esquema (Alumno, etc.)
-
-// --- Definir las relaciones ---
-// Relación Aspirante -> Carrera (Un aspirante elige una carrera)
-db.Aspirante.belongsTo(db.Carrera, { foreignKey: 'carrera_id' });
-db.Carrera.hasMany(db.Aspirante, { foreignKey: 'carrera_id' });
-
-// ... aquí definirás las demás relaciones
 
 module.exports = db;

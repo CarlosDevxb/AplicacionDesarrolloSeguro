@@ -1,45 +1,78 @@
-const { Usuario, Aspirante } = require('../models');
+const { Usuario, Alumno, Docente, Administrativo, Carrera } = require('../models');
+const bcrypt = require('bcryptjs');
 
-// Función para generar un número de control único.
-// Ejemplo: 24 (año) + 0001 (secuencial) = "240001"
-const generarNumeroControl = async () => {
-  const anio = new Date().getFullYear().toString().slice(-2);
-  const ultimoAlumno = await Usuario.findOne({
-    where: { rol: 'alumno' },
-    order: [['numero_control', 'DESC']],
-  });
-
-  let secuencial = 1;
-  if (ultimoAlumno && ultimoAlumno.numero_control.startsWith(anio)) {
-    secuencial = parseInt(ultimoAlumno.numero_control.slice(2)) + 1;
-  }
-
-  return `${anio}${secuencial.toString().padStart(4, '0')}`;
-};
-
-const promoverAspirante = async (req, res) => {
-  const { id } = req.params; // El ID del usuario aspirante (ej: ASP-NONA-12345)
+// Crear un nuevo usuario (Alumno, Docente o Administrativo)
+const createUser = async (req, res) => {
+  const { id, nombre_completo, correo, contrasena, rol, carrera_id, fecha_ingreso } = req.body;
 
   try {
-    const aspiranteUsuario = await Usuario.findByPk(id);
-    if (!aspiranteUsuario || aspiranteUsuario.rol !== 'aspirante') {
-      return res.status(404).json({ message: 'Usuario aspirante no encontrado.' });
+    // Validar que el ID o correo no existan
+    const existingUser = await Usuario.findOne({ where: { id } });
+    if (existingUser) {
+      return res.status(409).json({ message: `El ID '${id}' ya está en uso.` });
+    }
+    const existingEmail = await Usuario.findOne({ where: { correo } });
+    if (existingEmail) {
+      return res.status(409).json({ message: `El correo '${correo}' ya está en uso.` });
     }
 
-    const nuevoNumeroControl = await generarNumeroControl();
+    // Hashear contraseña
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(contrasena, salt);
 
-    // Actualizamos el rol y el campo 'usuario' con el nuevo número de control
-    await aspiranteUsuario.update({
-      rol: 'alumno',
-      usuario: nuevoNumeroControl, // El número de control se convierte en el nuevo 'usuario' para el login
-      numero_control: nuevoNumeroControl, // También lo guardamos en su campo dedicado por si se necesita
+    // Crear el usuario base
+    const newUser = await Usuario.create({
+      id,
+      usuario: correo, // Usamos el correo como 'usuario' para login de aspirantes
+      contrasena: hashedPassword,
+      nombre_completo,
+      correo,
+      rol,
+      numero_control: id // Guardamos el ID/No. de Control en el campo numero_control
     });
 
-    res.status(200).json({ message: 'Aspirante promovido a alumno exitosamente.', alumno: aspiranteUsuario });
+    // Si es un alumno, crear su registro en la tabla 'alumnos'
+    if (rol === 'alumno' && carrera_id && fecha_ingreso) {
+      await Alumno.create({ id, carrera_id, fecha_ingreso });
+    }
+
+    // Aquí podrías añadir lógica para Docente y Administrativo si tienen tablas separadas
+
+    res.status(201).json({ message: `Usuario ${rol} creado exitosamente.` });
+
   } catch (error) {
-    console.error('Error al promover aspirante:', error);
+    console.error('Error al crear usuario:', error);
+    res.status(500).json({ message: 'Error en el servidor al crear el usuario.' });
+  }
+};
+
+// Buscar un usuario por su ID
+const findUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await Usuario.findByPk(id, {
+      include: [{ model: Alumno, as: 'Alumno' }] // Incluimos datos de alumno si existen
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado.' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
     res.status(500).json({ message: 'Error en el servidor.' });
   }
 };
 
-module.exports = { promoverAspirante };
+// Actualizar un usuario
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombre_completo, correo, telefono, direccion } = req.body; // Campos editables
+    await Usuario.update({ nombre_completo, correo, telefono, direccion }, { where: { id } });
+    res.status(200).json({ message: 'Usuario actualizado correctamente.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el usuario.' });
+  }
+};
+
+module.exports = { createUser, findUserById, updateUser };

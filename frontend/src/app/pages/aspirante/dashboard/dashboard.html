@@ -24,7 +24,7 @@
     </div>
 
     <nav class="menu">
-      <a routerLink="/aspirante/dashboard" class="menu-item active">
+      <a routerLink="/aspirante/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="menu-item">
         <i class="fas fa-home"></i>
         <span class="menu-text">Inicio</span>
       </a>
@@ -49,13 +49,11 @@
 
     <section class="content-area">
       <div class="status-card">
-        <h2 *ngIf="aspirante">Estatus de Admisión: {{ aspirante.estado | titlecase }}</h2>
-        <h2 *ngIf="!aspirante">Cargando estatus...</h2>
-
         <!-- Contenedor que cambiará dinámicamente -->
         <div *ngIf="aspirante" [ngSwitch]="aspirante.estado" class="status-container">
-          <!-- Caso: Enviado (Nuevo) -->
-          <div *ngSwitchCase="'Enviado'">
+          <!-- Caso: Enviado -->
+          <div *ngSwitchCase="'enviado'">
+            <h2>Estatus de Admisión: Enviado</h2>
             <div class="status-indicator en-revision">
               <i class="fas fa-paper-plane"></i>
               <span>Enviado</span>
@@ -64,7 +62,8 @@
           </div>
 
           <!-- Caso: En Revisión -->
-          <div *ngSwitchCase="'En Revisión'">
+          <div *ngSwitchCase="'en_revision'">
+            <h2>Estatus de Admisión: En Revisión</h2>
             <div class="status-indicator en-revision">
               <i class="fas fa-hourglass-half"></i>
               <span>En Revisión</span>
@@ -73,7 +72,8 @@
           </div>
 
           <!-- Caso: Aceptado -->
-          <div *ngSwitchCase="'Aceptado'">
+          <div *ngSwitchCase="'aceptado'">
+            <h2>Estatus de Admisión: Aceptado</h2>
             <div class="status-indicator aceptado">
               <i class="fas fa-check-circle"></i>
               <span>¡Felicidades, has sido aceptado!</span>
@@ -82,7 +82,8 @@
           </div>
 
           <!-- Caso: Rechazado -->
-          <div *ngSwitchCase="'Rechazado'">
+          <div *ngSwitchCase="'rechazado'">
+            <h2>Estatus de Admisión: Rechazado</h2>
             <div class="status-indicator rechazado">
               <i class="fas fa-times-circle"></i>
               <span>Solicitud no aceptada</span>
@@ -90,6 +91,10 @@
             <p class="status-description">Lamentamos informarte que tu solicitud no ha sido aceptada en esta ocasión. Te deseamos éxito en tus futuros proyectos.</p>
           </div>
         </div>
+
+        <!-- Mensaje de carga mientras se obtienen los datos -->
+        <h2 *ngIf="!aspirante">Cargando estatus...</h2>
+
       </div>
     </section>
   </main>

@@ -1,0 +1,67 @@
+<div class="management-container">
+  <!-- Lista de Carreras Existentes -->
+  <div class="list-section">
+    <h3>Carreras Disponibles</h3>
+    <p class="section-description">Aquí puedes ver la lista de carreras activas y el número de alumnos inscritos en cada una. Haz clic en "Editar" para modificar los detalles de una carrera.</p>
+
+    <div *ngIf="carreras.length === 0" class="empty-state">
+      <p>Actualmente no hay carreras registradas en el sistema.</p>
+    </div>
+
+    <table *ngIf="carreras.length > 0" class="carreras-table">
+      <thead>
+        <tr>
+          <th>Nombre de la Carrera</th>
+          <th>Alumnos Inscritos</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let carrera of carreras">
+          <td>
+            <div class="carrera-nombre">{{ carrera.nombre }}</div>
+            <div class="carrera-descripcion">{{ carrera.descripcion }}</div>
+          </td>
+          <td>
+            <span class="alumnos-count">
+              <i class="fas fa-users"></i>
+              {{ carrera.alumnosInscritos }}
+            </span>
+          </td>
+          <td>
+            <button class="edit-btn" (click)="editCarrera(carrera)">
+              <i class="fas fa-pencil-alt"></i>
+              Editar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal para Editar Carrera -->
+  <div class="modal-overlay" *ngIf="isEditMode">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Editar Carrera</h3>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="carreraForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="nombre">Nombre de la Carrera</label>
+            <input id="nombre" type="text" formControlName="nombre" placeholder="Ej: Ingeniería en Software">
+          </div>
+          <div class="form-group">
+            <label for="descripcion">Descripción (Opcional)</label>
+            <textarea id="descripcion" formControlName="descripcion" rows="4" placeholder="Breve descripción de la carrera"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" [disabled]="carreraForm.invalid"><i class="fas fa-save"></i> Guardar Cambios</button>
+            <button type="button" class="secondary" (click)="closeModal()">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

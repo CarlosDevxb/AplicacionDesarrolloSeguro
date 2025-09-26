@@ -1,0 +1,124 @@
+<div class="management-container">
+  <header class="management-header">
+    <h2>Gestión de Usuarios</h2>
+    <p>Crea nuevas cuentas para alumnos, docentes y personal administrativo.</p>
+  </header>
+
+  <!-- Bloque para Crear Usuarios -->
+  <div class="collapsible-block">
+    <div class="collapsible-header" (click)="toggleCreateBlock('alumno')">
+      <h4><i class="fas fa-user-graduate"></i> Registrar Nuevo Alumno</h4>
+      <i class="fas fa-chevron-down" [class.rotated]="showCreateBlock === 'alumno'"></i>
+    </div>
+    <div class="collapsible-content" *ngIf="showCreateBlock === 'alumno'">
+      <form [formGroup]="alumnoForm" (ngSubmit)="createUser('alumno')" class="user-form">
+        <div class="form-grid">
+          <div class="form-group"><label for="alumno-id">No. de Control</label><input id="alumno-id" type="text" formControlName="id"></div>
+          <div class="form-group"><label for="alumno-nombre">Nombre Completo</label><input id="alumno-nombre" type="text" formControlName="nombre_completo"></div>
+          <div class="form-group"><label for="alumno-correo">Correo</label><input id="alumno-correo" type="email" formControlName="correo"></div>
+          <div class="form-group"><label for="alumno-pass">Contraseña</label><input id="alumno-pass" type="password" formControlName="contrasena"></div>
+          <div class="form-group"><label for="alumno-carrera">Carrera</label><select id="alumno-carrera" formControlName="carrera_id"><option value="" disabled>Selecciona una carrera</option><option *ngFor="let c of carreras" [value]="c.id">{{c.nombre}}</option></select></div>
+          <div class="form-group"><label for="alumno-ingreso">Fecha de Ingreso</label><input id="alumno-ingreso" type="date" formControlName="fecha_ingreso"></div>
+        </div>
+        <button type="submit" [disabled]="alumnoForm.invalid">Crear Alumno</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="collapsible-block">
+    <div class="collapsible-header" (click)="toggleCreateBlock('docente')">
+      <h4><i class="fas fa-user-tie"></i> Registrar Nuevo Docente</h4>
+      <i class="fas fa-chevron-down" [class.rotated]="showCreateBlock === 'docente'"></i>
+    </div>
+    <div class="collapsible-content" *ngIf="showCreateBlock === 'docente'">
+      <form [formGroup]="docenteForm" (ngSubmit)="createUser('docente')" class="user-form">
+        <div class="form-grid">
+          <div class="form-group"><label for="docente-id">ID de Empleado</label><input id="docente-id" type="text" formControlName="id"></div>
+          <div class="form-group"><label for="docente-nombre">Nombre Completo</label><input id="docente-nombre" type="text" formControlName="nombre_completo"></div>
+          <div class="form-group"><label for="docente-correo">Correo</label><input id="docente-correo" type="email" formControlName="correo"></div>
+          <div class="form-group"><label for="docente-pass">Contraseña</label><input id="docente-pass" type="password" formControlName="contrasena"></div>
+        </div>
+        <button type="submit" [disabled]="docenteForm.invalid">Crear Docente</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="collapsible-block">
+    <div class="collapsible-header" (click)="toggleCreateBlock('administrativo')">
+      <h4><i class="fas fa-user-shield"></i> Registrar Nuevo Administrativo</h4>
+      <i class="fas fa-chevron-down" [class.rotated]="showCreateBlock === 'administrativo'"></i>
+    </div>
+    <div class="collapsible-content" *ngIf="showCreateBlock === 'administrativo'">
+      <form [formGroup]="adminForm" (ngSubmit)="createUser('administrativo')" class="user-form">
+        <div class="form-grid">
+          <div class="form-group"><label for="admin-id">ID de Empleado</label><input id="admin-id" type="text" formControlName="id"></div>
+          <div class="form-group"><label for="admin-nombre">Nombre Completo</label><input id="admin-nombre" type="text" formControlName="nombre_completo"></div>
+          <div class="form-group"><label for="admin-correo">Correo</label><input id="admin-correo" type="email" formControlName="correo"></div>
+          <div class="form-group"><label for="admin-pass">Contraseña</label><input id="admin-pass" type="password" formControlName="contrasena"></div>
+        </div>
+        <button type="submit" [disabled]="adminForm.invalid">Crear Administrativo</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mensaje de éxito/error para la creación -->
+  <div *ngIf="createMessage" class="message-box info">{{ createMessage }}</div>
+
+  <!-- Bloque para Buscar y Editar -->
+  <div class="collapsible-block">
+    <div class="collapsible-header" (click)="toggleSearchBlock()">
+      <h4><i class="fas fa-search"></i> Buscar y Editar Usuario</h4>
+      <i class="fas fa-chevron-down" [class.rotated]="showSearchBlock"></i>
+    </div>
+    <div class="collapsible-content" *ngIf="showSearchBlock">
+      <div class="search-section">
+        <input [formControl]="searchControl" type="text" placeholder="Ingresa No. de Control o ID de Empleado">
+        <button (click)="searchUser()">Buscar</button>
+      </div>
+
+      <!-- Mensajes de búsqueda -->
+      <div *ngIf="searchMessage" class="message-box info">{{ searchMessage }}</div>
+
+      <!-- Formulario de Edición -->
+      <div *ngIf="searchedUser" class="edit-form-container">
+        <hr>
+        <h5>Editando a: {{ searchedUser.nombre_completo }}</h5>
+        <form [formGroup]="editForm" (ngSubmit)="updateUser()" class="user-form">
+          <div class="form-grid">
+            <!-- Campos no editables -->
+            <div class="form-group">
+              <label>ID / No. de Control</label>
+              <input type="text" [value]="searchedUser.id" readonly>
+            </div>
+            <div class="form-group">
+              <label>Rol</label>
+              <input type="text" [value]="searchedUser.rol | titlecase" readonly>
+            </div>
+
+            <!-- Campos editables -->
+            <div class="form-group">
+              <label for="edit-nombre">Nombre Completo</label>
+              <input id="edit-nombre" type="text" formControlName="nombre_completo">
+            </div>
+            <div class="form-group">
+              <label for="edit-correo">Correo</label>
+              <input id="edit-correo" type="email" formControlName="correo">
+            </div>
+            <div class="form-group">
+              <label for="edit-telefono">Teléfono</label>
+              <input id="edit-telefono" type="tel" formControlName="telefono">
+            </div>
+            <div class="form-group">
+              <label for="edit-direccion">Dirección</label>
+              <input id="edit-direccion" type="text" formControlName="direccion">
+            </div>
+          </div>
+          <button type="submit" [disabled]="editForm.invalid">Actualizar Usuario</button>
+        </form>
+        <!-- Mensaje de éxito/error para la actualización -->
+        <div *ngIf="updateMessage" class="message-box info">{{ updateMessage }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AspiranteService } from '../../services/aspirante.service';
 import { Carrera } from '../../models/carrera.model';
+import { CarreraService } from '../../services/carrera.service';
 
 @Component({
   selector: 'app-registro',
@@ -19,6 +20,7 @@ export default class RegistroComponent implements OnInit {
   private router = inject(Router);
   private renderer = inject(Renderer2);
   private aspiranteService = inject(AspiranteService);
+  private carreraService = inject(CarreraService); // Inyectamos el servicio correcto
 
   registerForm: FormGroup;
   errorMessage: string | null = null;
@@ -37,8 +39,10 @@ export default class RegistroComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.aspiranteService.getCarreras().subscribe(carreras => {
-      this.carreras = carreras;
+    // Usamos el servicio correcto para cargar las carreras
+    this.carreraService.getCarreras().subscribe({
+      next: (data) => this.carreras = data,
+      error: (err) => console.error('Error al cargar carreras para el registro:', err)
     });
     this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
   }

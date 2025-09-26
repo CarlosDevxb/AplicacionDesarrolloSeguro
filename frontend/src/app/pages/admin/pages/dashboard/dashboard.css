@@ -1,0 +1,8 @@
+/* Reutilizamos los estilos base del dashboard del docente */
+@import url('../../../docente/pages/dashboard/dashboard.css');
+
+/* Ajuste para el ícono de perfil del admin */
+.profile-picture-container {
+  background: linear-gradient(145deg, #6d28d9, #4c1d95);
+  border-color: #6d28d9;
+}
