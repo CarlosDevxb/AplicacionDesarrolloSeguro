@@ -1,1 +1,66 @@
-<p>dashboard works!</p>
+<div class="dashboard-container fade-in" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <!-- Menú Lateral (Sidebar) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="title">Administración</h2>
+    </div>
+
+    <div class="profile-section">
+      <label for="profile-picture-upload" class="profile-picture-container upload-label">
+        <i *ngIf="!admin?.foto" class="fas fa-user-shield"></i>
+        <img *ngIf="admin?.foto" [src]="admin.foto" alt="Foto de perfil" class="profile-picture-img" (error)="$event.target.src='assets/default-profile.png'">
+        <div class="upload-overlay"><i class="fas fa-camera"></i></div>
+      </label>
+      <input type="file" id="profile-picture-upload" (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+
+      <div class="profile-info">
+        <span class="profile-name" *ngIf="admin">{{ admin.nombre_completo }}</span>
+        <span class="profile-name" *ngIf="!admin">Cargando...</span>
+        <span class="profile-role">Rol: {{ admin?.rol | titlecase }}</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="menu-item">
+        <i class="fas fa-tachometer-alt"></i>
+        <span class="menu-text">Inicio</span>
+      </a>
+      <a routerLink="/admin/dashboard/usuarios" routerLinkActive="active" class="menu-item">
+        <i class="fas fa-users-cog"></i>
+        <span class="menu-text">Gestión de Usuarios</span>
+      </a>
+      <a routerLink="/admin/dashboard/carreras" routerLinkActive="active" class="menu-item">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="menu-text">Gestión de Carreras</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="menu-item logout-button">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="menu-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="main-content">
+    <header class="content-header">
+      <div class="header-text">
+        <h1>Panel de Administración</h1>
+        <p>Gestiona los recursos y usuarios de la plataforma CHAFATEC.</p>
+      </div>
+    </header>
+
+    <section class="content-area">
+      <!-- Aquí se mostrará el contenido de las rutas hijas (como la gestión de usuarios) -->
+      <router-outlet></router-outlet>
+
+      <!-- Contenido por defecto del dashboard -->
+      <div class="notice-board" *ngIf="isDashboardRoot()">
+        <h2>Bienvenido al Panel de Administración</h2>
+        <p>Selecciona una opción del menú de la izquierda para comenzar a gestionar la plataforma.</p>
+      </div>
+    </section>
+  </main>
+</div>

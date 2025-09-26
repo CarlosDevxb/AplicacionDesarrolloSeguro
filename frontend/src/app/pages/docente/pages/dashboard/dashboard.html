@@ -26,19 +26,19 @@
     </div>
 
     <nav class="menu">
-      <a routerLink="/docente/dashboard" class="menu-item active">
+      <a routerLink="/docente/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="menu-item">
         <i class="fas fa-home"></i>
         <span class="menu-text">Inicio</span>
       </a>
-      <a href="#" class="menu-item">
+      <a routerLink="/docente/dashboard/mis-datos" routerLinkActive="active" class="menu-item">
         <i class="fas fa-user-circle"></i>
         <span class="menu-text">Mis Datos</span>
       </a>
-      <a href="#" class="menu-item">
+      <a routerLink="/docente/dashboard/grupos" routerLinkActive="active" class="menu-item">
         <i class="fas fa-users"></i>
         <span class="menu-text">Grupos</span>
       </a>
-      <a href="#" class="menu-item">
+      <a routerLink="/docente/dashboard/opciones" routerLinkActive="active" class="menu-item">
         <i class="fas fa-cog"></i>
         <span class="menu-text">Opciones</span>
       </a>

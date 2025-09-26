@@ -27,22 +27,16 @@ app.use('/api', apiRoutes); // Todas las rutas tendrán el prefijo /api
 
 const PORT = process.env.PORT || 3000;
 
-const saltRounds = 10;
-const myPlaintextPassword = '123';
-
-bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
-  // Store hash in your password DB.
-  console.log(hash);
-});
-
 // Iniciar servidor y conectar a la BD
 const startServer = async () => {
   try {
     await db.sequelize.authenticate(); // <-- Usa db.sequelize
     console.log('✅ Conexión a la base de datos establecida correctamente.');
 
-    // Sincroniza los modelos con la base de datos. alter:true intenta añadir las columnas que faltan.
-    await db.sequelize.sync({ alter: true }); 
+    // Se ha comentado la siguiente línea para evitar que Sequelize modifique
+    // automáticamente la estructura de la base de datos.
+    // La base de datos ahora se debe gestionar con migraciones manuales.
+    // await db.sequelize.sync({ alter: true }); 
    
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);

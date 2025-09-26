@@ -114,4 +114,12 @@ export default class LoginComponent implements OnInit {
     this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
     this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
   }
+
+  // Función para obtener el texto de la etiqueta y el placeholder dinámicamente
+  get userFieldLabel(): string {
+    if (this.selectedRole === 'alumno') return 'Número de Control';
+    if (this.selectedRole === 'personal') return 'ID de Empleado';
+    if (this.selectedRole === 'aspirante') return 'Usuario (Correo)';
+    return 'Usuario';
+  }
 }

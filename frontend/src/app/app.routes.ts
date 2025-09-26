@@ -4,7 +4,7 @@ import { Routes } from '@angular/router';
 import LoginComponent from './pages/login/login';
 import NotFoundComponent from './components/not-found/not-found';
 import AlumnoDashboardComponent from './pages/alumno/dashboard.component';
-import AdminDashboardComponent from './pages/admin/dashboard.component';
+import AdminDashboardComponent from './pages/admin/pages/dashboard/dashboard';
 // Importamos el componente de registro que faltaba
 import RegistroComponent from './pages/registro/registro';
 // Importamos nuestro nuevo guard
@@ -43,10 +43,11 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/aspirante/aspirante.routes').then(m => m.ASPIRANTE_ROUTES)
   },
   {
-    path: 'admin/dashboard',
-    component: AdminDashboardComponent,
+    path: 'admin',
     canActivate: [roleGuard],
-    data: { expectedRole: 'administrativo' }
+    data: { expectedRole: 'administrativo' },
+    // Cargamos las rutas hijas para el administrador
+    loadChildren: () => import('./pages/admin/admin.routes').then(m => m.ADMIN_ROUTES)
   },
 
   // ¡ESTA ES LA RUTA CLAVE! Debe ser la última.

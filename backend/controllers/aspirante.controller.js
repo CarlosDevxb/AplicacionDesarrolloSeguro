@@ -1,17 +1,6 @@
 const { Aspirante, Carrera, Usuario } = require('../models');
 const bcrypt = require('bcryptjs');
 
-const getCarreras = async (req, res) => {
-  try {
-    const carreras = await Carrera.findAll({
-      attributes: ['id', 'nombre'] // Solo enviamos los datos necesarios
-    });
-    res.status(200).json(carreras);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener las carreras.' });
-  }
-};
-
 const solicitarFicha = async (req, res) => {
   // Ahora también recibimos 'password'
   const { nombre_completo, correo, telefono, direccion, carrera_id, password } = req.body;
@@ -65,4 +54,4 @@ const solicitarFicha = async (req, res) => {
   }
 };
 
-module.exports = { solicitarFicha, getCarreras };
+module.exports = { solicitarFicha };
