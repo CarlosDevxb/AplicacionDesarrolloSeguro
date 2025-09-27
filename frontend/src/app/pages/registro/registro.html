@@ -29,6 +29,7 @@
         <div *ngIf="registerForm.get('nombre_completo')?.invalid && registerForm.get('nombre_completo')?.touched" class="error-text">
           <small *ngIf="registerForm.get('nombre_completo')?.errors?.['required']">El nombre es obligatorio.</small>
           <small *ngIf="registerForm.get('nombre_completo')?.errors?.['minlength']">Debe tener al menos 3 caracteres.</small>
+          <small *ngIf="registerForm.get('nombre_completo')?.errors?.['pattern']">El nombre solo puede contener letras y espacios.</small>
         </div>
       </div>
 
@@ -52,6 +53,9 @@
           <div class="input-group">
             <input id="telefono" type="tel" formControlName="telefono" placeholder="Tu número de teléfono">
             <i class="fas fa-phone"></i>
+          </div>
+          <div *ngIf="registerForm.get('telefono')?.invalid && registerForm.get('telefono')?.touched" class="error-text">
+            <small *ngIf="registerForm.get('telefono')?.errors?.['pattern']">El teléfono debe contener 10 dígitos.</small>
           </div>
         </div>
         <div class="form-group">

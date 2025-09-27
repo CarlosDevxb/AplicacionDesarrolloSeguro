@@ -2,15 +2,19 @@
   <!-- Reemplaza la URL con el logo de tu proyecto -->
   <img src="/frontend/public/assets/CHAFATEC.png" alt="Logo de CHAFATEC" width="150">
   <h1>CHAFATEC - Plataforma de Gestión Académica</h1>
+  <p><i>Un proyecto de Cuchipu Entertainment </i></p>
+   <img src="/frontend/public/assets/default-profile.png" alt="Logo Cuchipu" width="100">
   <p>
     Una plataforma web segura para la gestión académica y administrativa, desarrollada con Angular y Node.js.
   </p>
 
   <!-- Badges de Tecnologías -->
   <p>
-    <img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular">
+    <img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular">    
+    <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
     <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js">
     <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js">
+    <img src="https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=sequelize&logoColor=white" alt="Sequelize">
     <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
     <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT">
   </p>
@@ -46,16 +50,16 @@ Repositorio para el proyecto de la materia de Desarrollo Seguro de Software.
 
 ---
 
-## 📋 Roadmap (Tareas Pendientes)
+## 📋 Roadmap
 
 -   **🖥️ Desarrollo de Dashboards**:
-    -   [ ] Crear el panel de control para `alumnos`.
-    -   [ ] Crear el panel de control para `personal`.
+    -   [x] Crear el panel de control para `alumnos`.
+    -   [x] Crear el panel de control para `personal` (docentes y administrativos).
 -   **🛡️ Mejoras de Seguridad**:
-    -   [ ] Implementar validación de entradas en el **backend** para todos los endpoints.
-    -   [ ] Añadir reglas de validación más robustas en los formularios del **frontend**.
+    -   [x] Implementar validación de entradas en el **backend** para todos los endpoints.
+    -   [x] Añadir reglas de validación más robustas en los formularios del **frontend**.
 -   **🔄 Sincronización de Roles**:
-    -   [ ] Alinear el rol de registro en el backend (actualmente 'cliente') con el flujo de 'aspirante'.
+    -   [x] Alinear el rol de registro en el backend con el flujo de 'aspirante'.
 
 ---
 
@@ -114,4 +118,10 @@ Repositorio para el proyecto de la materia de Desarrollo Seguro de Software.
 
 ¡La aplicación debería abrirse automáticamente en `http://localhost:4200`!
 
+---
 
+## 👨‍💻 Colaboradores
+
+-   **Carlos P.M.** - _Desarrollo Full-Stack_
+
+---

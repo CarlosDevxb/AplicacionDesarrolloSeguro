@@ -29,9 +29,15 @@ export default class RegistroComponent implements OnInit {
 
   constructor() {
     this.registerForm = this.fb.group({
-      nombre_completo: ['', [Validators.required, Validators.minLength(3)]],
+      nombre_completo: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern('^[a-zA-Z\\sñÑáéíóúÁÉÍÓÚüÜ]*$') // Solo letras, espacios y acentos
+      ]],
       correo: ['', [Validators.required, Validators.email]],
-      telefono: [''],
+      telefono: ['', [
+        Validators.pattern('^[0-9]{10}$') // Exactamente 10 dígitos numéricos
+      ]],
       direccion: [''],
       carrera_id: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
