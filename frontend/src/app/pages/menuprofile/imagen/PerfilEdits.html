@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil — TecNM Saltillo</title>
+    <link rel="stylesheet" href="PerfilEdits.css">
+</head>
+<body>
+    <button id="menuBtn" class="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+
+    <div id="overlay" class="overlay"></div>
+    <!-- Contenedor para mensajes de usuario -->
+    <div id="message-box" class="message-box"></div>
+
+    <nav id="sidebar" class="sidebar">
+        <div class="user-box">
+            <img src="imagen/Foto_Perfl.png" alt="Foto de perfil" class="user-avatar">
+            <h4>[Nombre del Alumno]</h4>
+        </div>
+        <ul>
+            <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="#"><i class="fas fa-user-circle"></i> Mi Perfil</a></li>
+            <li><a href="#"><i class="fas fa-graduation-cap"></i> Mi Carrera</a></li>
+            <li><a href="#"><i class="fas fa-book"></i> Retícula</a></li>
+            <li class="toggle">
+                <span><i class="fas fa-tasks"></i> Materias</span>
+                <ul class="submenu">
+                    <li><a href="#">Calificaciones</a></li>
+                    <li><a href="#">Horario</a></li>
+                </ul>
+            </li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+        </ul>
+    </nav>
+
+    <header class="barra-superior">
+        <div class="logo">
+            <img src="imagen/tecnm-logoV2.png" alt="Logo de TecNM" style="height:50px; width:50px;">
+            <span>Instituto Tecnológico Chafa</span>
+        </div>
+        <div class="perfil-usuario-menu">
+            <span>👤 [Nombre del Alumno]</span>
+            <img src="imagen/Foto_Perfl.png" alt="Foto de perfil" class="foto-perfil-chica">
+        </div>
+    </header>
+
+    <main class="perfil-main">
+        <form id="perfil-form" method="post" enctype="multipart/form-data">
+            <div class="profile-sections-grid">
+                <section class="seccion-form">
+                    <h3>Datos personales</h3>
+                    <p class="instrucciones">Modifica tu información personal y de contacto.</p>
+                    <div class="form-grid">
+                        <div class="campo-foto">
+                            <div class="foto-perfil-editar">
+                                <img src="imagen/Foto_Perfl.png" alt="Foto de perfil">
+                            </div>
+                            <div>
+                                <label for="foto">Fotografía <a href="#" id="file-trigger">Elegir archivo</a></label>
+                                <input type="file" id="foto" name="foto" style="display: none;">
+                                <p class="ayuda-foto">Sube una foto personal, de frente, con el rostro reconocible.</p>
+                            </div>
+                        </div>
+                        <label>Nombre completo<input type="text" name="nombre_completo"></label>
+                        <label>Correo electrónico<input type="email" name="correo"></label>
+                        <label>Teléfono<input type="tel" name="telefono"></label>
+                        <label>Dirección<input type="text" name="direccion" placeholder="Calle, número, colonia, etc."></label>
+                    </div>
+                </section>
+
+                <section class="seccion-form">
+                    <h3>Contraseña</h3>
+                    <div class="form-grid">
+                        <label>Contraseña actual
+                            <input type="password" name="contrasena_actual">
+                        </label>
+                        <label>Nueva contraseña
+                            <input type="password" id="nueva_contrasena" name="nueva_contrasena">
+                        </label>
+                        <label>Confirmar nueva contraseña
+                            <input type="password" id="confirmar_contrasena" name="confirmar_contrasena">
+                        </label>
+                    </div>
+                </section>
+            </div>
+
+            <section id="acciones-editar">
+                <a href="perfil-vista.html" class="boton-volver">
+                    Atrás
+                </a>
+                <button type="submit" class="boton-guardar">
+                    Guardar
+                </button>
+            </section>
+        </form>
+    </main>
+
+    <!-- Código JavaScript integrado en el HTML -->
+    <script>
+        // Lógica del menú lateral y submenú
+        const menuBtn = document.getElementById("menuBtn");
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const toggles = document.querySelectorAll(".toggle");
+
+        // Función para mostrar mensajes de notificación
+        function showMessage(message, type) {
+            const messageBox = document.getElementById("message-box");
+            messageBox.textContent = message;
+            messageBox.className = `message-box visible ${type}`;
+            setTimeout(() => {
+                messageBox.classList.remove("visible");
+            }, 3000);
+        }
+
+        // Evento para abrir y cerrar el menú
+        menuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("active");
+            overlay.classList.toggle("active");
+        });
+
+        // Evento para cerrar el menú haciendo click fuera
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("active");
+            overlay.classList.remove("active");
+        });
+
+        // Evento para los submenús
+        toggles.forEach(toggle => {
+            toggle.addEventListener("click", () => {
+                const submenu = toggle.querySelector(".submenu");
+                if (submenu) {
+                    toggle.classList.toggle("active");
+                    submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+                }
+            });
+        });
+
+        // Lógica de validación del formulario de contraseña
+        const perfilForm = document.getElementById("perfil-form");
+        const nuevaContrasena = document.getElementById("nueva_contrasena");
+        const confirmarContrasena = document.getElementById("confirmar_contrasena");
+
+        perfilForm.addEventListener("submit", (e) => {
+            // Previene el envío del formulario por defecto
+            e.preventDefault();
+
+            // Lógica para verificar que los campos de contraseña no estén vacíos
+            if (nuevaContrasena.value || confirmarContrasena.value) {
+                // Si el usuario quiere cambiar la contraseña, las dos deben coincidir
+                if (nuevaContrasena.value !== confirmarContrasena.value) {
+                    showMessage("Las contraseñas no coinciden. Por favor, revísalas.", "error");
+                    return; // Detiene el proceso
+                }
+            }
+
+            // Aquí iría el código para enviar los datos al servidor (backend)
+            // Por ahora, solo simulamos un envío exitoso.
+            console.log("Formulario enviado. Contraseñas coinciden.");
+            showMessage("Perfil actualizado con éxito.", "success");
+        });
+
+        // Lógica para el botón de subir foto
+        const fileTrigger = document.getElementById("file-trigger");
+        const fileInput = document.getElementById("foto");
+
+        fileTrigger.addEventListener("click", (e) => {
+            e.preventDefault();
+            fileInput.click();
+        });
+    </script>
+</body>
+</html>
