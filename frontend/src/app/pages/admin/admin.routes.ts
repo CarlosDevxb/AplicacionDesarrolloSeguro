@@ -21,6 +21,10 @@ export const ADMIN_ROUTES: Routes = [
         path: 'carreras',
         component: GestionCarrerasComponent,
         title: 'Gestión de Carreras - CHAFATEC'
+         },
+      {
+        path: 'materias',
+        loadComponent: () => import('./pages/gestion-materias/gestion-materias')
       }
     ]
   },

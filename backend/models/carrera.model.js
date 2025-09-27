@@ -21,6 +21,12 @@ module.exports = (sequelize, DataTypes) => {
     // La relación es con Aspirante y Alumno (que está en Usuario)
     Carrera.hasMany(models.Aspirante, { foreignKey: 'carrera_id' }); // Una carrera tiene muchos aspirantes
     Carrera.hasMany(models.Alumno, { foreignKey: 'carrera_id' }); // Una carrera tiene muchos alumnos
+    // Una carrera tiene muchas materias a través de la tabla intermedia
+    Carrera.belongsToMany(models.Materia, {
+      through: 'materias_por_carrera',
+      foreignKey: 'carrera_id',
+      otherKey: 'materia_id'
+    });
   };
 
   return Carrera;
