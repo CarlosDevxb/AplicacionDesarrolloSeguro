@@ -1,0 +1,255 @@
+
+:root {
+    --azul-barra-superior: #192f4a;
+    --azul-barra-lateral: #003366;
+    --azul-detalles: #005691;
+    --azul-botones-hover: #0077b6;
+    --azul-claro: #add8e6;
+    --azul-fondo: #add8e6;
+    --rojo-alerta: #c0392b;
+    --verde-exito: #2ecc71;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background-color: var(--azul-fondo);
+}
+
+html {
+    scroll-padding-top: 90px;
+    box-sizing: border-box;
+}
+
+/* === Barra superior del sistema === */
+header,
+.barra-superior {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: var(--azul-barra-superior);
+    color: white;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    gap: 20px;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+.logo {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.logo img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.perfil-usuario-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.perfil-usuario-menu span {
+    font-size: 0.9em;
+}
+
+.foto-perfil-chica {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+/* === Contenedor principal de la página de vista del perfil === */
+.perfil-main-vista {
+    padding-top: 90px;
+    padding: 90px 40px 40px;
+    background-color: var(--azul-fondo);
+}
+
+/* === Estilos para las secciones de información === */
+.seccion-info {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.seccion-info h3 {
+    color: var(--azul-detalles);
+    font-size: 1.5em;
+    margin-top: 0;
+    border-bottom: 2px solid var(--azul-claro);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* === Contenedores flexibles para la información === */
+.info-container {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.foto-perfil img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--azul-detalles);
+}
+
+.info-detalles p {
+    margin: 8px 0;
+    color: var(--azul-barra-superior);
+}
+
+.info-detalles p strong {
+    display: inline-block;
+    min-width: 150px;
+    color: var(--azul-detalles);
+}
+
+.info-container-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.info-container-grid p {
+    margin: 0;
+    color: var(--azul-barra-superior);
+}
+
+.info-container-grid p strong {
+    color: var(--azul-detalles);
+}
+
+/* === Botón de edición flotante === */
+.boton-editar {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: var(--azul-detalles);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.boton-editar img {
+    filter: brightness(0) invert(1);
+    height: 18px;
+}
+
+.boton-editar:hover {
+    background-color: var(--azul-botones-hover);
+}
+
+/* === Adaptabilidad === */
+@media (max-width: 900px) {
+    .barra-superior {
+        padding: 15px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .perfil-main-vista {
+        padding: 100px 15px 15px;
+    }
+
+    .info-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .info-detalles p strong {
+        display: inline;
+        min-width: auto;
+    }
+}
+
+/* === Estilos del menú lateral adaptados a tu paleta de colores === */
+.menu-toggle {
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    font-size: 1.8rem;
+    background: var(--azul-claro);
+    color: var(--azul-barra-superior);
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    cursor: pointer;
+    z-index: 20;
+    transition: 0.3s;
+}
+.menu-toggle:hover {
+    background: var(--azul-detalles);
+    color: white;
+}
+
+/* === Overlay borroso === */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    background: rgba(0,0,0,0.4);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 9;
+    transition: 0.4s ease-in-out;
+}
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* === Sidebar desplegable === */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 220px;
+    height: 100%;
+    background: rgba(0, 51, 102, 0.95);
+    padding: 20px;
+    z-index: 15;
+    box-shadow: 2px 0 20px rgba(0,0,0,0.6);
+    transition: 0.4s ease-in-out;
+    box-sizing: content-box;
+}
+.sidebar.active {
+    left: 0;
+}
+.user-box {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.user-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--azul-claro);
+    margin-bottom: 10px;
+}

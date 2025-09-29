@@ -1,0 +1,386 @@
+/* Paleta de colores principal */
+:root {
+    --azul-barra-superior: #192f4a;
+    --azul-barra-lateral: #003366;
+    --azul-detalles: #005691;
+    --azul-botones-hover: #0077b6;
+    --azul-claro: #add8e6;
+    --azul-fondo: #add8e6;
+    --rojo-alerta: #c0392b;
+    --verde-exito: #2ecc71;
+}
+
+/* Fuente y fondo general */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background-color: var(--azul-fondo);
+}
+
+/* Espaciado para scroll y box model */
+html {
+    scroll-padding-top: 90px;
+    box-sizing: border-box;
+}
+
+/* Barra superior fija con logo y usuario */
+header,
+.barra-superior {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: var(--azul-barra-superior);
+    color: white;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    gap: 20px;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+/* Logo institucional */
+.logo {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.logo img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Menú de usuario en barra superior */
+.perfil-usuario-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.perfil-usuario-menu span {
+    font-size: 0.9em;
+}
+
+.foto-perfil-chica {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+/* Contenedor principal del perfil */
+.perfil-main {
+    padding-top: 90px;
+    padding: 90px 40px 40px;
+    background-color: var(--azul-fondo);
+}
+
+/* Grid para secciones del perfil en dos columnas */
+.profile-sections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+/* Sección de formulario de datos */
+.seccion-form {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 25px;
+    margin-bottom: 25px;
+    margin-left: 0;
+}
+
+/* Título de cada sección de formulario */
+.seccion-form h3 {
+    color: var(--azul-detalles);
+    font-size: 1.5em;
+    margin-top: 0;
+    border-bottom: 2px solid var(--azul-claro);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Texto de instrucciones en formularios */
+.instrucciones {
+    font-size: 0.9em;
+    color: var(--azul-detalles);
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+
+/* Grid para campos de formulario */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+/* Etiquetas de campos de formulario */
+.form-grid label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    color: var(--azul-barra-superior);
+    max-width: 350px;
+    width: 100%;
+}
+
+/* Campos de entrada y select en formularios */
+.form-grid input,
+.form-grid select {
+    padding: 10px;
+    border: 1px solid var(--azul-claro);
+    border-radius: 4px;
+    background-color: var(--azul-claro);
+    margin-top: 5px;
+    font-size: 1em;
+    color: var(--azul-barra-superior);
+}
+
+/* Efecto al enfocar campos de formulario */
+.form-grid input:focus,
+.form-grid select:focus {
+    border-color: var(--azul-botones-hover);
+    outline: none;
+}
+
+/* Contenedor para foto de perfil en formulario */
+.campo-foto {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Imagen de perfil en edición */
+.foto-perfil-editar img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid var(--azul-detalles);
+}
+
+/* Texto de ayuda para foto */
+.ayuda-foto {
+    font-size: 0.8em;
+    color: var(--rojo-alerta);
+    margin-top: 5px;
+}
+
+/* Botones principales de acción */
+.boton-flotante,
+.boton-volver,
+.boton-guardar {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Contenedor de botones de acción en formularios */
+#acciones-editar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+/* Botón para volver */
+.boton-volver {
+    background-color: #e0e0e0;
+    color: var(--azul-barra-superior);
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, outline 0.3s;
+    outline: none;
+}
+
+/* Cambia el fondo a rojo y muestra contorno al hacer clic o tener foco */
+.boton-volver:active,
+.boton-volver:focus {
+    background-color: var(--rojo-alerta); /* relleno rojo */
+    color: #fff;
+    outline: 2px solid var(--rojo-alerta);
+    box-shadow: 0 0 0 4px rgba(192,57,43,0.2);
+}
+
+/* Botón para guardar cambios */
+.boton-guardar {
+    background-color: var(--azul-botones-hover);
+    color: white;
+}
+
+/* Hover para botones principales */
+.boton-flotante:hover,
+.boton-guardar:hover {
+    background-color: var(--azul-detalles);
+}
+
+/* Hover para botón volver */
+.boton-volver:hover {
+    background-color: var(--rojo-alerta);
+    color: #fff;
+    box-shadow: 0 0 8px 2px rgba(192,57,43,0.25);
+}
+
+/* Adaptabilidad para pantallas pequeñas */
+@media (max-width: 900px) {
+    .barra-superior {
+        padding: 15px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .perfil-main {
+        padding: 100px 15px 15px;
+    }
+
+    .info-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .info-detalles p strong {
+        display: inline;
+        min-width: auto;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .seccion-form {
+        padding: 15px;
+    }
+
+    .campo-foto {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .ayuda-foto {
+        text-align: center;
+    }
+
+    #acciones-editar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* Botón para abrir menú lateral */
+.menu-toggle {
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    font-size: 1.8rem;
+    background: var(--azul-claro);
+    color: var(--azul-barra-superior);
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    cursor: pointer;
+    z-index: 20;
+    transition: 0.3s;
+}
+.menu-toggle:hover {
+    background: var(--azul-detalles);
+    color: white;
+}
+
+/* Fondo borroso al abrir menú lateral */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    background: rgba(0,0,0,0.4);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 9;
+    transition: 0.4s ease-in-out;
+}
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Menú lateral desplegable */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 220px;
+    height: 100%;
+    background: rgba(0, 51, 102, 0.95);
+    padding: 20px;
+    z-index: 15;
+    box-shadow: 2px 0 20px rgba(0,0,0,0.6);
+    transition: 0.4s ease-in-out;
+    box-sizing: content-box;
+}
+.sidebar.active {
+    left: 0;
+}
+
+/* Caja de usuario en menú lateral */
+.user-box {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Imagen de usuario en menú lateral */
+.user-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--azul-claro);
+    margin-bottom: 10px;
+}
+
+/* Mensaje flotante de notificación */
+.message-box {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: white;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Mensaje de éxito */
+.message-box.success {
+    background-color: var(--verde-exito);
+}
+
+/* Mensaje de error */
+.message-box.error {
+    background-color: var(--rojo-alerta);
+}
+
+/* Mostrar mensaje flotante */
+.message-box.visible {
+    opacity: 1;
+    visibility: visible;
+}
