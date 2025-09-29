@@ -1,0 +1,74 @@
+<div class="dashboard-container fade-in" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <!-- Menú Lateral (Sidebar) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="title">Portal Alumno</h2>
+    </div>
+
+    <div class="profile-section">
+      <div class="profile-picture-container">
+        <img *ngIf="alumno?.foto" [src]="alumno.foto" alt="Foto de perfil" class="profile-picture-img" (error)="$event.target.src='assets/default-profile.png'">
+        <i *ngIf="!alumno?.foto" class="fas fa-user-graduate"></i>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name" *ngIf="alumno">{{ alumno.nombre_completo }}</span>
+        <span class="profile-role">Rol: {{ alumno?.rol | titlecase }}</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/alumno/dashboard" routerLinkActive="active" class="menu-item"><i class="fas fa-home"></i><span class="menu-text">Inicio</span></a>
+      <a routerLink="/alumno/perfil" routerLinkActive="active" class="menu-item"><i class="fas fa-user-circle"></i><span class="menu-text">Mi Perfil</span></a>
+      <a routerLink="/alumno/carrera" routerLinkActive="active" class="menu-item"><i class="fas fa-graduation-cap"></i><span class="menu-text">Mi Carrera</span></a>
+      <a routerLink="/alumno/reticula" routerLinkActive="active" class="menu-item"><i class="fas fa-book"></i><span class="menu-text">Retícula</span></a>
+      <a routerLink="/alumno/calificaciones" routerLinkActive="active" class="menu-item"><i class="fas fa-tasks"></i><span class="menu-text">Calificaciones</span></a>
+      <a routerLink="/alumno/horario" routerLinkActive="active" class="menu-item"><i class="fas fa-calendar-alt"></i><span class="menu-text">Horario</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="menu-item logout-button">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="menu-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="main-content" *ngIf="alumno">
+    <header class="content-header">
+      <h1>Mi Perfil</h1>
+      <p>Aquí puedes ver y editar tu información personal y académica.</p>
+    </header>
+
+    <section class="content-area">
+      <section class="seccion-info">
+          <h3>Información General</h3>
+          <div class="info-container">
+              <div class="foto-perfil">
+                  <img [src]="alumno.foto || 'assets/default-profile.png'" alt="Foto de perfil" (error)="$event.target.src='assets/default-profile.png'">
+              </div>
+              <div class="info-detalles">
+                  <p><strong>Nombre:</strong> {{ alumno.nombre_completo }}</p>
+                  <p><strong>Teléfono:</strong> {{ alumno.telefono || 'No especificado' }}</p>
+                  <p><strong>Correo electrónico:</strong> {{ alumno.correo }}</p>
+                  <p><strong>Dirección:</strong> {{ alumno.direccion || 'No especificada' }}</p>
+              </div>
+          </div>
+      </section>
+
+      <section class="seccion-info">
+          <h3>Información Escolar</h3>
+          <div class="info-container-grid">
+              <p><strong>N° de control:</strong> {{ alumno.numero_control }}</p>
+              <p><strong>Estatus:</strong> {{ alumno.Alumno?.estatus || 'Activo' }}</p>
+              <p><strong>Semestre:</strong> {{ alumno.Alumno?.semestre || 'N/A' }}</p>
+              <p><strong>Carrera:</strong> {{ alumno.Alumno?.Carrera?.nombre || 'No asignada' }}</p>
+            </div>
+      </section>
+
+      <a routerLink="/alumno/perfil/editar" class="boton-editar">
+          <i class="fas fa-pencil-alt"></i> Editar mis datos
+      </a>
+    </section>
+  </main>
+</div>

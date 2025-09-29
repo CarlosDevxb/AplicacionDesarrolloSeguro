@@ -72,4 +72,24 @@ export class AuthService {
 
     return this.http.post(`${this.usersApiUrl}/profile/picture`, formData, { headers });
   }
+
+  updateProfile(profileData: any): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.put(`${this.usersApiUrl}/profile`, profileData, { headers });
+  }
+
+  changePassword(passwordData: any): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.post(`${this.usersApiUrl}/profile/password`, passwordData, { headers });
+  }
+
+
 }

@@ -4,6 +4,8 @@ import { Routes } from '@angular/router';
 import LoginComponent from './pages/login/login';
 import NotFoundComponent from './components/not-found/not-found';
 import AlumnoDashboardComponent from './pages/alumno/dashboard.component';
+import  MenuAlumnoComponent  from './pages/menu-alumno/menu-alumno';
+import MenuAlumnoEditComponent from './pages/menu-alumno-edit/menu-alumno-edit';
 import AdminDashboardComponent from './pages/admin/pages/dashboard/dashboard';
 // Importamos el componente de registro que faltaba
 import RegistroComponent from './pages/registro/registro';
@@ -24,6 +26,18 @@ export const routes: Routes = [
   {
     path: 'alumno/dashboard',
     component: AlumnoDashboardComponent,
+    canActivate: [roleGuard],
+    data: { expectedRole: 'alumno' }
+  },
+  {
+    path: 'alumno/perfil',
+    component: MenuAlumnoComponent,
+    canActivate: [roleGuard],
+    data: { expectedRole: 'alumno' }
+  },
+  {
+    path: 'alumno/perfil/editar',
+    component: MenuAlumnoEditComponent,
     canActivate: [roleGuard],
     data: { expectedRole: 'alumno' }
   },

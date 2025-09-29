@@ -1,4 +1,5 @@
-const { Usuario, Aspirante } = require('../models');
+const { Usuario, Aspirante, Alumno } = require('../models');
+const bcrypt = require('bcryptjs');
 
 const getProfile = async (req, res) => {
   try {
@@ -6,7 +7,10 @@ const getProfile = async (req, res) => {
     const userId = req.user.id;
 
     const usuario = await Usuario.findByPk(userId, {
-      // Usamos raw:true para obtener un objeto plano de JS en lugar de una instancia de Sequelize
+      include: [{
+        model: Alumno,
+        include: [ 'Carrera' ] // Incluimos la información de la carrera del alumno
+      }],
       raw: true,
     });
 
@@ -57,4 +61,54 @@ const uploadProfilePicture = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, uploadProfilePicture };
+const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { nombre_completo, correo, telefono, direccion } = req.body;
+
+    // Preparamos los datos a actualizar
+    const dataToUpdate = { nombre_completo, correo, telefono, direccion, usuario: correo };
+
+    await Usuario.update(dataToUpdate, { where: { id: userId } });
+
+    res.status(200).json({ message: 'Perfil actualizado correctamente.' });
+  } catch (error) {
+    console.error('Error al actualizar el perfil:', error);
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(409).json({ message: 'El correo electrónico ya está en uso por otro usuario.' });
+    }
+    res.status(500).json({ message: 'Error en el servidor.' });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { contrasena_actual, nueva_contrasena } = req.body;
+
+    // 1. Obtener el usuario con su contraseña
+    const user = await Usuario.scope('withPassword').findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado.' });
+    }
+
+    // 2. Verificar la contraseña actual
+    const isPasswordCorrect = await bcrypt.compare(contrasena_actual, user.contrasena);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ message: 'La contraseña actual es incorrecta.' });
+    }
+
+    // 3. Hashear y guardar la nueva contraseña
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(nueva_contrasena, salt);
+
+    await Usuario.update({ contrasena: hashedPassword }, { where: { id: userId } });
+
+    res.status(200).json({ message: 'Contraseña actualizada correctamente.' });
+  } catch (error) {
+    console.error('Error al cambiar la contraseña:', error);
+    res.status(500).json({ message: 'Error en el servidor.' });
+  }
+};
+
+module.exports = { getProfile, uploadProfilePicture, updateProfile, changePassword };

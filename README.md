@@ -123,5 +123,8 @@ Repositorio para el proyecto de la materia de Desarrollo Seguro de Software.
 ## 👨‍💻 Colaboradores
 
 -   **Carlos P.M.** - _Desarrollo Full-Stack_
+-   **Alejandro Ramos Jr.** - _Desarrollo Full-Stack_
+-   **SirdallasFC. Jr.** - _Desarrollo Front-End_
+
 
 ---
