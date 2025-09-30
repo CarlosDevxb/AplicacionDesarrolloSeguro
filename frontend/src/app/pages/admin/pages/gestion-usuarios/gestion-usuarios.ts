@@ -63,7 +63,8 @@ export default class GestionUsuariosComponent {
       nombre_completo: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
       telefono: [''],
-      direccion: ['']
+      direccion: [''],
+      estatus: [''] // Añadimos el control para el estatus
     });
 
     this.carreraService.getCarreras().subscribe(data => this.carreras = data);
@@ -106,6 +107,10 @@ export default class GestionUsuariosComponent {
         this.searchedUser = user;
         this.searchMessage = null;
         this.editForm.patchValue(user);
+        // Si el usuario es un alumno, también cargamos su estatus en el form
+        if (user.Alumno) {
+          this.editForm.patchValue({ estatus: user.Alumno.estatus });
+        }
       },
       error: (err: HttpErrorResponse) => this.searchMessage = err.error.message || 'Error en la búsqueda.'
     });

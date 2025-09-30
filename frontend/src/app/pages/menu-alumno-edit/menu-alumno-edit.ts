@@ -1,24 +1,25 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { Title } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
 
 // Validador personalizado para contraseñas
 function passwordMatcher(control: AbstractControl): ValidationErrors | null {
   const nueva = control.get('nueva_contrasena');
   const confirmar = control.get('confirmar_contrasena');
-  if (nueva?.value && confirmar?.value && nueva.value !== confirmar.value) {
+  if (nueva && confirmar && nueva.value !== confirmar.value) {
     return { mismatch: true };
   }
-  return null;
+  return null; // Si no hay error, retorna null
 }
 
 @Component({
   selector: 'app-menu-alumno-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, NgClass],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './menu-alumno-edit.html',
   styleUrl: './menu-alumno-edit.css'
 })
@@ -26,15 +27,16 @@ export default class MenuAlumnoEditComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private titleService = inject(Title);
 
   // Estado de la UI
-  isSidebarOpen = false;
+  isSidebarCollapsed = false; // Usamos isSidebarCollapsed para consistencia con el dashboard
   alumno: any = null;
   message: string | null = null;
   messageType: 'success' | 'error' = 'success';
 
   // Formularios
-  editForm: FormGroup;
+   editForm: FormGroup;
   passwordForm: FormGroup;
 
   constructor() {
@@ -53,6 +55,7 @@ export default class MenuAlumnoEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Editar Perfil - CHAFATEC');
     this.authService.getProfile().subscribe({
       next: (data) => {
         this.alumno = data;
@@ -66,22 +69,24 @@ export default class MenuAlumnoEditComponent implements OnInit {
   }
 
   // --- Métodos de UI ---
-  toggleSidebar() { this.isSidebarOpen = !this.isSidebarOpen; }
-  toggleSubmenu(event: MouseEvent) {
-    const element = event.currentTarget as HTMLElement;
-    element.classList.toggle('active');
-    const submenu = element.querySelector('.submenu') as HTMLElement;
-    if (submenu) {
-      submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
-    }
+  toggleSidebar(event?: MouseEvent) {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
   logout() { this.authService.logout(); }
+  private showMessage(msg: string, type: 'success' | 'error') {
+    this.message = msg;
+    this.messageType = type;
+    setTimeout(() => this.message = null, 4000);
+  }
 
   // --- Métodos del Formulario ---
   updateProfile() {
-    if (this.editForm.invalid) return;
+    if (this.editForm.invalid || !this.editForm.dirty) return;
     this.authService.updateProfile(this.editForm.value).subscribe({
-      next: (res) => this.showMessage(res.message, 'success'),
+      next: (res) => {
+        this.showMessage(res.message, 'success');
+        this.editForm.markAsPristine(); // Marcar como no modificado después de guardar
+      },
       error: (err: HttpErrorResponse) => this.showMessage(err.error.message || 'Error al actualizar.', 'error')
     });
   }
@@ -107,11 +112,5 @@ export default class MenuAlumnoEditComponent implements OnInit {
   triggerFileInput(event: Event) {
     event.preventDefault();
     document.getElementById('foto')?.click();
-  }
-
-  private showMessage(msg: string, type: 'success' | 'error') {
-    this.message = msg;
-    this.messageType = type;
-    setTimeout(() => this.message = null, 4000);
   }
 }

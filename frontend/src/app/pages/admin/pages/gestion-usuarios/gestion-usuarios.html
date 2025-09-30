@@ -82,7 +82,15 @@
       <!-- Formulario de Edición -->
       <div *ngIf="searchedUser" class="edit-form-container">
         <hr>
-        <h5>Editando a: {{ searchedUser.nombre_completo }}</h5>
+        <h5>
+          Editando a: {{ searchedUser.nombre_completo }}
+          <!-- Insignia de estatus (solo para alumnos) -->
+          <span *ngIf="searchedUser.Alumno?.estatus"
+                class="status-badge"
+                [ngClass]="searchedUser.Alumno.estatus.replace(' ', '-')">
+            {{ searchedUser.Alumno.estatus }}
+          </span>
+        </h5>
         <form [formGroup]="editForm" (ngSubmit)="updateUser()" class="user-form">
           <div class="form-grid">
             <!-- Campos no editables -->
@@ -112,6 +120,16 @@
               <label for="edit-direccion">Dirección</label>
               <input id="edit-direccion" type="text" formControlName="direccion">
             </div>
+
+            <!-- Campo de Estatus (solo para alumnos) -->
+            <div class="form-group" *ngIf="searchedUser.rol === 'alumno'">
+              <label for="edit-estatus">Estatus del Alumno</label>
+              <select id="edit-estatus" formControlName="estatus">
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+                <option value="Baja Temporal">Baja Temporal</option>
+              </select>
+            </div>
           </div>
           <button type="submit" [disabled]="editForm.invalid">Actualizar Usuario</button>
         </form>
@@ -121,4 +139,3 @@
     </div>
   </div>
 </div>
-

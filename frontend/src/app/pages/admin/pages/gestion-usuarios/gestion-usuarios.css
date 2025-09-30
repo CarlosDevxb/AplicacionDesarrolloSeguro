@@ -165,3 +165,32 @@
   font-size: 1.2rem;
   color: #1e293b;
 }
+
+/* --- Estilos para la insignia de estatus --- */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 10px;
+}
+
+.status-badge.Activo {
+  background-color: #dcfce7; /* Verde claro */
+  color: #166534; /* Verde oscuro */
+}
+
+.status-badge.Inactivo {
+  background-color: #fee2e2; /* Rojo claro */
+  color: #991b1b; /* Rojo oscuro */
+}
+
+.status-badge.Baja-Temporal {
+  background-color: #fef3c7; /* Amarillo claro */
+  color: #92400e; /* Amarillo oscuro */
+}

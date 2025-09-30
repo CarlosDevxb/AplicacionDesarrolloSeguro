@@ -96,3 +96,57 @@
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
 }
+
+/* --- Estilos para la insignia de estatus del alumno --- */
+.info-item-flex {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.status-badge .prefix {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.status-badge.activo {
+  background-color: #dcfce7; /* Verde claro */
+  color: #166534; /* Verde oscuro */
+}
+
+.status-badge.inactivo {
+  background-color: #fee2e2; /* Rojo claro */
+  color: #991b1b; /* Rojo oscuro */
+}
+
+.status-badge.baja-temporal {
+  background-color: #fef3c7; /* Amarillo claro */
+  color: #92400e; /* Amarillo oscuro */
+}
+
+.status-badge.con-especiales {
+  background-color: #e0e7ff; /* Azul-índigo claro */
+  color: #3730a3; /* Azul-índigo oscuro */
+}
+
+.status-badge.egresado {
+  background-color: #e5e7eb; /* Gris claro */
+  color: #1f2937; /* Gris oscuro */
+}
+
+.status-badge.desconocido {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}

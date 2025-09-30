@@ -60,7 +60,16 @@
           <h3>Información Escolar</h3>
           <div class="info-container-grid">
               <p><strong>N° de control:</strong> {{ alumno.numero_control }}</p>
-              <p><strong>Estatus:</strong> {{ alumno.Alumno?.estatus || 'Activo' }}</p>
+              <div class="info-item-flex">
+                <strong>Estatus:</strong>
+                <ng-container *ngIf="alumno.Alumno?.estatus as status">
+                  <span class="status-badge" [ngClass]="getStatusInfo(status).class">
+                    <i class="fas" [ngClass]="getStatusInfo(status).icon"></i>
+                    <span class="prefix">{{ getStatusInfo(status).prefix }}</span>
+                    <span>{{ getStatusInfo(status).text }}</span>
+                  </span>
+                </ng-container>
+              </div>
               <p><strong>Semestre:</strong> {{ alumno.Alumno?.semestre || 'N/A' }}</p>
               <p><strong>Carrera:</strong> {{ alumno.Alumno?.Carrera?.nombre || 'No asignada' }}</p>
             </div>

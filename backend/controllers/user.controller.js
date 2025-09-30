@@ -9,9 +9,8 @@ const getProfile = async (req, res) => {
     const usuario = await Usuario.findByPk(userId, {
       include: [{
         model: Alumno,
-        include: [ 'Carrera' ] // Incluimos la información de la carrera del alumno
-      }],
-      raw: true,
+        include: ['Carrera'] // Incluimos la información de la carrera del alumno
+      }]
     });
 
     if (!usuario) {
@@ -19,17 +18,19 @@ const getProfile = async (req, res) => {
     }
 
     // Si el usuario es un aspirante, buscamos su información adicional
-    if (usuario.rol === 'aspirante') {
+    const plainUser = usuario.toJSON(); // Convertimos la instancia de Sequelize a un objeto plano
+
+    if (plainUser.rol === 'aspirante') {
       const aspiranteInfo = await Aspirante.findOne({ where: { correo: usuario.correo }, raw: true });
       if (aspiranteInfo) {
         // Combinamos la información del usuario con la del aspirante
-        const fullProfile = { ...usuario, ...aspiranteInfo };
+        const fullProfile = { ...plainUser, ...aspiranteInfo };
         return res.status(200).json(fullProfile);
       }
     }
 
     // Para otros roles o si no se encuentra info de aspirante, devolvemos solo la info de usuario
-    return res.status(200).json(usuario);
+    return res.status(200).json(plainUser);
   } catch (error) {
     console.error('Error al obtener el perfil:', error);
     res.status(500).json({ message: 'Error en el servidor.' });

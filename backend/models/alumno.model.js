@@ -17,7 +17,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false
     },
-    // ... otros campos de la tabla alumnos
+    semestre: {
+      type: DataTypes.INTEGER,
+      allowNull: true // O false si siempre debe tener un valor
+    },
+    estatus: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      defaultValue: 'Activo' // Estado por defecto para nuevos alumnos
+    }
   }, {
     tableName: 'alumnos',
     timestamps: false

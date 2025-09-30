@@ -33,7 +33,24 @@ const createUser = async (req, res) => {
 
     // Si es un alumno, crear su registro en la tabla 'alumnos'
     if (rol === 'alumno' && carrera_id && fecha_ingreso) {
-      await Alumno.create({ id, carrera_id, fecha_ingreso });
+      // --- Lógica para calcular el semestre ---
+      const fechaIngreso = new Date(fecha_ingreso);
+      const fechaActual = new Date();
+
+      // Se calcula la diferencia de años
+      const aniosDiferencia = fechaActual.getFullYear() - fechaIngreso.getFullYear();
+
+      // Se determina el periodo del año (1 para Ene-Jul, 2 para Ago-Dic)
+      const periodoIngreso = fechaIngreso.getMonth() < 7 ? 1 : 2;
+      const periodoActual = fechaActual.getMonth() < 7 ? 1 : 2;
+
+      // Se calculan los semestres base por los años transcurridos
+      let semestres = aniosDiferencia * 2;
+
+      // Se ajusta el semestre según el periodo
+      semestres += (periodoActual - periodoIngreso) + 1;
+
+      await Alumno.create({ id, carrera_id, fecha_ingreso, semestre: semestres });
     }
 
     // Aquí podrías añadir lógica para Docente y Administrativo si tienen tablas separadas
@@ -67,8 +84,16 @@ const findUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre_completo, correo, telefono, direccion } = req.body; // Campos editables
+    // Separamos los datos del usuario y los datos específicos del alumno
+    const { nombre_completo, correo, telefono, direccion, estatus } = req.body;
+
+    // 1. Actualizar datos en la tabla 'usuarios'
     await Usuario.update({ nombre_completo, correo, telefono, direccion }, { where: { id } });
+
+    // 2. Si hay un estatus, actualizarlo en la tabla 'alumnos'
+    if (estatus) {
+      await Alumno.update({ estatus }, { where: { id } });
+    }
     res.status(200).json({ message: 'Usuario actualizado correctamente.' });
   } catch (error) {
     res.status(500).json({ message: 'Error al actualizar el usuario.' });
