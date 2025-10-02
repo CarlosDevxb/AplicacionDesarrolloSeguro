@@ -1,0 +1,140 @@
+<!-- frontend/src/app/pages/admin/pages/gestion-salones/gestion-salones.html -->
+<div class="management-container">
+
+  <!-- Contenedor para mensajes de feedback -->
+  <div *ngIf="message" class="message-box" [ngClass]="messageType">
+    {{ message }}
+  </div>
+
+  <!-- Formulario para crear un nuevo salón -->
+  <div class="form-card">
+    <h3>Registrar Nuevo Salón</h3>
+    <form [formGroup]="salonForm" (ngSubmit)="onSubmit()" class="salon-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="salon-clave">Clave del Salón</label>
+          <input id="salon-clave" type="text" formControlName="clave" placeholder="Ej: A101, LC2">
+        </div>
+        <div class="form-group">
+          <label for="salon-nombre">Nombre Descriptivo</label>
+          <input id="salon-nombre" type="text" formControlName="nombre" placeholder="Ej: Laboratorio de Cómputo 1">
+        </div>
+        <div class="form-group">
+          <label for="salon-capacidad">Capacidad</label>
+          <input id="salon-capacidad" type="number" formControlName="capacidad" placeholder="Ej: 30">
+        </div>
+        <div class="form-group">
+          <label for="salon-tipo">Tipo de Salón</label>
+          <select id="salon-tipo" formControlName="tipo">
+            <option value="" disabled>Selecciona un tipo</option>
+            <option value="Aula">Aula</option>
+            <option value="Laboratorio">Laboratorio</option>
+            <option value="Auditorio">Auditorio</option>
+            <option value="Sala de Juntas">Sala de Juntas</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="salon-ubicacion">Ubicación (Opcional)</label>
+          <input id="salon-ubicacion" type="text" formControlName="ubicacion" placeholder="Ej: Edificio B, Planta Alta">
+        </div>
+        <div class="form-group">
+          <label for="salon-descripcion">Descripción (Opcional)</label>
+          <input id="salon-descripcion" type="text" formControlName="descripcion" placeholder="Ej: Equipado con proyector y pizarrón">
+        </div>
+      </div>
+      <button type="submit" [disabled]="salonForm.invalid">
+        <i class="fas fa-plus-circle"></i> Agregar Salón
+      </button>
+    </form>
+  </div>
+
+  <!-- Tabla para mostrar los salones existentes -->
+  <div class="table-card">
+    <h3>Salones Registrados</h3>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Clave</th>
+            <th class="nombre-col">Nombre</th>
+            <th>Tipo</th>
+            <th>Capacidad</th>
+            <th>Ubicación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let salon of salones">
+            <td>{{ salon.clave }}</td>
+            <td>{{ salon.nombre }}</td>
+            <td>{{ salon.tipo }}</td>
+            <td>{{ salon.capacidad }}</td>
+            <td>{{ salon.ubicacion || 'N/A' }}</td>
+            <td class="actions">
+              <button class="btn-icon btn-edit" (click)="openEditModal(salon)" title="Editar Salón">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="salones.length === 0">
+            <td colspan="6" class="text-center">No hay salones registrados.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Editar/Eliminar Salón -->
+<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Editando Salón: {{ selectedSalon?.nombre }}</h3>
+      <button class="close-button" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="editForm" (ngSubmit)="onUpdate()">
+        <div class="form-group">
+          <label>Clave del Salón</label>
+          <input type="text" [value]="selectedSalon?.clave" readonly>
+        </div>
+        <div class="form-group">
+          <label for="edit-nombre">Nombre Descriptivo</label>
+          <input id="edit-nombre" type="text" formControlName="nombre">
+        </div>
+        <div class="form-group">
+          <label for="edit-capacidad">Capacidad</label>
+          <input id="edit-capacidad" type="number" formControlName="capacidad">
+        </div>
+        <div class="form-group">
+          <label for="edit-tipo">Tipo de Salón</label>
+          <select id="edit-tipo" formControlName="tipo">
+            <option value="Aula">Aula</option>
+            <option value="Laboratorio">Laboratorio</option>
+            <option value="Auditorio">Auditorio</option>
+            <option value="Sala de Juntas">Sala de Juntas</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edit-ubicacion">Ubicación</label>
+          <input id="edit-ubicacion" type="text" formControlName="ubicacion">
+        </div>
+        <div class="form-group">
+          <label for="edit-descripcion">Descripción</label>
+          <input id="edit-descripcion" type="text" formControlName="descripcion">
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-delete" (click)="onDelete()">
+        <i class="fas fa-trash-alt"></i> Eliminar
+      </button>
+      <div>
+        <button class="btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button class="btn-primary" (click)="onUpdate()" [disabled]="editForm.invalid || !editForm.dirty">
+          <i class="fas fa-save"></i> Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { Title } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
 
 const decodeToken = (token: string): any => {
@@ -30,6 +31,7 @@ export default class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private renderer = inject(Renderer2);
+  private titleService = inject(Title);
 
   errorMessage: string | null = null;
   // Esta es la variable clave que controla el mensaje en el HTML
@@ -38,6 +40,7 @@ export default class LoginComponent implements OnInit {
   currentTheme: 'dark' | 'light' = 'dark';
 
   ngOnInit(): void {
+    this.titleService.setTitle('Iniciar Sesión - CHAFATEC');
     // Opcional: podrías guardar la preferencia del usuario en localStorage
     // y cargarla aquí. Por ahora, inicia en oscuro.
     this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);

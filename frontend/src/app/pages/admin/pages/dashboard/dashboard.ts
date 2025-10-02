@@ -1,8 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterOutlet, RouterLinkActive, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../../../services/auth';
 import { TitleCasePipe } from '@angular/common';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -14,9 +15,14 @@ import { TitleCasePipe } from '@angular/common';
 export default class AdminDashboardComponent implements OnInit {
   authService = inject(AuthService);
   router = inject(Router);
+  
+  
+  activatedRoute = inject(ActivatedRoute);
 
   isSidebarCollapsed = false;
   admin: any = null;
+  headerTitle = 'Dashboard'; // Título por defecto
+  headerSubtitle = 'Bienvenido al Panel de Administración'; // Subtítulo por defecto
 
   ngOnInit(): void {
     this.authService.getProfile().subscribe({
@@ -28,7 +34,24 @@ export default class AdminDashboardComponent implements OnInit {
         this.authService.logout();
       }
     });
+
+    // Lógica para actualizar el título dinámicamente
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => {
+        let child = this.activatedRoute.firstChild;
+        while (child?.firstChild) {
+          child = child.firstChild;
+        }
+        // Devolvemos tanto el título como el subtítulo de los datos de la ruta
+        return child?.snapshot.data || { title: 'Dashboard', subtitle: 'Bienvenido al Panel de Administración' };
+      })
+    ).subscribe((data: any) => {
+      this.headerTitle = data.title;
+      this.headerSubtitle = data.subtitle;
+    });
   }
+
 
   logout() {
     this.authService.logout();

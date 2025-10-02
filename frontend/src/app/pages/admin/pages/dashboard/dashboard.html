@@ -21,21 +21,25 @@
     </div>
 
     <nav class="menu">
-      <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="menu-item">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="menu-item">
         <i class="fas fa-tachometer-alt"></i>
         <span class="menu-text">Inicio</span>
       </a>
-      <a routerLink="/admin/dashboard/usuarios" routerLinkActive="active" class="menu-item">
+      <a routerLink="/admin/usuarios" routerLinkActive="active" class="menu-item">
         <i class="fas fa-users-cog"></i>
         <span class="menu-text">Gestión de Usuarios</span>
       </a>
-      <a routerLink="/admin/dashboard/carreras" routerLinkActive="active" class="menu-item">
+      <a routerLink="/admin/carreras" routerLinkActive="active" class="menu-item">
         <i class="fas fa-graduation-cap"></i>
         <span class="menu-text">Gestión de Carreras</span>
       </a>
-      <a routerLink="/admin/dashboard/materias" routerLinkActive="active" class="menu-item">
+      <a routerLink="/admin/materias" routerLinkActive="active" class="menu-item">
         <i class="fas fa-book"></i>
         <span class="menu-text">Gestión de Materias</span>
+      </a>
+      <a routerLink="/admin/salones" routerLinkActive="active" class="menu-item">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <span class="menu-text">Gestión de Salones</span>
       </a>
     </nav>
 
@@ -51,20 +55,14 @@
   <main class="main-content">
     <header class="content-header">
       <div class="header-text">
-        <h1>Panel de Administración</h1>
-        <p>Gestiona los recursos y usuarios de la plataforma CHAFATEC.</p>
+        <h1>{{ headerTitle }}</h1>
+        <p>{{ headerSubtitle }}</p>
       </div>
     </header>
 
     <section class="content-area">
       <!-- Aquí se mostrará el contenido de las rutas hijas (como la gestión de usuarios) -->
       <router-outlet></router-outlet>
-
-      <!-- Contenido por defecto del dashboard -->
-      <div class="notice-board" *ngIf="isDashboardRoot()">
-        <h2>Bienvenido al Panel de Administración</h2>
-        <p>Selecciona una opción del menú de la izquierda para comenzar a gestionar la plataforma.</p>
-      </div>
     </section>
   </main>
 </div>
