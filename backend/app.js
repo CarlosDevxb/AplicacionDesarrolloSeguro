@@ -12,6 +12,7 @@ const bcrypt = require('bcryptjs');
 const app = express();
 const db = require('./models'); // <-- Importa el index.js de models
 const { hashPassword } = require('./hash');
+const { func } = require('joi');
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));

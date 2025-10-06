@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { SessionTimerService } from '../../services/session-timer.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -13,6 +14,7 @@ import { Title } from '@angular/platform-browser';
 })
 export default class MenuAlumnoComponent implements OnInit {
   private authService = inject(AuthService);
+  private sessionTimerService = inject(SessionTimerService);
   private titleService = inject(Title);
 
   // Estado de la UI
@@ -23,6 +25,7 @@ export default class MenuAlumnoComponent implements OnInit {
     this.titleService.setTitle('Mi Perfil - CHAFATEC');
     this.authService.getProfile().subscribe({
       next: (data) => {
+        this.sessionTimerService.startTimers(); // ¡Iniciamos los timers aquí!
         this.alumno = data;
       },
       error: (err) => {

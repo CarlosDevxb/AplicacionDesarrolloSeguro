@@ -30,9 +30,29 @@ export class AuthService {
     
   }
 
-  logout(): void {
+  refreshToken(): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post(`${this.authApiUrl}/refresh`, {}, { headers }).pipe(
+      tap((response: any) => {
+        // Al refrescar, también actualizamos el token
+        localStorage.setItem('token', response.token);
+      })
+    );
+  }
+
+  logout(sessionExpired = false): void {
     localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+
+    // Solo añadimos el parámetro a la URL si la sesión realmente expiró.
+    if (sessionExpired) {
+      this.router.navigate(['/login'], { queryParams: { sessionExpired: true } });
+    } else {
+      // Si es un logout manual, navegamos sin parámetros.
+      this.router.navigate(['/login']);
+    }
   }
 
   getToken(): string | null {

@@ -52,7 +52,7 @@ const login = async (req, res) => {
     };
 
     // 5. Firmar y enviar el token (esto no cambia)
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '10m' });
 
     res.status(200).json({ token });
 
@@ -62,4 +62,21 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { login };
+const refresh = (req, res) => {
+  // El middleware 'authenticateToken' ya ha verificado el token y ha puesto los datos del usuario en req.user
+  const user = req.user;
+
+  // Creamos un nuevo payload para el nuevo token, asegurándonos de no incluir 'iat' y 'exp' del token viejo.
+  const payload = {
+    id: user.id,
+    rol: user.rol,
+  };
+
+  // Firmamos un nuevo token con una nueva expiración de 15 minutos
+  const newToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '10m' });
+
+  res.json({ token: newToken });
+};
+
+
+module.exports = { login, refresh };
