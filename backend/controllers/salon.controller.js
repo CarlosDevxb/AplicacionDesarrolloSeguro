@@ -13,25 +13,14 @@ const getSalones = async (req, res) => {
 
 
 const createSalon = async (req, res) => {
-  const t = await sequelize.transaction(); // Iniciar transacción
   try {
-    const { clave, nombre, capacidad, tipo, ubicacion, descripcion } = req.body;
+    // El ID debe ser único y proporcionado en el body, ya que no es autoincremental.
+    const { id, clave, nombre, capacidad, tipo, ubicacion, descripcion } = req.body;
 
-    // 1. Encontrar el ID máximo actual dentro de la transacción
-    const maxIdResult = await Salon.findOne({
-      attributes: [[sequelize.fn('MAX', sequelize.col('id')), 'maxId']],
-      raw: true,
-      transaction: t
-    });
-    const newId = (maxIdResult && maxIdResult.maxId) ? maxIdResult.maxId + 1 : 1;
-
-    // 2. Crear el nuevo salón con el ID calculado
-    const nuevoSalon = await Salon.create({ id: newId, clave, nombre, capacidad, tipo, ubicacion, descripcion }, { transaction: t });
-
-    await t.commit(); // Confirmar la transacción
+    // Crear el nuevo salón con el ID proporcionado
+    const nuevoSalon = await Salon.create({ id, clave, nombre, capacidad, tipo, ubicacion, descripcion });
     res.status(201).json({ message: 'Salón creado exitosamente.', salon: nuevoSalon });
   } catch (error) {
-    await t.rollback(); // Revertir la transacción en caso de error
     if (error.name === 'SequelizeUniqueConstraintError') {
       return res.status(409).json({ message: `La clave '${req.body.clave}' o el nombre '${req.body.nombre}' ya existen.` });
     }

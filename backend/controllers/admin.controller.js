@@ -84,16 +84,28 @@ const findUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    // Separamos los datos del usuario y los datos específicos del alumno
-    const { nombre_completo, correo, telefono, direccion, estatus } = req.body;
+    // Obtenemos todos los datos del cuerpo de la solicitud
+    const { nombre_completo, correo, telefono, direccion, rol, estado, estatus } = req.body;
 
-    // 1. Actualizar datos en la tabla 'usuarios'
-    await Usuario.update({ nombre_completo, correo, telefono, direccion }, { where: { id } });
+    // 1. Preparamos los datos para la tabla 'usuarios'
+    const userData = {
+      nombre_completo,
+      correo,
+      telefono,
+      direccion,
+      rol,
+      estado // Aseguramos que el estado se incluya en la actualización
+    };
+console.log(userData);
 
-    // 2. Si hay un estatus, actualizarlo en la tabla 'alumnos'
-    if (estatus) {
+    // 2. Actualizamos la tabla 'usuarios'
+    await Usuario.update(userData, { where: { id } });
+
+    // 3. Si el usuario es un alumno y se ha proporcionado un estatus académico, lo actualizamos
+    if (rol === 'alumno' && estatus) {
       await Alumno.update({ estatus }, { where: { id } });
     }
+
     res.status(200).json({ message: 'Usuario actualizado correctamente.' });
   } catch (error) {
     res.status(500).json({ message: 'Error al actualizar el usuario.' });

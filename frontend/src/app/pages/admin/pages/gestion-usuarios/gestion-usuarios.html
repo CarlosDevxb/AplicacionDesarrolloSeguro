@@ -98,9 +98,25 @@
               <label>ID / No. de Control</label>
               <input type="text" [value]="searchedUser.id" readonly>
             </div>
+
+            <!-- Campo para editar el Rol -->
             <div class="form-group">
-              <label>Rol</label>
-              <input type="text" [value]="searchedUser.rol | titlecase" readonly>
+              <label for="edit-rol">Rol del Usuario</label>
+              <select id="edit-rol" formControlName="rol">
+                <option value="alumno">Alumno</option>
+                <option value="docente">Docente</option>
+                <option value="administrativo">Administrativo</option>
+              </select>
+            </div>
+
+            <!-- Campo para editar el Estado de la cuenta -->
+            <div class="form-group">
+              <label for="edit-estado">Estado de la Cuenta</label>
+              <select id="edit-estado" formControlName="estado">
+                <option value="activo">Activo</option>
+                <option value="no activo">No Activo</option>
+                <option value="bloqueado">Bloqueado</option>
+              </select>
             </div>
 
             <!-- Campos editables -->
@@ -121,13 +137,15 @@
               <input id="edit-direccion" type="text" formControlName="direccion">
             </div>
 
-            <!-- Campo de Estatus (solo para alumnos) -->
+            <!-- Campo de Estatus Académico (solo para alumnos) -->
             <div class="form-group" *ngIf="searchedUser.rol === 'alumno'">
-              <label for="edit-estatus">Estatus del Alumno</label>
+              <label for="edit-estatus">Estatus Académico (Alumno)</label>
               <select id="edit-estatus" formControlName="estatus">
-                <option value="Activo">Activo</option>
-                <option value="Inactivo">Inactivo</option>
-                <option value="Baja Temporal">Baja Temporal</option>
+                <option value="activo">Activo</option>
+                <option value="activo con especiales">Activo con Especiales</option>
+                <option value="baja temporal">Baja Temporal</option>
+                <option value="baja definitiva">Baja Definitiva</option>
+                <option value="egresado">Egresado</option>
               </select>
             </div>
           </div>
