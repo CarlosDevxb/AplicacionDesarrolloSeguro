@@ -1,5 +1,7 @@
 // backend/models/salon.model.js
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
   const Salon = sequelize.define('Salon', {
     id: {
       type: DataTypes.INTEGER,

@@ -1,14 +1,54 @@
+/* Importamos variables y estilos de botones para consistencia */
+@import '../../pages/login/login.css';
+
 .not-found-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   text-align: center;
-  padding: 50px;
-  font-family: var(--font-family);
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  color: var(--text-primary);
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.error-image {
+  max-width: 400px;
+  width: 100%;
+  margin-bottom: 2rem;
 }
 
 h1 {
-  font-size: 3em;
-  color: var(--primary-color);
-  margin-bottom: 20px;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
 }
 
+p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+}
+
+.home-button {
+  /* Reutilizamos el estilo del botón principal del login */
+  display: inline-block;
+  padding: 14px 30px;
+  background: linear-gradient(135deg, var(--button-gradient-start) 0%, var(--button-gradient-end) 100%);
+  color: var(--button-text);
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.home-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}

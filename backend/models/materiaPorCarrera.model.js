@@ -1,4 +1,6 @@
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
   const MateriaPorCarrera = sequelize.define('MateriaPorCarrera', {
     materia_id: {
       type: DataTypes.STRING(20),

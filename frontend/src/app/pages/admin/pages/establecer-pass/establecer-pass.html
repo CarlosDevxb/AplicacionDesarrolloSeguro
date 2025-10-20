@@ -1,0 +1,43 @@
+<div class="auth-wrapper">
+  <div class="auth-form-container">
+    <img src="assets/CHAFATEC.png" alt="Logo CHAFATEC" class="logo">
+    <h2>Establecer Nueva Contraseña</h2>
+    <p class="subtitle">Ingresa y confirma tu nueva contraseña para acceder a tu cuenta.</p>
+
+    <!-- Mensajes de feedback -->
+    <div *ngIf="message" class="message-box" [ngClass]="messageType === 'success' ? 'success-message' : 'error-message'">
+      {{ message }}
+    </div>
+
+    <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" *ngIf="!isSuccess">
+      <!-- Nueva Contraseña -->
+      <div class="form-group">
+        <label for="nueva_contrasena">Nueva Contraseña</label>
+        <div class="input-group">
+          <input id="nueva_contrasena" type="password" formControlName="nueva_contrasena" placeholder="Mínimo 8 caracteres">
+          <i class="fas fa-lock"></i>
+        </div>
+        <div *ngIf="passwordForm.get('nueva_contrasena')?.invalid && passwordForm.get('nueva_contrasena')?.touched" class="error-text">
+          <small *ngIf="passwordForm.get('nueva_contrasena')?.errors?.['required']">La contraseña es obligatoria.</small>
+          <small *ngIf="passwordForm.get('nueva_contrasena')?.errors?.['minlength']">Debe tener al menos 8 caracteres.</small>
+        </div>
+      </div>
+
+      <!-- Confirmar Contraseña -->
+      <div class="form-group">
+        <label for="confirmar_contrasena">Confirmar Contraseña</label>
+        <div class="input-group">
+          <input id="confirmar_contrasena" type="password" formControlName="confirmar_contrasena" placeholder="Repite la contraseña">
+          <i class="fas fa-lock"></i>
+        </div>
+        <div *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('confirmar_contrasena')?.touched" class="error-text">
+          <small>Las contraseñas no coinciden.</small>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="passwordForm.invalid">Guardar Contraseña</button>
+    </form>
+
+    <a *ngIf="isSuccess" routerLink="/login" class="login-link">Ir a Iniciar Sesión</a>
+  </div>
+</div>

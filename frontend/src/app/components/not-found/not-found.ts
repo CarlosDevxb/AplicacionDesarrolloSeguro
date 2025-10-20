@@ -6,8 +6,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './not-found.html',
-  styleUrls: ['./not-found.css'] // Asumo que tienes un archivo CSS con este nombre
+  styleUrls: ['./not-found.css']
 })
 export default class NotFoundComponent {
-  // No se necesita lógica aquí para una página 404 simple
 }

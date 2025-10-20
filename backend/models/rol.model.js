@@ -1,5 +1,7 @@
 // backend/models/rol.model.js
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
   const Rol = sequelize.define('Rol', {
     idRol: {
       type: DataTypes.INTEGER,

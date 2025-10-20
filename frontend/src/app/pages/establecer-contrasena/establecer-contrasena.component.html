@@ -1,0 +1,46 @@
+<!-- frontend/src/app/pages/establecer-contrasena/establecer-contrasena.component.html -->
+<div class="login-container">
+  <div class="login-box">
+    <div class="logo-container">
+      <img src="assets/CHAFATEC.png" alt="Logo CHAFATEC" class="logo">
+    </div>
+    <h2>Establecer Contraseña</h2>
+    <p class="subtitle">Crea una contraseña segura para tu cuenta.</p>
+
+    <!-- Formulario para establecer la contraseña -->
+    <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
+
+      <!-- Campo para la nueva contraseña -->
+      <div class="input-group">
+        <label for="nueva_contrasena">Nueva Contraseña</label>
+        <input type="password" id="nueva_contrasena" formControlName="nueva_contrasena" placeholder="Mínimo 8 caracteres">
+        @if (passwordForm.get('nueva_contrasena')?.touched && passwordForm.get('nueva_contrasena')?.hasError('required')) {
+          <small class="error-message">La contraseña es requerida.</small>
+        }
+        @if (passwordForm.get('nueva_contrasena')?.touched && passwordForm.get('nueva_contrasena')?.hasError('minlength')) {
+          <small class="error-message">La contraseña debe tener al menos 8 caracteres.</small>
+        }
+      </div>
+
+      <!-- Campo para confirmar la contraseña -->
+      <div class="input-group">
+        <label for="confirmar_contrasena">Confirmar Contraseña</label>
+        <input type="password" id="confirmar_contrasena" formControlName="confirmar_contrasena" placeholder="Repite la contraseña">
+        @if (passwordForm.hasError('mismatch') && passwordForm.get('confirmar_contrasena')?.touched) {
+          <small class="error-message">Las contraseñas no coinciden.</small>
+        }
+      </div>
+
+      <!-- Mensajes de éxito o error -->
+      @if (message) {
+        <div class="message" [ngClass]="messageType">{{ message }}</div>
+      }
+
+      <!-- Botón de envío o enlace para ir al login si ya se completó -->
+      <button type="submit" [disabled]="passwordForm.invalid || isSuccess" class="submit-btn">{{ isSuccess ? 'Contraseña Guardada' : 'Guardar Contraseña' }}</button>
+      @if (isSuccess) {
+        <a routerLink="/login" class="back-to-login">Ir a Iniciar Sesión</a>
+      }
+    </form>
+  </div>
+</div>

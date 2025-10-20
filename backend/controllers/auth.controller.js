@@ -2,8 +2,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const crypto = require('crypto'); // Necesario para hashear el token
 const { Usuario } = require('../models');
-const { alternatives } = require('joi');
 const { Op } = require('sequelize');
 
 
@@ -78,5 +78,41 @@ const refresh = (req, res) => {
   res.json({ token: newToken });
 };
 
+const resetPassword = async (req, res) => {
+  try {
+    // 1. Obtener el token de la URL y hashearlo para buscarlo en la BD
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
 
-module.exports = { login, refresh };
+    // 2. Buscar al usuario con ese token y que no haya expirado
+    const user = await Usuario.findOne({
+      where: {
+        password_reset_token: hashedToken,
+        password_reset_expires: { [Op.gt]: Date.now() } // Op.gt = "mayor que"
+      }
+    });
+
+    // 3. Si no se encuentra el usuario o el token expiró, enviar error
+    if (!user) {
+      return res.status(400).json({ message: 'El token es inválido o ha expirado.' });
+    }
+
+    // 4. Hashear la nueva contraseña y actualizar el usuario
+    const salt = await bcrypt.genSalt(10);
+    user.contrasena = await bcrypt.hash(req.body.password, salt);
+    user.password_reset_token = null; // Limpiar el token
+    user.password_reset_expires = null; // Limpiar la expiración
+
+    await user.save();
+
+    res.status(200).json({ message: 'La contraseña ha sido actualizada correctamente. Ahora puedes iniciar sesión.' });
+
+  } catch (error) {
+    console.error('Error al restablecer la contraseña:', error);
+    res.status(500).json({ message: 'Error en el servidor.' });
+  }
+};
+
+module.exports = { login, refresh, resetPassword };

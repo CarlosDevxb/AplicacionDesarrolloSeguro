@@ -1,5 +1,7 @@
 // backend/models/usuario.model.js
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
   const Usuario = sequelize.define('Usuario', {
     id: {
       type: DataTypes.STRING(20),

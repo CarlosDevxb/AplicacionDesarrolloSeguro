@@ -16,7 +16,6 @@
           <div class="form-group"><label for="alumno-id">No. de Control</label><input id="alumno-id" type="text" formControlName="id"></div>
           <div class="form-group"><label for="alumno-nombre">Nombre Completo</label><input id="alumno-nombre" type="text" formControlName="nombre_completo"></div>
           <div class="form-group"><label for="alumno-correo">Correo</label><input id="alumno-correo" type="email" formControlName="correo"></div>
-          <div class="form-group"><label for="alumno-pass">Contraseña</label><input id="alumno-pass" type="password" formControlName="contrasena"></div>
           <div class="form-group"><label for="alumno-carrera">Carrera</label><select id="alumno-carrera" formControlName="carrera_id"><option value="" disabled>Selecciona una carrera</option><option *ngFor="let c of carreras" [value]="c.id">{{c.nombre}}</option></select></div>
           <div class="form-group"><label for="alumno-ingreso">Fecha de Ingreso</label><input id="alumno-ingreso" type="date" formControlName="fecha_ingreso"></div>
         </div>
@@ -36,7 +35,6 @@
           <div class="form-group"><label for="docente-id">ID de Empleado</label><input id="docente-id" type="text" formControlName="id"></div>
           <div class="form-group"><label for="docente-nombre">Nombre Completo</label><input id="docente-nombre" type="text" formControlName="nombre_completo"></div>
           <div class="form-group"><label for="docente-correo">Correo</label><input id="docente-correo" type="email" formControlName="correo"></div>
-          <div class="form-group"><label for="docente-pass">Contraseña</label><input id="docente-pass" type="password" formControlName="contrasena"></div>
         </div>
         <button type="submit" [disabled]="docenteForm.invalid">Crear Docente</button>
       </form>
@@ -54,7 +52,6 @@
           <div class="form-group"><label for="admin-id">ID de Empleado</label><input id="admin-id" type="text" formControlName="id"></div>
           <div class="form-group"><label for="admin-nombre">Nombre Completo</label><input id="admin-nombre" type="text" formControlName="nombre_completo"></div>
           <div class="form-group"><label for="admin-correo">Correo</label><input id="admin-correo" type="email" formControlName="correo"></div>
-          <div class="form-group"><label for="admin-pass">Contraseña</label><input id="admin-pass" type="password" formControlName="contrasena"></div>
         </div>
         <button type="submit" [disabled]="adminForm.invalid">Crear Administrativo</button>
       </form>

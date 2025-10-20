@@ -40,7 +40,6 @@ export default class GestionUsuariosComponent {
       id: ['', Validators.required],
       nombre_completo: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(8)]],
       carrera_id: ['', Validators.required],
       fecha_ingreso: [new Date().toISOString().split('T')[0], Validators.required]
     });
@@ -48,15 +47,13 @@ export default class GestionUsuariosComponent {
     this.docenteForm = this.fb.group({
       id: ['', Validators.required],
       nombre_completo: ['', Validators.required],
-      correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(8)]]
+      correo: ['', [Validators.required, Validators.email]]
     });
 
     this.adminForm = this.fb.group({
       id: ['', Validators.required],
       nombre_completo: ['', Validators.required],
-      correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(8)]]
+      correo: ['', [Validators.required, Validators.email]]
     });
 
     this.editForm = this.fb.group({

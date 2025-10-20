@@ -4,15 +4,10 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 require('dotenv').config();
-
-// Importar la conexión a la BD y las rutas
-const sequelize = require('./config/database');
-const apiRoutes = require('./routes/index'); // <-- Importa el enrutador principal
-const bcrypt = require('bcryptjs');
+const apiRoutes = require('./routes/index');
 const app = express();
 const db = require('./models'); // <-- Importa el index.js de models
-const { hashPassword } = require('./hash');
-const { func } = require('joi');
+
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
