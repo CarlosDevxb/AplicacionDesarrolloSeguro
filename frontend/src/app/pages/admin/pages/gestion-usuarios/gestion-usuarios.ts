@@ -40,7 +40,6 @@ export default class GestionUsuariosComponent {
       id: ['', Validators.required],
       nombre_completo: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(8)]],
       carrera_id: ['', Validators.required],
       fecha_ingreso: [new Date().toISOString().split('T')[0], Validators.required]
     });
@@ -48,15 +47,13 @@ export default class GestionUsuariosComponent {
     this.docenteForm = this.fb.group({
       id: ['', Validators.required],
       nombre_completo: ['', Validators.required],
-      correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(8)]]
+      correo: ['', [Validators.required, Validators.email]]
     });
 
     this.adminForm = this.fb.group({
       id: ['', Validators.required],
       nombre_completo: ['', Validators.required],
-      correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(8)]]
+      correo: ['', [Validators.required, Validators.email]]
     });
 
     this.editForm = this.fb.group({
@@ -64,7 +61,9 @@ export default class GestionUsuariosComponent {
       correo: ['', [Validators.required, Validators.email]],
       telefono: [''],
       direccion: [''],
-      estatus: [''] // Añadimos el control para el estatus
+      rol: ['', Validators.required], // Campo para el rol del usuario
+      estado: ['', Validators.required], // Campo para el estado de la cuenta
+      estatus: [''] // Campo para el estatus académico del alumno
     });
 
     this.carreraService.getCarreras().subscribe(data => this.carreras = data);
@@ -106,7 +105,7 @@ export default class GestionUsuariosComponent {
       next: user => {
         this.searchedUser = user;
         this.searchMessage = null;
-        this.editForm.patchValue(user);
+        this.editForm.patchValue(user); // Carga datos de la tabla 'usuarios'
         // Si el usuario es un alumno, también cargamos su estatus en el form
         if (user.Alumno) {
           this.editForm.patchValue({ estatus: user.Alumno.estatus });
@@ -121,6 +120,8 @@ export default class GestionUsuariosComponent {
     this.adminService.updateUser(this.searchedUser.id, this.editForm.value).subscribe({
       next: res => {
         this.updateMessage = res.message;
+        // Volvemos a buscar al usuario para refrescar los datos en la pantalla
+        this.searchUser();
         setTimeout(() => this.updateMessage = null, 5000);
       },
       error: (err: HttpErrorResponse) => this.updateMessage = err.error.message || 'Error al actualizar.'

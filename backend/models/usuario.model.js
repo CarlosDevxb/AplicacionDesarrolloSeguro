@@ -1,5 +1,7 @@
 // backend/models/usuario.model.js
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
   const Usuario = sequelize.define('Usuario', {
     id: {
       type: DataTypes.STRING(20),
@@ -13,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     contrasena: {
       type: DataTypes.STRING(255),
-      allowNull: false,
+      allowNull: true, // Coincide con el schema que permite NULL
     },
     nombre_completo: {
       type: DataTypes.STRING(100),
@@ -40,11 +42,24 @@ module.exports = (sequelize, DataTypes) => {
     foto: {
       type: DataTypes.STRING(255),
     },
+    estado: {
+      type: DataTypes.ENUM('activo', 'no activo', 'bloqueado'),
+      allowNull: false,
+      defaultValue: 'activo'
+    },
+    password_reset_token: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    password_reset_expires: {
+      type: DataTypes.DATE,
+      allowNull: true
+    }
   }, {  
     tableName: 'usuarios',
     timestamps: false, // Tu esquema no tiene createdAt/updatedAt
     defaultScope: {
-      attributes: { exclude: ['contrasena'] },
+      attributes: { exclude: ['contrasena', 'password_reset_token', 'password_reset_expires'] },
     },
     scopes: {
       withPassword: {

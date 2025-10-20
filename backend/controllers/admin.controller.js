@@ -1,9 +1,13 @@
-const { Usuario, Alumno, Docente, Administrativo, Carrera } = require('../models');
+const { Usuario, Alumno, Docente, Administrativo, Carrera, sequelize } = require('../models'); // Importamos sequelize
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const sendEmail = require('./email.js'); // Importamos la utilidad para enviar correos
+
 
 // Crear un nuevo usuario (Alumno, Docente o Administrativo)
 const createUser = async (req, res) => {
-  const { id, nombre_completo, correo, contrasena, rol, carrera_id, fecha_ingreso } = req.body;
+  const { id, nombre_completo, correo, rol, carrera_id, fecha_ingreso } = req.body;
+  const t = await sequelize.transaction(); // Iniciar transacción (Forma correcta en v6)
 
   try {
     // Validar que el ID o correo no existan
@@ -16,20 +20,16 @@ const createUser = async (req, res) => {
       return res.status(409).json({ message: `El correo '${correo}' ya está en uso.` });
     }
 
-    // Hashear contraseña
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(contrasena, salt);
-
     // Crear el usuario base
     const newUser = await Usuario.create({
       id,
-      usuario: correo, // Usamos el correo como 'usuario' para login de aspirantes
-      contrasena: hashedPassword,
+      usuario: id, // Usamos el ID/No. de Control como 'usuario' para el login
+      contrasena: null, // La contraseña se establecerá por el usuario
       nombre_completo,
       correo,
       rol,
       numero_control: id // Guardamos el ID/No. de Control en el campo numero_control
-    });
+    }, { transaction: t });
 
     // Si es un alumno, crear su registro en la tabla 'alumnos'
     if (rol === 'alumno' && carrera_id && fecha_ingreso) {
@@ -50,12 +50,48 @@ const createUser = async (req, res) => {
       // Se ajusta el semestre según el periodo
       semestres += (periodoActual - periodoIngreso) + 1;
 
-      await Alumno.create({ id, carrera_id, fecha_ingreso, semestre: semestres });
+      await Alumno.create({ id, carrera_id, fecha_ingreso, semestre: semestres }, { transaction: t });
+    } else if (rol === 'docente') {
+      await Docente.create({ id }, { transaction: t });
+    } else if (rol === 'administrativo') {
+      await Administrativo.create({ id }, { transaction:t });
     }
 
-    // Aquí podrías añadir lógica para Docente y Administrativo si tienen tablas separadas
+    // --- Lógica para enviar correo de establecimiento de contraseña ---
 
-    res.status(201).json({ message: `Usuario ${rol} creado exitosamente.` });
+    // 1. Generar un token único para el usuario
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    // 2. Hashear el token y guardarlo en la base de datos
+    newUser.password_reset_token = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    // 3. Establecer una fecha de expiración (ej. 24 horas)
+    newUser.password_reset_expires = Date.now() + 24 * 60 * 60 * 1000;
+
+    await newUser.save({ transaction: t });
+
+    // 4. Construir la URL y enviar el correo
+    const resetURL = `${process.env.FRONTEND_URL}/establecer-contrasena/${resetToken}`;
+    const message = `
+      ¡Bienvenido a CHAFATEC!
+      Has sido registrado en nuestra plataforma. Para completar tu registro y acceder a tu cuenta,
+      por favor, establece tu contraseña personal haciendo clic en el siguiente enlace:
+      \n\n${resetURL}\n\n
+      Si no has solicitado este registro, por favor ignora este correo. El enlace es válido por 24 horas.
+    `;
+
+    await sendEmail({
+      email: newUser.correo,
+      subject: 'Bienvenido a CHAFATEC - Establece tu contraseña',
+      message
+    });
+
+    await t.commit(); // Confirmar la transacción solo si todo fue exitoso
+
+    res.status(201).json({ message: `Usuario ${rol} creado. Se ha enviado un correo para establecer la contraseña.` });
 
   } catch (error) {
     console.error('Error al crear usuario:', error);
@@ -84,16 +120,28 @@ const findUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    // Separamos los datos del usuario y los datos específicos del alumno
-    const { nombre_completo, correo, telefono, direccion, estatus } = req.body;
+    // Obtenemos todos los datos del cuerpo de la solicitud
+    const { nombre_completo, correo, telefono, direccion, rol, estado, estatus } = req.body;
 
-    // 1. Actualizar datos en la tabla 'usuarios'
-    await Usuario.update({ nombre_completo, correo, telefono, direccion }, { where: { id } });
+    // 1. Preparamos los datos para la tabla 'usuarios'
+    const userData = {
+      nombre_completo,
+      correo,
+      telefono,
+      direccion,
+      rol,
+      estado // Aseguramos que el estado se incluya en la actualización
+    };
+console.log(userData);
 
-    // 2. Si hay un estatus, actualizarlo en la tabla 'alumnos'
-    if (estatus) {
+    // 2. Actualizamos la tabla 'usuarios'
+    await Usuario.update(userData, { where: { id } });
+
+    // 3. Si el usuario es un alumno y se ha proporcionado un estatus académico, lo actualizamos
+    if (rol === 'alumno' && estatus) {
       await Alumno.update({ estatus }, { where: { id } });
     }
+
     res.status(200).json({ message: 'Usuario actualizado correctamente.' });
   } catch (error) {
     res.status(500).json({ message: 'Error al actualizar el usuario.' });

@@ -1,37 +1,41 @@
 // backend/models/alumno.model.js
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
   const Alumno = sequelize.define('Alumno', {
     id: {
       type: DataTypes.STRING(20),
       primaryKey: true,
-      references: {
-        model: 'usuarios', // Nombre de la tabla
-        key: 'id'
-      }
+      allowNull: false,
     },
     carrera_id: {
-      type: DataTypes.STRING(20),
-      allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'carreras', // Nombre de la tabla de carreras
+        key: 'id',
+      }
     },
     fecha_ingreso: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: DataTypes.DATEONLY,
+      allowNull: false,
     },
     semestre: {
       type: DataTypes.INTEGER,
-      allowNull: true // O false si siempre debe tener un valor
+      allowNull: false,
     },
     estatus: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.ENUM('activo', 'activo con especiales', 'baja temporal', 'baja definitiva', 'egresado'),
+      defaultValue: 'activo',
       allowNull: false,
-      defaultValue: 'Activo' // Estado por defecto para nuevos alumnos
     }
   }, {
     tableName: 'alumnos',
-    timestamps: false
+    timestamps: false,
   });
 
   Alumno.associate = (models) => {
+    // Un alumno pertenece a un usuario y a una carrera
     Alumno.belongsTo(models.Usuario, { foreignKey: 'id' });
     Alumno.belongsTo(models.Carrera, { foreignKey: 'carrera_id' });
   };

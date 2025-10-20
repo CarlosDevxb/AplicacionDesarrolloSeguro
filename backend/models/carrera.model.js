@@ -1,16 +1,17 @@
 // backend/models/carrera.model.js
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
   const Carrera = sequelize.define('Carrera', {
     id: {
-      type: DataTypes.STRING(20), // Corregido: El ID es un string (VARCHAR)
+      type: DataTypes.STRING(20),
       primaryKey: true
     },
     nombre: {
-      type: DataTypes.STRING(100), // Corregido: Coincide con el schema
+      type: DataTypes.STRING(100),
       allowNull: false,
       unique: true
     }
-    // Eliminada la columna 'descripcion' que no existe en la BD
   }, {
     tableName: 'carreras', // Especificamos el nombre exacto de la tabla
     // Le decimos a Sequelize que esta tabla no tiene los campos createdAt y updatedAt

@@ -9,7 +9,7 @@ base.txt
 
 # La carpeta de dependencias, ¡nunca se sube!
 backend/node_modules/
-
+databaseCreatee.sql
 # El archivo con las variables de entorno y secretos
 backend/.env
 

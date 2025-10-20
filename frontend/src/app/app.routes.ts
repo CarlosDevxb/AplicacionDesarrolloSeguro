@@ -63,6 +63,13 @@ export const routes: Routes = [
     // Cargamos las rutas hijas para el administrador
     loadChildren: () => import('./pages/admin/admin.routes').then(m => m.ADMIN_ROUTES)
   },
+  // Ruta para manejar páginas no encontradas
+  // Esta ruta debe ir al final de todas las rutas definidas
+  // para que funcione correctamente.
+  {
+    path: 'establecer-contrasena/:token',
+    loadComponent: () => import('./pages/establecer-contrasena/establecer-contrasena.component').then(m => m.default)
+        },
 
   // ¡ESTA ES LA RUTA CLAVE! Debe ser la última.
   { path: '**', component: NotFoundComponent }

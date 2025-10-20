@@ -30,8 +30,8 @@ const getAllCarreras = async (req, res) => {
 // Crear una nueva carrera
 const createCarrera = async (req, res) => {
   try {
-    const { nombre, descripcion } = req.body;
-    const nuevaCarrera = await Carrera.create({ nombre, descripcion });
+    const { nombre } = req.body;
+    const nuevaCarrera = await Carrera.create({ nombre });
     res.status(201).json(nuevaCarrera);
   } catch (error) {
     res.status(500).json({ message: 'Error al crear la carrera.', error: error.message });
@@ -42,8 +42,8 @@ const createCarrera = async (req, res) => {
 const updateCarrera = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, descripcion } = req.body;
-    await Carrera.update({ nombre, descripcion }, { where: { id } });
+    const { nombre } = req.body;
+    await Carrera.update({ nombre }, { where: { id } });
     res.status(200).json({ message: 'Carrera actualizada correctamente.' });
   } catch (error) {
     res.status(500).json({ message: 'Error al actualizar la carrera.', error: error.message });

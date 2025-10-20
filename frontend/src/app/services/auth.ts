@@ -111,5 +111,10 @@ export class AuthService {
     return this.http.post(`${this.usersApiUrl}/profile/password`, passwordData, { headers });
   }
 
+  // ¡NUEVO MÉTODO!
+  resetPassword(token: string, password: string): Observable<any> {
+    // No se necesita token de autenticación, el token de reseteo va en la URL
+    return this.http.post(`${this.authApiUrl}/reset-password/${token}`, { password });
+  }
 
 }
