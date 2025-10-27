@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal Alumno — Detalle de Tarea</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- Estilos globales -->
+  <link rel="stylesheet" href="styles.css"/>
+  <!-- Estilos puntuales de la vista de tarea -->
+  <link rel="stylesheet" href="tarea.css"/>
+</head>
+<body>
+  <!-- ===== Sidebar (igual) ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2 class="title">Portal Alumno</h2>
+    </div>
+    <div class="profile-section">
+      <div class="profile-picture-container">
+        <i class="fa-solid fa-user-graduate profile-picture-icon" aria-hidden="true"></i>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name">Rodolfo Torres Reyes</span>
+        <span class="profile-role">Rol: Alumno</span>
+      </div>
+    </div>
+    <nav class="menu">
+      <a href="Index.html"        class="menu-item"><i class="fas fa-home"></i><span class="menu-text">Inicio</span></a>
+      <a href="Perfil.html"       class="menu-item"><i class="fas fa-user-circle"></i><span class="menu-text">Mi Perfil</span></a>
+      <a href="Academico.html"    class="menu-item"><i class="fas fa-graduation-cap"></i><span class="menu-text">Academico</span></a>
+      <a href="Evaluaciones.html" class="menu-item"><i class="fas fa-book"></i><span class="menu-text">Evaluaciones</span></a>
+      <a href="Servicios.html"    class="menu-item"><i class="fas fa-tasks"></i><span class="menu-text">Servicios</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <button id="logoutBtn" class="menu-item logout-button" type="button">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="menu-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== Contenido ===== -->
+  <main class="main-content">
+    <section class="page tarea-page">
+      <div class="breadcrumb">
+        <a href="Index.html"><i class="fa-solid fa-chevron-left"></i> Volver a Inicio</a>
+      </div>
+
+      <!-- Encabezado dinámica -->
+      <header id="tareaHead" class="tarea-head">
+        <!-- se rellena por JS -->
+      </header>
+
+      <!-- Grid principal -->
+      <div class="tarea-grid">
+        <!-- Panel izquierdo -->
+        <section class="tarea-left">
+          <article class="card">
+            <h3><i class="fa-regular fa-file-lines"></i> Instrucciones</h3>
+            <div id="tareaInstrucciones" class="prose"></div>
+          </article>
+
+          <article class="card">
+            <h3><i class="fa-solid fa-list-check"></i> Rúbrica / Criterios</h3>
+            <table class="table rubric" id="tablaRubrica">
+              <thead>
+                <tr><th>Criterio</th><th>Descripción</th><th>Puntos</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div class="muted" id="rubricaTotal"></div>
+          </article>
+
+          <article class="card">
+            <h3><i class="fa-regular fa-comments"></i> Comentarios</h3>
+            <div id="comentariosList" class="comentarios"></div>
+            <div class="comentario-new">
+              <input id="nuevoComentario" type="text" placeholder="Escribe un comentario…"/>
+              <button id="btnComentar" class="btn">Enviar</button>
+            </div>
+          </article>
+        </section>
+
+        <!-- Panel derecho -->
+        <aside class="tarea-right">
+          <article class="card">
+            <h3><i class="fa-regular fa-clock"></i> Estado y fechas</h3>
+            <ul class="meta">
+              <li><span>Asignada:</span><strong id="fAsignada">—</strong></li>
+              <li><span>Entrega límite:</span><strong id="fLimite">—</strong></li>
+              <li><span>Tiempo restante:</span><strong id="fRestante">—</strong></li>
+              <li><span>Prioridad:</span><strong id="fPrioridad" class="tag">—</strong></li>
+              <li><span>Estado:</span><strong id="fEstado" class="tag state">Pendiente</strong></li>
+            </ul>
+            <button id="btnMarcarHecho" class="btn full"><i class="fa-regular fa-square-check"></i> Marcar como hecho</button>
+          </article>
+
+          <article class="card">
+            <h3><i class="fa-solid fa-paperclip"></i> Recursos</h3>
+            <ul id="recursosList" class="links"></ul>
+          </article>
+
+          <article class="card">
+            <h3><i class="fa-regular fa-paper-plane"></i> Entregar</h3>
+            <div class="entrega">
+              <label class="upload">
+                <input type="file" id="fileInput" multiple/>
+                <span><i class="fa-solid fa-upload"></i> Subir archivos</span>
+              </label>
+              <div class="o">o</div>
+              <input type="url" id="urlEntrega" placeholder="Pega un enlace (GitHub, Drive, etc.)"/>
+              <button id="btnEntregar" class="btn full">Enviar entrega</button>
+            </div>
+            <div class="muted" id="entregaStatus">Aún no has enviado nada.</div>
+          </article>
+
+          <article class="card">
+            <h3><i class="fa-solid fa-timeline"></i> Línea de tiempo</h3>
+            <ul id="timeline" class="timeline"></ul>
+          </article>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="tarea.js"></script>
+</body>
+</html>

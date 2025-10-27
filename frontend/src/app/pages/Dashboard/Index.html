@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal Alumno — Inicio</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+
+<body>
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2 class="title">Portal Alumno</h2>
+    </div>
+
+    <div class="profile-section">
+      <div class="profile-picture-container">
+        <i class="fa-solid fa-user-graduate profile-picture-icon" aria-hidden="true"></i>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name">Rodolfo Torres Reyes</span>
+        <span class="profile-role">Rol: Alumno</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a href="Index.html"       data-file="Index.html"                   class="menu-item"><i class="fas fa-home"></i><span class="menu-text">Inicio</span></a>
+      <a href="perfil.html"       data-file="Perfil.html"       class="menu-item"><i class="fas fa-user-circle"></i><span class="menu-text">Mi Perfil</span></a>
+      <a href="Academico.html"    data-file="Academico.html"    class="menu-item"><i class="fas fa-graduation-cap"></i><span class="menu-text">Academico</span></a>
+      <a href="Evaluaciones.html" data-file="Evaluaciones.html" class="menu-item"><i class="fas fa-book"></i><span class="menu-text">Evaluaciones</span></a>
+      <a href="Servicios.html"    data-file="Servicios.html"    class="menu-item"><i class="fas fa-tasks"></i><span class="menu-text">Servicios</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button id="logoutBtn" class="menu-item logout-button" type="button">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="menu-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== Contenido: INICIO (local) ===== -->
+  <main class="main-content">
+    <section class="page" id="view-inicio">
+      <h1 id="greeting" class="page__title"></h1>
+      <p class="page__subtitle">Aquí verás tus tareas y los avisos más recientes de la institución.</p>
+
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-book-open"></i> Tareas pendientes</h2>
+        <div class="carousel-controls">
+          <button class="carousel-btn" id="btnPrev" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="carousel-btn" id="btnNext" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <div class="tasks-carousel" id="tasksCarousel">
+        <div class="tasks-track" id="tasksTrack"><!-- Tarjetas desde JS --></div>
+      </div>
+
+      <div class="section-header below">
+        <h2 class="section-title"><i class="fa-solid fa-bullhorn"></i> Anuncios</h2>
+      </div>
+
+      <div class="ann-tabs" role="tablist" aria-label="Categorías de anuncios">
+        <button class="ann-tab is-active" role="tab" aria-selected="true" data-tag="Todos"><span class="ann-tab__label">Todos</span></button>
+        <button class="ann-tab" role="tab" aria-selected="false" data-tag="Académico"><span class="ann-tab__label">Académico</span></button>
+        <button class="ann-tab" role="tab" aria-selected="false" data-tag="Eventos"><span class="ann-tab__label">Eventos</span></button>
+        <button class="ann-tab" role="tab" aria-selected="false" data-tag="Becas"><span class="ann-tab__label">Becas</span></button>
+        <button class="ann-tab" role="tab" aria-selected="false" data-tag="Sistemas"><span class="ann-tab__label">Sistemas</span></button>
+      </div>
+
+      <div class="announcements" id="annList"><!-- Anuncios desde JS --></div>
+    </section>
+  </main>
+ <script src="script.js"></script>
+</body>
+</html>
