@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal Alumno — Servicios</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- Estilos SOLO de esta vista -->
+  <link rel="stylesheet" href="Servicios.css"/>
+</head>
+<body>
+  <!-- ===== Shell opcional (si abres este HTML directo). En SPA tu router solo usa <section.page> ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><h2 class="title">Portal Alumno</h2></div>
+
+    <div class="profile-section">
+      <div class="profile-picture-container">
+        <i class="fa-solid fa-user-graduate profile-picture-icon" aria-hidden="true"></i>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name">Rodolfo Torres Reyes</span>
+        <span class="profile-role">Rol: Alumno</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a href="Index.html"       data-file="Index.html"        class="menu-item"><i class="fas fa-home"></i><span class="menu-text">Inicio</span></a>
+      <a href=""       data-file="Perfil.html"       class="menu-item"><i class="fas fa-user-circle"></i><span class="menu-text">Mi Perfil</span></a>
+      <a href="Academico.html"    data-file="Academico.html"    class="menu-item"><i class="fas fa-graduation-cap"></i><span class="menu-text">Academico</span></a>
+      <a href="Evaluaciones.html" data-file="Evaluaciones.html" class="menu-item"><i class="fas fa-book"></i><span class="menu-text">Evaluaciones</span></a>
+      <a href="Servicios.html"    data-file="Servicios.html"    class="menu-item active"><i class="fas fa-tasks"></i><span class="menu-text">Servicios</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button id="logoutBtn" class="menu-item logout-button" type="button">
+        <i class="fas fa-sign-out-alt"></i><span class="menu-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+  <!-- ===== /Shell opcional ===== -->
+
+  <!-- ===== SOLO ESTA SECCIÓN la inyecta tu router ===== -->
+  <main class="main-content">
+    <section class="page" id="page-servicios">
+      <h1 id="greeting" class="page__title"></h1>
+      <p class="page__subtitle">Trámites escolares disponibles.</p>
+
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-gear"></i> Servicios</h2>
+      </div>
+
+      <!-- Trámites escolares -->
+      <div class="grid cols-2" style="margin-bottom:18px;">
+        <!-- Pagos -->
+        <article class="opt-card">
+          <div class="opt-title"><i class="fa-solid fa-receipt"></i> Pagos</div>
+          <p class="opt-desc">Consulta adeudos, genera referencias y revisa tu historial de pagos.</p>
+          <div class="opt-cta">
+            <button class="btn" data-action="ver-pagos">Ver adeudos</button>
+            <button class="btn ghost" data-action="generar-referencia">Generar referencia</button>
+          </div>
+        </article>
+
+        <!-- Constancias -->
+        <article class="opt-card">
+          <div class="opt-title"><i class="fa-regular fa-file-lines"></i> Constancias</div>
+          <p class="opt-desc">Solicita constancias (estudios, créditos, no adeudo) y da seguimiento.</p>
+          <div class="opt-cta">
+            <button class="btn" data-action="solicitar-constancia">Solicitar</button>
+            <button class="btn ghost" data-action="mis-constancias">Mis solicitudes</button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Panel: Pagos -->
+      <div class="card" id="panelPagos" style="display:none;">
+        <h3><i class="fa-solid fa-wallet"></i> Adeudos y pagos</h3>
+        <p class="muted">Vista de ejemplo. Sustituye por tu API.</p>
+        <div style="overflow:auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Concepto</th>
+                <th>Referencia</th>
+                <th>Importe</th>
+                <th>Vence</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyPagos"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Panel: Constancias -->
+      <div class="card" id="panelConstancias" style="display:none; margin-top:16px;">
+        <h3><i class="fa-regular fa-file-lines"></i> Mis constancias</h3>
+        <p class="muted">Vista de ejemplo. Conecta tus endpoints.</p>
+        <div style="overflow:auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Folio</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyConstancias"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Lógica de esta vista -->
+  <script src="Servicios.js"></script>
+</body>
+</html>

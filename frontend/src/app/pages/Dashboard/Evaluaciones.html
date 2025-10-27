@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal Alumno — Evaluaciones</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- Estilos SOLO de esta vista -->
+  <link rel="stylesheet" href="Evaluaciones.css"/>
+</head>
+<body>
+  <!-- ===== Shell opcional (si abres este HTML directo). En SPA tu router solo usa <section.page> ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><h2 class="title">Portal Alumno</h2></div>
+
+    <div class="profile-section">
+      <div class="profile-picture-container">
+        <i class="fa-solid fa-user-graduate profile-picture-icon" aria-hidden="true"></i>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name">Rodolfo Torres Reyes</span>
+        <span class="profile-role">Rol: Alumno</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a href="Index.html"       data-file="Index.html"        class="menu-item"><i class="fas fa-home"></i><span class="menu-text">Inicio</span></a>
+      <a href=""       data-file="Perfil.html"       class="menu-item"><i class="fas fa-user-circle"></i><span class="menu-text">Mi Perfil</span></a>
+      <a href="Academico.html"    data-file="Academico.html"    class="menu-item"><i class="fas fa-graduation-cap"></i><span class="menu-text">Academico</span></a>
+      <a href="Evaluaciones.html" data-file="Evaluaciones.html" class="menu-item active"><i class="fas fa-book"></i><span class="menu-text">Evaluaciones</span></a>
+      <a href="Servicios.html"    data-file="Servicios.html"    class="menu-item"><i class="fas fa-tasks"></i><span class="menu-text">Servicios</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button id="logoutBtn" class="menu-item logout-button" type="button">
+        <i class="fas fa-sign-out-alt"></i><span class="menu-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+  <!-- ===== /Shell opcional ===== -->
+
+  <!-- ===== SOLO ESTA SECCIÓN la inyecta tu router ===== -->
+  <main class="main-content">
+    <section class="page" id="page-evaluaciones">
+      <h1 id="greeting" class="page__title"></h1>
+      <p class="page__subtitle">Opciones relacionadas con evaluaciones.</p>
+
+      <!-- Opciones principales -->
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-clipboard-list"></i> Evaluaciones</h2>
+      </div>
+
+      <div class="grid cols-3" style="margin-bottom:18px;">
+        <!-- Evaluaciones realizadas -->
+        <article class="opt-card">
+          <div class="opt-title"><i class="fa-regular fa-square-check"></i> Evaluaciones realizadas</div>
+          <p class="opt-desc">Histórico de evaluaciones completadas y su estado.</p>
+          <div class="opt-cta">
+            <button class="btn" data-action="ver-realizadas">Ver listado</button>
+            <button class="btn ghost" data-action="descargar-comprobante">Descargar comprobante</button>
+          </div>
+        </article>
+
+        <!-- Evaluación docente -->
+        <article class="opt-card">
+          <div class="opt-title"><i class="fa-solid fa-chalkboard-user"></i> Evaluación docente</div>
+          <p class="opt-desc">Da tu retroalimentación sobre tus profesores del periodo.</p>
+          <div class="opt-cta">
+            <button class="btn" data-action="iniciar-docente">Iniciar evaluación</button>
+            <button class="btn ghost" data-action="ver-instrucciones">Instrucciones</button>
+          </div>
+        </article>
+
+        <!-- Evaluación de servicios -->
+        <article class="opt-card">
+          <div class="opt-title"><i class="fa-solid fa-building-columns"></i> Evaluación de servicios</div>
+          <p class="opt-desc">Valora servicios como biblioteca, laboratorios y sistemas.</p>
+          <div class="opt-cta">
+            <button class="btn" data-action="iniciar-servicios">Evaluar servicios</button>
+            <button class="btn ghost" data-action="resultados-servicios">Resultados</button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Panel dinámico: Evaluaciones realizadas -->
+      <div class="card" id="panelRealizadas" style="display:none;">
+        <h3><i class="fa-regular fa-square-check"></i> Mis evaluaciones realizadas</h3>
+        <p class="muted">Vista de ejemplo. Conecta tu API para datos reales.</p>
+        <div style="overflow:auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Referencia</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyRealizadas"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lógica de esta vista -->
+  <script src="Evaluaciones.js"></script>
+</body>
+</html>
