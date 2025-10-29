@@ -1,29 +1,28 @@
 <div class="login-wrapper">
   <!-- Contenedor del Carrusel de Imágenes -->
   <div class="carousel-container">
-    <!-- Coloca aquí tus imágenes. Deben tener una relación de aspecto similar. -->
     <img src="assets/CHAFATEC.png" alt="Imagen 1" class="carousel-image image1">
-    <!-- La animación CSS se encargará de mostrarlas una por una. -->
     <div class="carousel-overlay"></div>
   </div>
 
   <!-- Contenedor del Formulario de Login -->
   <div class="login-form-container">
     <img src="assets/CHAFATEC.png" alt="CHAFATEC Logo" class="logo">
-    <h2>CHAFATEC</h2>
-
-    <h2>Iniciar Sesión</h2>
+    <h2>Portal de Aspirantes</h2>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
       <div class="form-group">
         <label for="usuario">{{ userFieldLabel }}</label>
         <div class="input-group">
-          <i class="fa-solid fa-at"></i>
-          <input id="usuario" type="text" formControlName="usuario" placeholder="Ingresa tu identificador">
+          <i class="fa-solid fa-envelope"></i>
+          <input id="usuario" type="email" formControlName="usuario" [placeholder]="'Ingresa tu ' + userFieldLabel">
         </div>
-        @if (loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched) {
-          <div class="error-text"><small>Este campo es requerido.</small></div>
+        @if (loginForm.get('usuario')?.hasError('required') && loginForm.get('usuario')?.touched) {
+          <div class="error-text"><small>El correo es requerido.</small></div>
+        }
+        @if (loginForm.get('usuario')?.hasError('email') && loginForm.get('usuario')?.touched) {
+          <div class="error-text"><small>Por favor, ingresa un correo válido.</small></div>
         }
       </div>
 
@@ -39,26 +38,21 @@
       </div>
 
       @if (errorMessage) {
-        <div class="error-message">
-          {{ errorMessage }}
-        </div>
+        <div class="error-message">{{ errorMessage }}</div>
       }
 
       @if (userNotFound) {
         <div class="info-message">
-          <span>No existe una cuenta con ese número de control.</span>
+          <span>No existe una cuenta con ese correo.</span>
           <a routerLink="/registro" class="register-link">Regístrate aquí</a>
         </div>
       }
 
-      <button type="submit" [disabled]="loginForm.invalid">
-        Ingresar
-      </button>
+      <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
 
-      <div class="theme-switcher-container">
-        <button type="button" class="theme-toggle" (click)="toggleTheme()" [title]="currentTheme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
-          <i class="fa-solid" [ngClass]="currentTheme === 'dark' ? 'fa-sun' : 'fa-moon'"></i>
-        </button>
+      <div class="aspirante-actions">
+        <p>¿Aún no tienes una cuenta?</p>
+        <button type="button" class="secondary" routerLink="/registro">Solicitar Ficha</button>
       </div>
 
     </form>

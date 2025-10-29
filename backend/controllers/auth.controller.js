@@ -8,34 +8,23 @@ const { Op } = require('sequelize');
 
 
 const login = async (req, res) => {
-  const { usuario, password, rol } = req.body; // Ahora también recibimos el rol
+  const { usuario, password } = req.body;
 
   try {
-    // 1. Buscar al usuario.
-    // Si el rol es 'alumno' o 'personal', se busca por el campo 'id' (No. de Control / ID de Empleado).
-    // Si el rol es 'aspirante', se busca por el campo 'usuario' (que es su correo).
-    let searchCondition;
-    if (rol === 'alumno' || rol === 'personal') {
-      searchCondition = { numero_control: usuario };
-    } else { // aspirante
-      searchCondition = { usuario: usuario };
-    }
-
+    // 1. Buscar al usuario por su número de control O su correo, excluyendo a los aspirantes.
     const user = await Usuario.scope('withPassword').findOne({
-      where: searchCondition
+      where: {
+        // Permite que el login sea con 'numero_control' (para alumnos) o 'usuario' (que puede ser correo para otros roles)
+        [Op.or]: [
+          { numero_control: usuario },
+          { usuario: usuario }
+        ],
+        rol: { [Op.ne]: 'aspirante' } // [Op.ne] significa "not equal" (no es igual a)
+      }
     });
 
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado.' });
-    }
-
-    // 2. Validar que el rol seleccionado coincida con el del usuario
-    // El frontend envía 'personal' para 'docente' y 'administrativo'
-    const isRoleValid = (rol === 'personal' && (user.rol === 'docente' || user.rol === 'administrativo')) || rol === user.rol;
-
-    if (!isRoleValid) {
-      // Usamos 403 Forbidden porque el usuario existe, pero no tiene permiso para acceder con ese rol.
-      return res.status(403).json({ message: 'El rol seleccionado no es correcto para este usuario.' });
     }
 
     // 3. Comparamos con la columna 'contrasena'
@@ -54,6 +43,45 @@ const login = async (req, res) => {
     // 5. Firmar y enviar el token (esto no cambia)
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '10m' });
 
+    res.status(200).json({ token });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error en el servidor.' });
+  }
+};
+
+const aspiranteLogin = async (req, res) => {
+  const { usuario, password } = req.body; // Para aspirantes, 'usuario' es el correo
+
+  try {
+    // 1. Buscar al aspirante por su correo ('usuario')
+    const user = await Usuario.scope('withPassword').findOne({
+      where: {
+        usuario: usuario,
+        rol: 'aspirante'
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Aspirante no encontrado.' });
+    }
+
+    // 2. Comparamos la contraseña
+    const isPasswordCorrect = await bcrypt.compare(password, user.contrasena);
+
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ message: 'Credenciales incorrectas.' });
+    }
+
+    // 3. Crear el payload
+    const payload = {
+      id: user.id,
+      rol: user.rol,
+    };
+
+    // 4. Firmar y enviar el token
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '10m' });
     res.status(200).json({ token });
 
   } catch (error) {
@@ -115,4 +143,4 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { login, refresh, resetPassword };
+module.exports = { login, aspiranteLogin, refresh, resetPassword };

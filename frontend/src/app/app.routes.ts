@@ -19,6 +19,9 @@ export const routes: Routes = [
   // Ruta para el componente de login
   { path: 'login', component: LoginComponent },
 
+  // Ruta para el login de aspirantes
+  { path: 'login/aspirante', loadComponent: () => import('./pages/login/aspirante-login.component').then(m => m.default) },
+
   // ¡RUTA AÑADIDA! Ahora Angular sabe qué mostrar en /registro
   { path: 'registro', component: RegistroComponent },
 
