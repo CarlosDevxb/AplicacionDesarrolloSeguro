@@ -1,15 +1,20 @@
-// backend/routes/auth.routes.js
 const express = require('express');
 const router = express.Router();
-const { login, refresh, resetPassword } = require('../controllers/auth.controller');
-const authenticateToken = require('../middleware/auth.middleware').authenticateToken;
-// Ruta para iniciar sesión
+const {
+  login,
+  aspiranteLogin,
+  refresh,
+  resetPassword
+} = require('../controllers/auth.controller');
+const { authenticateToken } = require('../middleware/auth.middleware');
+
+// Ruta para el login de usuarios generales (alumnos, docentes, etc.)
 router.post('/login', login);
 
-// Ruta para refrescar el token (protegida)
-router.get('/refresh', authenticateToken, refresh);
+// Ruta para el login exclusivo de aspirantes
+router.post('/aspirante-login', aspiranteLogin);
 
-// Ruta para establecer/restablecer la contraseña usando un token
+router.post('/refresh', authenticateToken, refresh);
 router.post('/reset-password/:token', resetPassword);
 
 module.exports = router;

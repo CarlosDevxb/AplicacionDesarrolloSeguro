@@ -10,7 +10,7 @@ import { Title } from '@angular/platform-browser';
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, TitleCasePipe],
   templateUrl: './menu-alumno.html',
-  styleUrl: './menu-alumno.css'
+  styleUrls: ['./menu-alumno.css']
 })
 export default class MenuAlumnoComponent implements OnInit {
   private authService = inject(AuthService);

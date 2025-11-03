@@ -3,6 +3,6 @@
 
 /* Ajuste para el ícono de perfil del admin */
 .profile-picture-container {
-  background: linear-gradient(145deg, #6d28d9, #4c1d95);
-  border-color: #6d28d9;
+  background: linear-gradient(145deg, var(--button-gradient-start), var(--button-gradient-end));
+  border-color: var(--button-gradient-end);
 }

@@ -30,6 +30,15 @@ export class AuthService {
     
   }
 
+  aspiranteLogin(credentials: any): Observable<any> {
+    // Llama al endpoint específico para el login de aspirantes
+    return this.http.post(`${this.authApiUrl}/aspirante-login`, credentials).pipe(
+      tap((response: any) => {
+        localStorage.setItem('token', response.token);
+      })
+    );
+  }
+
   refreshToken(): Observable<any> {
     const token = this.getToken();
     const headers = new HttpHeaders({
@@ -43,15 +52,26 @@ export class AuthService {
     );
   }
 
-  logout(sessionExpired = false): void {
+  logout(options: { sessionExpired?: boolean; redirectPath?: string } = {}): void {
+    // 1. Obtenemos el rol ANTES de borrar el token.
+    const userRole = this.getUserRole();
+
+    // 2. Borramos el token del almacenamiento local.
     localStorage.removeItem('token');
 
-    // Solo añadimos el parámetro a la URL si la sesión realmente expiró.
+    // 3. Determinamos la ruta de redirección.
+    let { sessionExpired = false, redirectPath } = options;
+
+    // Si no se proveyó una ruta específica, la decidimos según el rol.
+    if (!redirectPath) {
+      redirectPath = userRole === 'aspirante' ? '/login/aspirante' : '/login';
+    }
+
+    // 4. Navegamos a la ruta correcta.
     if (sessionExpired) {
-      this.router.navigate(['/login'], { queryParams: { sessionExpired: true } });
+      this.router.navigate([redirectPath], { queryParams: { sessionExpired: true } });
     } else {
-      // Si es un logout manual, navegamos sin parámetros.
-      this.router.navigate(['/login']);
+      this.router.navigate([redirectPath]);
     }
   }
 

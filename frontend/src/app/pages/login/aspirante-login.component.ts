@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, Renderer2, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { Title } from '@angular/platform-browser';
@@ -17,9 +17,12 @@ const decodeToken = (token: string): any => {
 @Component({
   selector: 'app-aspirante-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './aspirante-login.component.html',
-  styleUrls: ['./aspirante-login.component.css']
+  styleUrls: ['./aspirante-login.component.css'] // Reutiliza estilos
 })
 export default class AspiranteLoginComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -28,17 +31,16 @@ export default class AspiranteLoginComponent implements OnInit {
   private renderer = inject(Renderer2);
   private titleService = inject(Title);
 
+  errorMessage: string | null = null;
+  currentTheme: 'dark' | 'light' = 'dark';
+
   loginForm: FormGroup = this.fb.group({
-    usuario: ['', [Validators.required, Validators.email]],
+    usuario: ['', [Validators.required, Validators.email]], // 'usuario' es el correo para aspirantes
     password: ['', [Validators.required]]
   });
 
-  errorMessage: string | null = null;
-  userNotFound = false;
-  currentTheme: 'dark' | 'light' = 'dark';
-
   ngOnInit(): void {
-    this.titleService.setTitle('Aspirantes - Iniciar Sesión');
+    this.titleService.setTitle('Aspirantes - CHAFATEC');
     this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
   }
 
@@ -48,38 +50,44 @@ export default class AspiranteLoginComponent implements OnInit {
     }
 
     this.errorMessage = null;
-    this.userNotFound = false;
+    const credentials = this.loginForm.value;
 
-    this.authService.login(this.loginForm.value).subscribe({
-      next: (response: any) => {
+    this.authService.aspiranteLogin(credentials).subscribe({
+      next: (response) => {
         const decodedToken = decodeToken(response.token);
-        if (decodedToken?.rol === 'aspirante') {
+        const userRole = decodedToken?.rol;
+
+        if (userRole === 'aspirante') {
           this.router.navigate(['/aspirante/dashboard']);
         } else {
-          this.errorMessage = 'Error de autenticación. Rol no válido.';
-          // Opcional: limpiar token si se guardó por error
-          localStorage.removeItem('token');
+          // Si por alguna razón el rol no es 'aspirante', redirigir al login principal
+          this.errorMessage = 'Acceso no autorizado para este panel.';
+          setTimeout(() => this.router.navigate(['/login']), 2000);
         }
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 404) {
-          this.userNotFound = true;
-        } else if (err.status === 401) {
-          this.errorMessage = 'Credenciales incorrectas.';
+          this.errorMessage = 'No se encontró una cuenta de aspirante con ese correo.';
         } else {
-          this.errorMessage = err.error.message || 'Ocurrió un error en el servidor.';
+          this.errorMessage = 'Correo o contraseña incorrectos.';
         }
         console.error('Error en el login de aspirante:', err);
       }
     });
   }
 
+  /**
+   * Navega a la página de registro.
+   */
+  goToRegistro(): void {
+    this.router.navigate(['/registro']);
+  }
+
+  /**
+   * Cambia entre el tema oscuro y claro.
+   */
   toggleTheme(): void {
     this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
     this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
-  }
-
-  get userFieldLabel(): string {
-    return 'Correo Electrónico';
   }
 }

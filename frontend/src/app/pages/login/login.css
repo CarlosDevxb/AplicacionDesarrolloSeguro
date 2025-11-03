@@ -181,14 +181,14 @@ button:disabled {
 
 /* Estilo para el mensaje de información (usuario no encontrado) */
 .info-message {
-  background-color: rgba(0, 119, 182, 0.1);
-  color: var(--text-accent);
+  background-color: rgba(230, 11, 11, 0.685);
+  color: var(--text-primary);
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 20px;
   font-weight: 500;
   text-align: center;
-  border: 1px solid var(--text-accent);
+  border: 1px solid var(#e53935);
 }
 
 /* Estilo para el enlace de registro */
@@ -265,6 +265,24 @@ button:disabled {
   color: var(--button-text);
 }
 
+/* Estilo para el enlace al panel de aspirantes */
+.aspirant-panel-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.aspirant-panel-link a {
+  color: var(--text-accent);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.aspirant-panel-link a:hover {
+  text-decoration: underline;
+  color: var(--text-primary);
+}
+
 /* --- ESTILOS DEL BOTÓN DE TEMA --- */
 .theme-switcher-container {
   margin-top: 25px;
@@ -288,4 +306,31 @@ button:disabled {
   color: var(--text-accent);
   transform: translateY(0) rotate(15deg); /* Quita el hover del botón principal y añade uno propio */
   box-shadow: none;
+}
+
+/* --- ESTILOS DE LA MARCA DE AGUA --- */
+.watermark {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.watermark:hover {
+  opacity: 1;
+}
+
+.watermark img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.watermark span {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
 }

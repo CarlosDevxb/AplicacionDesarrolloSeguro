@@ -1,4 +1,5 @@
 /* frontend/src/app/pages/admin/pages/gestion-salones/gestion-salones.css */
+@import url('../gestion-carreras/gestion-carreras.css');
 
 .management-container {
   display: flex;
@@ -8,19 +9,19 @@
 }
 
 .form-card, .table-card {
-  background-color: #ffffff;
+  background-color: var(--container-bg);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--container-border);
 }
 
 .form-card h3, .table-card h3 {
   margin-top: 0;
   margin-bottom: 1.5rem;
-  color: #1e293b;
+  color: var(--text-primary);
   font-size: 1.25rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--container-border);
   padding-bottom: 0.75rem;
 }
 
@@ -35,31 +36,33 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .form-group input, .form-group select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   font-size: 1rem;
   box-sizing: border-box;
   transition: all 0.2s ease;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
 }
 
 .form-group input:focus, .form-group select:focus {
   outline: none;
-  border-color: #0077b6;
-  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.2);
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
 }
 
 .salon-form button {
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
-  background-color: #005691;
-  color: white;
+  background: var(--button-gradient-end);
+  color: var(--button-text);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -70,11 +73,11 @@
 }
 
 .salon-form button:hover {
-  background-color: #003366;
+  background: var(--button-gradient-start);
 }
 
 .salon-form button:disabled {
-  background-color: #94a3b8;
+  background-color: var(--button-disabled-bg);
   cursor: not-allowed;
 }
 
@@ -90,14 +93,14 @@ table {
 th, td {
   padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-  color: #334155;
+  border-bottom: 1px solid var(--container-border);
+  color: var(--text-primary);
 }
 
 thead th {
-  background-color: #f8fafc;
+  background-color: var(--input-bg);
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .nombre-col {
@@ -105,7 +108,6 @@ thead th {
 }
 
 /* Reutilizamos los estilos de los botones de acción de otras tablas */
-@import url('../gestion-carreras/gestion-carreras.css');
 
 /* --- Estilos para Mensajes de Feedback --- */
 .message-box {
@@ -117,14 +119,14 @@ thead th {
 }
 
 .message-box.success {
-  background-color: #dcfce7;
-  color: #166534;
+  background-color: var(--message-success-bg);
+  color: var(--message-success-text);
   border: 1px solid #86efac;
 }
 
 .message-box.error {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: var(--message-error-bg);
+  color: var(--message-error-text);
   border: 1px solid #fca5a5;
 }
 
@@ -144,7 +146,7 @@ thead th {
 }
 
 .modal-content {
-  background-color: #fff;
+  background-color: var(--container-bg);
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   width: 90%;
@@ -157,13 +159,13 @@ thead th {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--container-border);
 }
 
 .modal-header h3 {
   margin: 0;
   font-size: 1.25rem;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .close-button {
@@ -171,7 +173,7 @@ thead th {
   border: none;
   font-size: 1.75rem;
   cursor: pointer;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .modal-body {
@@ -181,9 +183,9 @@ thead th {
 }
 
 .modal-body .form-group input[readonly] {
-  background-color: #f1f5f9;
+  background-color: var(--input-bg);
   cursor: not-allowed;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .modal-footer {
@@ -191,8 +193,8 @@ thead th {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  background-color: #f8fafc;
-  border-top: 1px solid #e2e8f0;
+  background-color: var(--input-bg);
+  border-top: 1px solid var(--container-border);
   border-radius: 0 0 12px 12px;
 }
 
@@ -209,10 +211,10 @@ thead th {
   gap: 0.5rem;
 }
 
-.modal-footer .btn-primary { background-color: #005691; color: white; }
-.modal-footer .btn-primary:disabled { background-color: #94a3b8; cursor: not-allowed; }
-.modal-footer .btn-secondary { background-color: #e2e8f0; color: #334155; }
-.modal-footer .btn-delete { background-color: #dc2626; color: white; }
+.modal-footer .btn-primary { background: var(--button-gradient-end); color: var(--button-text); }
+.modal-footer .btn-primary:disabled { background: var(--button-disabled-bg); cursor: not-allowed; }
+.modal-footer .btn-secondary { background-color: var(--input-bg); color: var(--text-primary); border: 1px solid var(--container-border); }
+.modal-footer .btn-delete { background-color: var(--btn-delete-bg); color: var(--btn-delete-text); }
 
 @keyframes slideInUp {
   from { transform: translateY(30px); opacity: 0; }

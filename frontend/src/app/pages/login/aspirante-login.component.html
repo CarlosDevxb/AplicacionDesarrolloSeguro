@@ -8,21 +8,18 @@
   <!-- Contenedor del Formulario de Login -->
   <div class="login-form-container">
     <img src="assets/CHAFATEC.png" alt="CHAFATEC Logo" class="logo">
-    <h2>Portal de Aspirantes</h2>
+    <h2>Panel de Aspirante</h2>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
       <div class="form-group">
-        <label for="usuario">{{ userFieldLabel }}</label>
+        <label for="usuario">Correo Electrónico</label>
         <div class="input-group">
-          <i class="fa-solid fa-envelope"></i>
-          <input id="usuario" type="email" formControlName="usuario" [placeholder]="'Ingresa tu ' + userFieldLabel">
+          <i class="fa-solid fa-at"></i>
+          <input id="usuario" type="email" formControlName="usuario" placeholder="tu.correo@ejemplo.com">
         </div>
-        @if (loginForm.get('usuario')?.hasError('required') && loginForm.get('usuario')?.touched) {
+        @if (loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched) {
           <div class="error-text"><small>El correo es requerido.</small></div>
-        }
-        @if (loginForm.get('usuario')?.hasError('email') && loginForm.get('usuario')?.touched) {
-          <div class="error-text"><small>Por favor, ingresa un correo válido.</small></div>
         }
       </div>
 
@@ -38,23 +35,33 @@
       </div>
 
       @if (errorMessage) {
-        <div class="error-message">{{ errorMessage }}</div>
-      }
-
-      @if (userNotFound) {
-        <div class="info-message">
-          <span>No existe una cuenta con ese correo.</span>
-          <a routerLink="/registro" class="register-link">Regístrate aquí</a>
+        <div class="error-message">
+          {{ errorMessage }}
         </div>
       }
 
-      <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
+      <button type="submit" [disabled]="loginForm.invalid">
+        Ingresar
+      </button>
 
+      <!-- Sección de acciones para aspirantes -->
       <div class="aspirante-actions">
-        <p>¿Aún no tienes una cuenta?</p>
-        <button type="button" class="secondary" routerLink="/registro">Solicitar Ficha</button>
+        <button type="button" class="secondary" (click)="goToRegistro()">
+          Solicitar Ficha
+        </button>
       </div>
 
+      <div class="theme-switcher-container">
+        <button type="button" class="theme-toggle" (click)="toggleTheme()" [title]="currentTheme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
+          <i class="fa-solid" [ngClass]="currentTheme === 'dark' ? 'fa-sun' : 'fa-moon'"></i>
+        </button>
+      </div>
+
+      <!-- Marca de agua -->
+      <div class="watermark">
+        <img src="assets/default-profile.png" alt="Cuchipu Entertainment Logo">
+        <span>Chafatec by Cuchipu Entertainment</span>
+      </div>
     </form>
   </div>
 </div>

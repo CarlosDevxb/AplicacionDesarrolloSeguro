@@ -47,7 +47,6 @@
       @if (userNotFound) {
         <div class="info-message">
           <span>No existe una cuenta con ese número de control.</span>
-          <a routerLink="/registro" class="register-link">Regístrate aquí</a>
         </div>
       }
 
@@ -55,12 +54,21 @@
         Ingresar
       </button>
 
+      <div class="aspirant-panel-link">
+        <a routerLink="/login/aspirante">Panel para Aspirantes</a>
+      </div>
+
       <div class="theme-switcher-container">
         <button type="button" class="theme-toggle" (click)="toggleTheme()" [title]="currentTheme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
           <i class="fa-solid" [ngClass]="currentTheme === 'dark' ? 'fa-sun' : 'fa-moon'"></i>
         </button>
       </div>
 
+      <!-- Marca de agua -->
+      <div class="watermark">
+        <img src="assets/cuchiputlogo2.png" alt="Cuchipu Entertainment Logo">
+        <span>CHAFATEC  by Cuchipu Entertainment</span>
+      </div>
     </form>
   </div>
 </div>
