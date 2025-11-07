@@ -4,7 +4,8 @@ const {
   login,
   aspiranteLogin,
   refresh,
-  resetPassword
+  resetPassword,
+  establecerContrasena
 } = require('../controllers/auth.controller');
 const { authenticateToken } = require('../middleware/auth.middleware');
 
@@ -16,5 +17,7 @@ router.post('/aspirante-login', aspiranteLogin);
 
 router.post('/refresh', authenticateToken, refresh);
 router.post('/reset-password/:token', resetPassword);
+// Nueva ruta para establecer la contraseña
+router.post('/establecer-contrasena',establecerContrasena);
 
 module.exports = router;

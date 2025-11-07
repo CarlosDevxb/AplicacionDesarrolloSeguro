@@ -1,46 +1,51 @@
-<!-- frontend/src/app/pages/establecer-contrasena/establecer-contrasena.component.html -->
-<div class="login-container">
-  <div class="login-box">
-    <div class="logo-container">
-      <img src="assets/CHAFATEC.png" alt="Logo CHAFATEC" class="logo">
-    </div>
-    <h2>Establecer Contraseña</h2>
-    <p class="subtitle">Crea una contraseña segura para tu cuenta.</p>
+<div class="login-wrapper">
+  <div class="login-form-container">
+    <img src="assets/CHAFATEC.png" alt="CHAFATEC Logo" class="logo">
+    <h2>Establecer Nueva Contraseña</h2>
+    <p class="subtitle">Crea una contraseña segura para acceder a tu cuenta.</p>
 
-    <!-- Formulario para establecer la contraseña -->
-    <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" *ngIf="!successMessage">
 
-      <!-- Campo para la nueva contraseña -->
-      <div class="input-group">
-        <label for="nueva_contrasena">Nueva Contraseña</label>
-        <input type="password" id="nueva_contrasena" formControlName="nueva_contrasena" placeholder="Mínimo 8 caracteres">
-        @if (passwordForm.get('nueva_contrasena')?.touched && passwordForm.get('nueva_contrasena')?.hasError('required')) {
-          <small class="error-message">La contraseña es requerida.</small>
-        }
-        @if (passwordForm.get('nueva_contrasena')?.touched && passwordForm.get('nueva_contrasena')?.hasError('minlength')) {
-          <small class="error-message">La contraseña debe tener al menos 8 caracteres.</small>
-        }
+      <div class="form-group">
+        <label for="password">Nueva Contraseña</label>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input id="password" type="password" formControlName="password" placeholder="Mínimo 6 caracteres">
+        </div>
+        <div *ngIf="passwordForm.get('password')?.invalid && passwordForm.get('password')?.touched" class="error-text">
+          <small *ngIf="passwordForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</small>
+          <small *ngIf="passwordForm.get('password')?.errors?.['minlength']">Debe tener al menos 6 caracteres.</small>
+        </div>
       </div>
 
-      <!-- Campo para confirmar la contraseña -->
-      <div class="input-group">
-        <label for="confirmar_contrasena">Confirmar Contraseña</label>
-        <input type="password" id="confirmar_contrasena" formControlName="confirmar_contrasena" placeholder="Repite la contraseña">
-        @if (passwordForm.hasError('mismatch') && passwordForm.get('confirmar_contrasena')?.touched) {
-          <small class="error-message">Las contraseñas no coinciden.</small>
-        }
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Contraseña</label>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Repite tu contraseña">
+        </div>
+        <div *ngIf="passwordForm.get('confirmPassword')?.errors?.['mustMatch'] && passwordForm.get('confirmPassword')?.touched" class="error-text">
+          <small>Las contraseñas no coinciden.</small>
+        </div>
       </div>
 
-      <!-- Mensajes de éxito o error -->
-      @if (message) {
-        <div class="message" [ngClass]="messageType">{{ message }}</div>
-      }
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
 
-      <!-- Botón de envío o enlace para ir al login si ya se completó -->
-      <button type="submit" [disabled]="passwordForm.invalid || isSuccess" class="submit-btn">{{ isSuccess ? 'Contraseña Guardada' : 'Guardar Contraseña' }}</button>
-      @if (isSuccess) {
-        <a routerLink="/login" class="back-to-login">Ir a Iniciar Sesión</a>
-      }
+      <button type="submit" [disabled]="passwordForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Guardar Contraseña</span>
+        <span *ngIf="isLoading">Guardando...</span>
+      </button>
     </form>
+
+    <!-- Mensaje de éxito -->
+    <div *ngIf="successMessage" class="success-message">
+      <i class="fas fa-check-circle"></i>
+      <h3>¡Éxito!</h3>
+      <p>{{ successMessage }}</p>
+      <a routerLink="/login" class="login-link">Ir al Login ahora</a>
+    </div>
+
   </div>
 </div>

@@ -136,5 +136,12 @@ export class AuthService {
     // No se necesita token de autenticación, el token de reseteo va en la URL
     return this.http.post(`${this.authApiUrl}/reset-password/${token}`, { password });
   }
+  // ¡NUEVO MÉTODO!
+  establecerContrasena(token: string, password: string): Observable<any> {
+    return this.http.post(`${this.usersApiUrl}/auth/establecer-contrasena`, { token, password });
+  }
+  
 
+  
+  
 }

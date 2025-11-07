@@ -142,5 +142,63 @@ const resetPassword = async (req, res) => {
     res.status(500).json({ message: 'Error en el servidor.' });
   }
 };
+/**
+ * Establece la contraseña para un nuevo usuario usando un token JWT.
+ */
+const establecerContrasena = async (req, res) => {
+  const { token, password } = req.body;
 
-module.exports = { login, aspiranteLogin, refresh, resetPassword };
+  if (!token || !password) {
+    return res.status(400).json({ message: 'El token y la contraseña son requeridos.' });
+  }
+
+  try {
+    // 1. Verificar el token de establecimiento de contraseña
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    // 2. Buscar al usuario en la base de datos
+    const usuario = await Usuario.findByPk(userId);
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuario no encontrado.' });
+    }
+
+    // Opcional: Verificar si el usuario ya tiene una contraseña (si el token es de un solo uso)
+    // if (usuario.password) {
+    //   return res.status(400).json({ message: 'Este enlace ya ha sido utilizado o ha expirado.' });
+    // }
+
+    // 3. Hashear y guardar la nueva contraseña
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    usuario.password = hashedPassword;
+    await usuario.save();
+
+    // 4. Enviar correo de confirmación
+    const emailSubject = '¡Tu contraseña ha sido configurada con éxito!';
+    const emailHtml = `
+      <h1>¡Hola, ${usuario.nombre_completo}!</h1>
+      <p>Te confirmamos que tu contraseña para la plataforma CHAFATEC ha sido establecida correctamente.</p>
+      <p>Ya puedes iniciar sesión con tu correo y tu nueva contraseña.</p>
+      <p>Si no realizaste esta acción, por favor, contacta a soporte inmediatamente.</p>
+      <br>
+      <p>Saludos,</p>
+      <p>El equipo de CHAFATEC</p>
+    `;
+
+    await sendEmail(usuario.correo, emailSubject, emailHtml);
+
+    res.status(200).json({ message: 'Contraseña establecida con éxito. Ya puedes iniciar sesión.' });
+
+  } catch (error) {
+    console.error('Error al establecer contraseña:', error);
+    // Manejar errores de token (expirado, inválido)
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'El enlace es inválido o ha expirado. Por favor, solicita uno nuevo.' });
+    }
+    res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+};
+
+module.exports = { login, aspiranteLogin, refresh, resetPassword, establecerContrasena };
