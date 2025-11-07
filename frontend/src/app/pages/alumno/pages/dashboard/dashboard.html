@@ -1,1 +1,70 @@
-<p>dashboard works!</p>
+<div class="dashboard-container fade-in" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <!-- Menú Lateral (Sidebar) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="title">Portal Alumno</h2>
+    </div>
+
+    <div class="profile-section">
+      <div class="profile-picture-container">
+        <img *ngIf="alumno?.foto" [src]="alumno.foto" alt="Foto de perfil" class="profile-picture-img" (error)="$event.target.src='assets/default-profile.png'">
+        <i *ngIf="!alumno?.foto" class="fas fa-user-graduate"></i>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name" *ngIf="alumno">{{ alumno.nombre_completo }}</span>
+        <span class="profile-role">Rol: {{ alumno?.rol | titlecase }}</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/alumno/dashboard" routerLinkActive="active" class="menu-item"><i class="fas fa-home"></i><span class="menu-text">Inicio</span></a>
+      <a routerLink="/alumno/perfil" routerLinkActive="active" class="menu-item"><i class="fas fa-user-circle"></i><span class="menu-text">Mi Perfil</span></a>
+      <a routerLink="/alumno/carrera" routerLinkActive="active" class="menu-item"><i class="fas fa-graduation-cap"></i><span class="menu-text">Mi Carrera</span></a>
+      <a routerLink="/alumno/reticula" routerLinkActive="active" class="menu-item"><i class="fas fa-book"></i><span class="menu-text">Retícula</span></a>
+      <a routerLink="/alumno/calificaciones" routerLinkActive="active" class="menu-item"><i class="fas fa-tasks"></i><span class="menu-text">Calificaciones</span></a>
+      <a routerLink="/alumno/horario" routerLinkActive="active" class="menu-item"><i class="fas fa-calendar-alt"></i><span class="menu-text">Horario</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="menu-item logout-button">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="menu-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="main-content" *ngIf="alumno">
+    <header class="content-header">
+      <h1>Bienvenido, {{ alumno.nombre_completo }}</h1>
+      <p>Este es tu portal. Desde aquí puedes acceder a tus herramientas y servicios.</p>
+    </header>
+
+    <section class="content-area">
+      <div class="tarjeta-bienvenida">
+        <div class="tarjeta-icono">
+          <i class="fas fa-bullhorn"></i>
+        </div>
+        <div class="tarjeta-contenido">
+          <h3>Anuncios Importantes</h3>
+          <p>No hay anuncios nuevos por el momento. ¡Vuelve a revisar más tarde!</p>
+        </div>
+      </div>
+
+      <div class="accesos-directos">
+        <a routerLink="/alumno/horario" class="acceso-directo">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Mi Horario</span>
+        </a>
+        <a routerLink="/alumno/calificaciones" class="acceso-directo">
+          <i class="fas fa-tasks"></i>
+          <span>Mis Calificaciones</span>
+        </a>
+        <a routerLink="/alumno/reticula" class="acceso-directo">
+          <i class="fas fa-book"></i>
+          <span>Mi Retícula</span>
+        </a>
+      </div>
+    </section>
+  </main>
+</div>

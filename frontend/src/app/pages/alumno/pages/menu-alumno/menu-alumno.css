@@ -1,5 +1,5 @@
 /* Reutilizamos los estilos base del dashboard del docente para mantener la consistencia */
-@import url('../docente/pages/dashboard/dashboard.css');
+@import url('../../../docente/pages/dashboard/dashboard.css');
 
 /* --- Estilos específicos para la página de perfil del alumno --- */
 

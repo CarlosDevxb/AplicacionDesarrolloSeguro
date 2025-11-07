@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../services/auth';
-import { SessionTimerService } from '../../services/session-timer.service';
+import { AuthService } from '../../../../services/auth';
+import { SessionTimerService } from '../../../../services/session-timer.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({

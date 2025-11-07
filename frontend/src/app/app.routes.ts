@@ -3,9 +3,9 @@ import { Routes } from '@angular/router';
 // Importa tus componentes de página y el nuevo componente NotFound
 import LoginComponent from './pages/login/login';
 import NotFoundComponent from './components/not-found/not-found';
-import AlumnoDashboardComponent from './pages/alumno/dashboard.component';
-import  MenuAlumnoComponent  from './pages/menu-alumno/menu-alumno';
-import MenuAlumnoEditComponent from './pages/menu-alumno-edit/menu-alumno-edit';
+import { AlumnoDashboardComponent } from './pages/alumno/pages/dashboard/dashboard.component';
+import  MenuAlumnoComponent from './pages/alumno/pages/menu-alumno/menu-alumno';
+import MenuAlumnoEditComponent from './pages/alumno/pages/menu-alumno-edit/menu-alumno-edit';
 
 // Importamos el componente de registro que faltaba
 import RegistroComponent from './pages/registro/registro';
@@ -31,6 +31,7 @@ export const routes: Routes = [
     component: AlumnoDashboardComponent,
     canActivate: [roleGuard],
     data: { expectedRole: 'alumno' }
+
   },
   {
     path: 'alumno/perfil',

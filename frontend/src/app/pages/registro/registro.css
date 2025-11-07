@@ -18,8 +18,7 @@ body {
 .register-wrapper {
   display: flex;
   width: 100%;
-  max-width: 900px;
-  /* Eliminamos la altura mínima fija para que se adapte al contenido */
+  max-width: 1200px; /* Aumentado para un formulario más ancho */
   /* min-height: 600px; */
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
@@ -36,8 +35,7 @@ body {
   padding: 40px;
   text-align: center;
   transition: background-color 0.5s ease, border-color 0.5s ease;
-  /* Habilitamos el scroll si el contenido es muy alto en pantallas pequeñas */
-  overflow-y: auto;
+  /* Se elimina overflow-y: auto para evitar el scroll vertical */
 }
 
 .register-form-container .subtitle {
@@ -45,6 +43,27 @@ body {
   margin-top: -15px;
   margin-bottom: 25px;
 }
+
+/*
+  Nuevo layout en grid para el formulario.
+  Esto coloca los campos en dos columnas para un diseño más ancho.
+*/
+.register-form-container form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 20px; /* Espacio entre columnas, sin espacio entre filas */
+  text-align: left; /* Alinea el texto de las etiquetas a la izquierda */
+}
+
+/*
+  Hacemos que ciertos elementos (como la fila de dirección/teléfono y el botón)
+  ocupen las dos columnas para mantener la estructura deseada.
+*/
+.register-form-container form .form-row,
+.register-form-container form > button {
+  grid-column: 1 / -1; /* Expande el elemento a lo ancho de las dos columnas */
+}
+
 
 /*
   Estilos para el select de carreras, para que se parezca a los inputs.
@@ -120,5 +139,10 @@ body {
   .form-row {
     flex-direction: column; /* Apilamos los campos en móvil */
     gap: 0;
+  }
+
+  /* En móvil, volvemos a una sola columna para el grid */
+  .register-form-container form {
+    grid-template-columns: 1fr;
   }
 }
