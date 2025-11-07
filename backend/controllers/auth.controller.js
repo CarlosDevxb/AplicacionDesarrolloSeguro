@@ -5,6 +5,7 @@ require('dotenv').config();
 const crypto = require('crypto'); // Necesario para hashear el token
 const { Usuario } = require('../models');
 const { Op } = require('sequelize');
+const sendEmail = require('./email.js'); // Importamos la utilidad para enviar correos
 
 
 const login = async (req, res) => {
@@ -200,7 +201,8 @@ const establecerContrasena = async (req, res) => {
       <p>El equipo de CHAFATEC</p>
     `;
 
-    // await sendEmail(usuario.correo, emailSubject, emailHtml); // Descomentar cuando SendGrid esté configurado
+    // Enviamos el correo usando la propiedad 'html'
+    await sendEmail({ email: usuario.correo, subject: emailSubject, html: emailHtml });
 
     res.status(200).json({ message: 'Contraseña establecida con éxito. Ya puedes iniciar sesión.' });
 
