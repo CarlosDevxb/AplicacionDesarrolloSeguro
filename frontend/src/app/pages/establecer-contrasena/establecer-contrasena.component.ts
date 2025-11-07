@@ -24,14 +24,27 @@ export default class EstablecerContrasenaComponent implements OnInit {
   errorMessage: string | null = null;
   successMessage: string | null = null;
   isLoading = false;
+  showForm = false; // Controla la visibilidad del formulario
 
   ngOnInit(): void {
     this.titleService.setTitle('Establecer Contraseña - CHAFATEC');
     this.token = this.route.snapshot.paramMap.get('token');
 
     if (!this.token) {
-      this.errorMessage = 'Token no válido o ausente. El enlace puede estar roto.';
+      this.errorMessage = 'Token no proporcionado. El enlace puede estar roto.';
+      return;
     }
+
+    // Validamos el token al cargar el componente
+    this.authService.validarTokenEstablecimiento(this.token).subscribe({
+      next: () => {
+        this.showForm = true; // El token es válido, mostramos el formulario
+      },
+      error: (err) => {
+        this.errorMessage = err.error.message || 'El enlace es inválido, ha expirado o ya fue utilizado.';
+        this.showForm = false; // El token no es válido, no mostramos el formulario
+      }
+    });
 
     this.passwordForm = this.fb.group({
       password: ['', [Validators.required, Validators.minLength(6)]],

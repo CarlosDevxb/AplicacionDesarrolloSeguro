@@ -15,6 +15,7 @@ const decodeToken = (token: string): any => {
   selector: 'app-not-found',
   standalone: true,
   templateUrl: './not-found.html',
+  imports: [RouterLink],
   styleUrls: ['./not-found.css'],
 })
 export default class NotFoundComponent {

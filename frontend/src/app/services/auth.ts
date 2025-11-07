@@ -23,8 +23,8 @@ export class AuthService {
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.authApiUrl}/login`, credentials).pipe(
       tap((response: any) => {
-        // Al hacer login, guardamos el token en localStorage
-        localStorage.setItem('token', response.token);
+        // Unificamos la clave del token a 'authToken'
+        localStorage.setItem('authToken', response.token);
       })
     );
     
@@ -34,7 +34,7 @@ export class AuthService {
     // Llama al endpoint específico para el login de aspirantes
     return this.http.post(`${this.authApiUrl}/aspirante-login`, credentials).pipe(
       tap((response: any) => {
-        localStorage.setItem('token', response.token);
+        localStorage.setItem('authToken', response.token);
       })
     );
   }
@@ -46,8 +46,8 @@ export class AuthService {
     });
     return this.http.post(`${this.authApiUrl}/refresh`, {}, { headers }).pipe(
       tap((response: any) => {
-        // Al refrescar, también actualizamos el token
-        localStorage.setItem('token', response.token);
+        // Al refrescar, también actualizamos el token con la clave correcta
+        localStorage.setItem('authToken', response.token);
       })
     );
   }
@@ -57,7 +57,7 @@ export class AuthService {
     const userRole = this.getUserRole();
 
     // 2. Borramos el token del almacenamiento local.
-    localStorage.removeItem('token');
+    localStorage.removeItem('authToken');
 
     // 3. Determinamos la ruta de redirección.
     let { sessionExpired = false, redirectPath } = options;
@@ -76,7 +76,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem('authToken');
   }
 
   isAuthenticated(): boolean {
@@ -139,6 +139,11 @@ export class AuthService {
   // ¡NUEVO MÉTODO!
   establecerContrasena(token: string, password: string): Observable<any> {
     return this.http.post(`${this.authApiUrl}/establecer-contrasena/${token}`, { password });
+  }
+  
+  // ¡NUEVO MÉTODO!
+  validarTokenEstablecimiento(token: string): Observable<any> {
+    return this.http.get(`${this.authApiUrl}/validar-token-establecimiento/${token}`);
   }
   
 

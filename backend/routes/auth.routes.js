@@ -5,7 +5,8 @@ const {
   aspiranteLogin,
   refresh,
   resetPassword,
-  establecerContrasena
+  establecerContrasena,
+  validarTokenEstablecimiento
 } = require('../controllers/auth.controller');
 const { authenticateToken } = require('../middleware/auth.middleware');
 
@@ -18,6 +19,9 @@ router.post('/aspirante-login', aspiranteLogin);
 router.post('/refresh', authenticateToken, refresh);
 router.post('/reset-password/:token', resetPassword);
 // Nueva ruta para establecer la contraseña
-router.post('/establecer-contrasena/:token',establecerContrasena);
+router.post('/establecer-contrasena/:token', establecerContrasena);
+
+// Nueva ruta para validar el token de establecimiento antes de mostrar el formulario
+router.get('/validar-token-establecimiento/:token', validarTokenEstablecimiento);
 
 module.exports = router;

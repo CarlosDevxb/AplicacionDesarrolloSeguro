@@ -4,7 +4,14 @@
     <h2>Establecer Nueva Contraseña</h2>
     <p class="subtitle">Crea una contraseña segura para acceder a tu cuenta.</p>
 
-    <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" *ngIf="!successMessage">
+    <!-- Mensaje de error si el token no es válido (se muestra en lugar del formulario) -->
+    <div *ngIf="!showForm && errorMessage" class="token-error-message">
+      <i class="fas fa-exclamation-triangle"></i>
+      <h3>Enlace no válido</h3>
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" *ngIf="showForm && !successMessage">
 
       <div class="form-group">
         <label for="password">Nueva Contraseña</label>
@@ -45,6 +52,12 @@
       <h3>¡Éxito!</h3>
       <p>{{ successMessage }}</p>
       <a routerLink="/login" class="login-link">Ir al Login ahora</a>
+    </div>
+
+    <!-- Marca de agua (igual que en el login) -->
+    <div class="watermark">
+      <img src="assets/cuchiputlogo2.png" alt="Cuchipu Entertainment Logo">
+      <span>CHAFATEC by Cuchipu Entertainment</span>
     </div>
 
   </div>
