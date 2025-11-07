@@ -146,34 +146,47 @@ const resetPassword = async (req, res) => {
  * Establece la contraseña para un nuevo usuario usando un token JWT.
  */
 const establecerContrasena = async (req, res) => {
-  const { token, password } = req.body;
+  const { password } = req.body;
+  const { token } = req.params; // Tomamos el token de la URL
 
   if (!token || !password) {
     return res.status(400).json({ message: 'El token y la contraseña son requeridos.' });
   }
 
   try {
-    // 1. Verificar el token de establecimiento de contraseña
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
+    // 1. Hashear el token de la URL para buscarlo en la BD (igual que en resetPassword)
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
 
-    // 2. Buscar al usuario en la base de datos
-    const usuario = await Usuario.findByPk(userId);
+    // 2. Buscar al usuario con ese token y que no haya expirado
+    const usuario = await Usuario.findOne({
+      where: {
+        password_reset_token: hashedToken,
+        password_reset_expires: { [Op.gt]: Date.now() } // Op.gt = "mayor que"
+      }
+    });
+
+    // 3. Si no se encuentra el usuario o el token expiró, enviar error
     if (!usuario) {
-      return res.status(404).json({ message: 'Usuario no encontrado.' });
+      return res.status(400).json({ message: 'El enlace es inválido o ha expirado.' });
     }
 
-    // Opcional: Verificar si el usuario ya tiene una contraseña (si el token es de un solo uso)
-    // if (usuario.password) {
-    //   return res.status(400).json({ message: 'Este enlace ya ha sido utilizado o ha expirado.' });
-    // }
+    // 4. Verificar si el usuario ya tiene una contraseña (para que el enlace sea de un solo uso)
+    if (usuario.contrasena) {
+      return res.status(400).json({ message: 'Este enlace ya ha sido utilizado. Si olvidaste tu contraseña, usa la opción de recuperarla.' });
+    }
 
     // 3. Hashear y guardar la nueva contraseña
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    usuario.password = hashedPassword;
+    usuario.contrasena = hashedPassword; // ¡CORRECCIÓN! Usar el nombre de campo correcto del modelo.
     await usuario.save();
+    // Limpiamos el token para que no se pueda volver a usar
+    usuario.password_reset_token = null;
+    usuario.password_reset_expires = null;
 
     // 4. Enviar correo de confirmación
     const emailSubject = '¡Tu contraseña ha sido configurada con éxito!';
@@ -187,16 +200,12 @@ const establecerContrasena = async (req, res) => {
       <p>El equipo de CHAFATEC</p>
     `;
 
-    await sendEmail(usuario.correo, emailSubject, emailHtml);
+    // await sendEmail(usuario.correo, emailSubject, emailHtml); // Descomentar cuando SendGrid esté configurado
 
     res.status(200).json({ message: 'Contraseña establecida con éxito. Ya puedes iniciar sesión.' });
 
   } catch (error) {
     console.error('Error al establecer contraseña:', error);
-    // Manejar errores de token (expirado, inválido)
-    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-      return res.status(401).json({ message: 'El enlace es inválido o ha expirado. Por favor, solicita uno nuevo.' });
-    }
     res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };

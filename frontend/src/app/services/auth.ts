@@ -138,7 +138,7 @@ export class AuthService {
   }
   // ¡NUEVO MÉTODO!
   establecerContrasena(token: string, password: string): Observable<any> {
-    return this.http.post(`${this.usersApiUrl}/auth/establecer-contrasena`, { token, password });
+    return this.http.post(`${this.authApiUrl}/establecer-contrasena/${token}`, { password });
   }
   
 

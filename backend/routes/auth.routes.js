@@ -18,6 +18,6 @@ router.post('/aspirante-login', aspiranteLogin);
 router.post('/refresh', authenticateToken, refresh);
 router.post('/reset-password/:token', resetPassword);
 // Nueva ruta para establecer la contraseña
-router.post('/establecer-contrasena',establecerContrasena);
+router.post('/establecer-contrasena/:token',establecerContrasena);
 
 module.exports = router;
