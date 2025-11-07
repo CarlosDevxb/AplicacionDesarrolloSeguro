@@ -51,6 +51,13 @@
         </button>
       </div>
 
+       <!-- Enlace para volver al login normal -->
+    <div class="login-link-container">
+      <span>¿No eres aspirante? 
+        <a routerLink="/login" class="login-link">Inicia sesión aquí</a>
+      </span>
+    </div>
+
       <div class="theme-switcher-container">
         <button type="button" class="theme-toggle" (click)="toggleTheme()" [title]="currentTheme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
           <i class="fa-solid" [ngClass]="currentTheme === 'dark' ? 'fa-sun' : 'fa-moon'"></i>

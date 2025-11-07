@@ -6,6 +6,7 @@ const { authenticateToken } = require('../middleware/auth.middleware');
 // Todas estas rutas requieren que el usuario sea un administrador autenticado
 router.use(authenticateToken);
 
+router.get('/users', adminController.getAllUsers); // Nueva ruta para listar todos los usuarios
 router.post('/users', adminController.createUser);
 router.get('/users/:id', adminController.findUserById);
 router.put('/users/:id', adminController.updateUser);

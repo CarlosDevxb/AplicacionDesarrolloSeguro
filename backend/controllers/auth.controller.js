@@ -35,6 +35,10 @@ const login = async (req, res) => {
       return res.status(401).json({ message: 'Credenciales incorrectas.' });
     }
 
+    // Actualizamos la fecha del último acceso
+    user.ultimo_acceso = new Date();
+    await user.save();
+
     // 4. Crear el payload incluyendo el rol del usuario
     const payload = {
       id: user.id,      // Usamos la nueva PK 'id'
@@ -74,6 +78,10 @@ const aspiranteLogin = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: 'Credenciales incorrectas.' });
     }
+
+    // Actualizamos la fecha del último acceso para el aspirante
+    user.ultimo_acceso = new Date();
+    await user.save();
 
     // 3. Crear el payload
     const payload = {

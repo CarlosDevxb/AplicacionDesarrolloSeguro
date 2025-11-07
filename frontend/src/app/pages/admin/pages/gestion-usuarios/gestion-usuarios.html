@@ -1,8 +1,61 @@
 <div class="management-container">
   <header class="management-header">
     <h2>Gestión de Usuarios</h2>
-    <p>Crea nuevas cuentas para alumnos, docentes y personal administrativo.</p>
+    <p>Crea, busca, edita y visualiza los usuarios del sistema.</p>
   </header>
+
+  <!-- Bloque para Listar Todos los Usuarios -->
+  <div class="collapsible-block">
+    <div class="collapsible-header" (click)="toggleListBlock()">
+      <h4><i class="fas fa-users"></i> Ver Todos los Usuarios</h4>
+      <i class="fas fa-chevron-down" [class.rotated]="showListBlock"></i>
+    </div>
+    <div class="collapsible-content" *ngIf="showListBlock">
+      <div *ngIf="listIsLoading" class="text-center mt-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p>Cargando usuarios...</p>
+      </div>
+
+      <div *ngIf="listErrorMessage" class="alert alert-danger mt-3">
+        {{ listErrorMessage }}
+      </div>
+
+      <div *ngIf="!listIsLoading && !listErrorMessage" class="table-responsive mt-4">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre Completo</th>
+              <th>ID / No. Control</th>
+              <th>Correo Electrónico</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Último Acceso</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of allUsers">
+              <td>{{ user.nombre_completo }}</td>
+              <td>{{ user.id }}</td>
+              <td>{{ user.correo }}</td>
+              <td><span class="badge" [ngClass]="'role-' + user.rol">{{ user.rol }}</span></td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'status-active': user.estado === 'activo',
+                  'status-inactive': user.estado === 'no activo',
+                  'status-blocked': user.estado === 'bloqueado'
+                }">{{ user.estado }}</span>
+              </td>
+              <td class="last-access">
+                {{ user.ultimo_acceso ? (user.ultimo_acceso | date:'short') : 'Nunca' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
   <!-- Bloque para Crear Usuarios -->
   <div class="collapsible-block">
@@ -73,82 +126,28 @@
         <button (click)="searchUser()">Buscar</button>
       </div>
 
-      <!-- Mensajes de búsqueda -->
       <div *ngIf="searchMessage" class="message-box info">{{ searchMessage }}</div>
 
-      <!-- Formulario de Edición -->
       <div *ngIf="searchedUser" class="edit-form-container">
         <hr>
-        <h5>
-          Editando a: {{ searchedUser.nombre_completo }}
-          <!-- Insignia de estatus (solo para alumnos) -->
-          <span *ngIf="searchedUser.Alumno?.estatus"
-                class="status-badge"
-                [ngClass]="searchedUser.Alumno.estatus.replace(' ', '-')">
-            {{ searchedUser.Alumno.estatus }}
-          </span>
-        </h5>
+        <h5>Editando a: {{ searchedUser.nombre_completo }}</h5>
         <form [formGroup]="editForm" (ngSubmit)="updateUser()" class="user-form">
           <div class="form-grid">
-            <!-- Campos no editables -->
-            <div class="form-group">
-              <label>ID / No. de Control</label>
-              <input type="text" [value]="searchedUser.id" readonly>
-            </div>
-
-            <!-- Campo para editar el Rol -->
-            <div class="form-group">
-              <label for="edit-rol">Rol del Usuario</label>
-              <select id="edit-rol" formControlName="rol">
-                <option value="alumno">Alumno</option>
-                <option value="docente">Docente</option>
-                <option value="administrativo">Administrativo</option>
-              </select>
-            </div>
-
-            <!-- Campo para editar el Estado de la cuenta -->
-            <div class="form-group">
-              <label for="edit-estado">Estado de la Cuenta</label>
+            <div class="form-group"><label>ID / No. de Control</label><input type="text" [value]="searchedUser.id" readonly></div>
+            <div class="form-group"><label for="edit-rol">Rol</label><select id="edit-rol" formControlName="rol"><option value="alumno">Alumno</option><option value="docente">Docente</option><option value="administrativo">Administrativo</option></select></div>            
+            <div class="form-group"><label for="edit-estado">Estado</label>
               <select id="edit-estado" formControlName="estado">
-                <option value="activo">Activo</option>
-                <option value="no activo">No Activo</option>
-                <option value="bloqueado">Bloqueado</option>
+                <option value="activo">Activo</option><option value="no activo">No Activo</option><option value="bloqueado">Bloqueado</option>
               </select>
             </div>
-
-            <!-- Campos editables -->
-            <div class="form-group">
-              <label for="edit-nombre">Nombre Completo</label>
-              <input id="edit-nombre" type="text" formControlName="nombre_completo">
-            </div>
-            <div class="form-group">
-              <label for="edit-correo">Correo</label>
-              <input id="edit-correo" type="email" formControlName="correo">
-            </div>
-            <div class="form-group">
-              <label for="edit-telefono">Teléfono</label>
-              <input id="edit-telefono" type="tel" formControlName="telefono">
-            </div>
-            <div class="form-group">
-              <label for="edit-direccion">Dirección</label>
-              <input id="edit-direccion" type="text" formControlName="direccion">
-            </div>
-
-            <!-- Campo de Estatus Académico (solo para alumnos) -->
-            <div class="form-group" *ngIf="searchedUser.rol === 'alumno'">
-              <label for="edit-estatus">Estatus Académico (Alumno)</label>
-              <select id="edit-estatus" formControlName="estatus">
-                <option value="activo">Activo</option>
-                <option value="activo con especiales">Activo con Especiales</option>
-                <option value="baja temporal">Baja Temporal</option>
-                <option value="baja definitiva">Baja Definitiva</option>
-                <option value="egresado">Egresado</option>
-              </select>
-            </div>
+            <div class="form-group"><label for="edit-nombre">Nombre Completo</label><input id="edit-nombre" type="text" formControlName="nombre_completo"></div>
+            <div class="form-group"><label for="edit-correo">Correo</label><input id="edit-correo" type="email" formControlName="correo"></div>
+            <div class="form-group"><label for="edit-telefono">Teléfono</label><input id="edit-telefono" type="tel" formControlName="telefono"></div>
+            <div class="form-group"><label for="edit-direccion">Dirección</label><input id="edit-direccion" type="text" formControlName="direccion"></div>
+            <div class="form-group" *ngIf="searchedUser.rol === 'alumno'"><label for="edit-estatus">Estatus Académico</label><select id="edit-estatus" formControlName="estatus"><option value="activo">Activo</option><option value="activo con especiales">Activo con Especiales</option><option value="baja temporal">Baja Temporal</option><option value="baja definitiva">Baja Definitiva</option><option value="egresado">Egresado</option></select></div>
           </div>
           <button type="submit" [disabled]="editForm.invalid">Actualizar Usuario</button>
         </form>
-        <!-- Mensaje de éxito/error para la actualización -->
         <div *ngIf="updateMessage" class="message-box info">{{ updateMessage }}</div>
       </div>
     </div>
