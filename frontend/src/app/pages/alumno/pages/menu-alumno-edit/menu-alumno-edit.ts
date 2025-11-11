@@ -29,15 +29,21 @@ export default class MenuAlumnoEditComponent implements OnInit {
   private router = inject(Router);
   private titleService = inject(Title);
 
-  // Estado de la UI
-  isSidebarCollapsed = false; // Usamos isSidebarCollapsed para consistencia con el dashboard
+  // --- Estados de la UI ---
+  isSidebarCollapsed = false;
   alumno: any = null;
   message: string | null = null;
   messageType: 'success' | 'error' = 'success';
+  // Máquina de estados para el flujo de actualización del perfil
+  updateState: 'editing' | 'confirmingPassword' | 'verifyingCode' = 'editing';
+  // Variable para saber qué acción se está confirmando ('profile' o 'password')
+  actionToConfirm: 'profile' | 'password' | null = null;
 
-  // Formularios
-   editForm: FormGroup;
+  // --- Formularios ---
+  editForm: FormGroup;
   passwordForm: FormGroup;
+  // Nuevo formulario para el proceso de verificación
+  verificationForm: FormGroup;
 
   constructor() {
     this.editForm = this.fb.group({
@@ -48,10 +54,14 @@ export default class MenuAlumnoEditComponent implements OnInit {
     });
 
     this.passwordForm = this.fb.group({
-      contrasena_actual: ['', Validators.required],
       nueva_contrasena: ['', [Validators.required, Validators.minLength(6)]],
       confirmar_contrasena: ['', Validators.required]
     }, { validators: passwordMatcher });
+
+    this.verificationForm = this.fb.group({
+      contrasena_actual: ['', Validators.required],
+      update_code: [''] // Se hará requerido en el paso de verificación
+    });
   }
 
   ngOnInit(): void {
@@ -79,27 +89,93 @@ export default class MenuAlumnoEditComponent implements OnInit {
     setTimeout(() => this.message = null, 4000);
   }
 
-  // --- Métodos del Formulario ---
-  updateProfile() {
-    if (this.editForm.invalid || !this.editForm.dirty) return;
-    this.authService.updateProfile(this.editForm.value).subscribe({
+  // --- Métodos del Formulario de Perfil (Flujo de 2 Pasos) ---
+
+  // PASO 1: El usuario hace clic en "Guardar" en cualquiera de los dos formularios
+  startUpdateProcess(action: 'profile' | 'password') {
+    if (action === 'profile' && (this.editForm.invalid || !this.editForm.dirty)) return;
+    if (action === 'password' && this.passwordForm.invalid) return;
+
+    this.actionToConfirm = action;
+    this.updateState = 'confirmingPassword';
+    this.message = null; // Limpiamos mensajes previos
+  }
+
+  // PASO 2: El usuario envía su contraseña actual para obtener un código
+  requestUpdateCode() {
+    this.message = null;
+    if (this.verificationForm.get('contrasena_actual')?.invalid) return;
+
+    const { contrasena_actual } = this.verificationForm.value;
+    this.authService.requestUpdateCode(contrasena_actual).subscribe({
       next: (res) => {
         this.showMessage(res.message, 'success');
-        this.editForm.markAsPristine(); // Marcar como no modificado después de guardar
+        this.updateState = 'verifyingCode';
+        // Hacemos el campo del código requerido para el siguiente paso
+        this.verificationForm.get('update_code')?.setValidators([Validators.required, Validators.pattern(/^\d{6}$/)]);
+        this.verificationForm.get('update_code')?.updateValueAndValidity();
       },
-      error: (err: HttpErrorResponse) => this.showMessage(err.error.message || 'Error al actualizar.', 'error')
+      error: (err: HttpErrorResponse) => this.showMessage(err.error.message || 'Error al solicitar el código.', 'error')
     });
   }
 
-  changePassword() {
-    if (this.passwordForm.invalid) return;
-    this.authService.changePassword(this.passwordForm.value).subscribe({
+  // PASO 3: El usuario envía el código para finalizar la actualización
+  confirmAndSubmit() {
+    this.message = null;
+    if (this.verificationForm.get('update_code')?.invalid) return;
+
+    const { update_code } = this.verificationForm.value;
+
+    if (this.actionToConfirm === 'profile') {
+      const finalData = { ...this.editForm.value, update_code };
+      this.submitProfileUpdate(finalData);
+    } else if (this.actionToConfirm === 'password') {
+      const finalData = { nueva_contrasena: this.passwordForm.value.nueva_contrasena, update_code };
+      this.submitPasswordChange(finalData);
+    }
+  }
+
+  private submitProfileUpdate(data: any) {
+    this.authService.updateProfile(data).subscribe({
+      next: (res) => {
+        this.showMessage(res.message, 'success');
+        this.editForm.markAsPristine();
+        this.cancelUpdate(); // Volvemos al estado inicial
+      },
+      error: (err: HttpErrorResponse) => {
+        this.showMessage(err.error.message || 'Error al actualizar el perfil.', 'error');
+        // Si el código expiró o es inválido, permitimos solicitar uno nuevo
+        if (err.status === 410 || err.status === 401) {
+          this.updateState = 'confirmingPassword';
+          this.verificationForm.get('update_code')?.reset();
+        }
+      }
+    });
+  }
+
+  private submitPasswordChange(data: any) {
+    this.authService.changePassword(data).subscribe({
       next: (res) => {
         this.showMessage(res.message, 'success');
         this.passwordForm.reset();
+        this.cancelUpdate(); // Volvemos al estado inicial
       },
-      error: (err: HttpErrorResponse) => this.showMessage(err.error.message || 'Error al cambiar contraseña.', 'error')
+      error: (err: HttpErrorResponse) => {
+        this.showMessage(err.error.message || 'Error al cambiar la contraseña.', 'error');
+        // Si el código expiró o es inválido, permitimos solicitar uno nuevo
+        if (err.status === 410 || err.status === 401) {
+          this.updateState = 'confirmingPassword';
+          this.verificationForm.get('update_code')?.reset();
+        }
+      }
     });
+  }
+
+  // Cancela el proceso de actualización y vuelve al formulario de edición
+  cancelUpdate() {
+    this.updateState = 'editing';
+    this.verificationForm.reset();
+    this.actionToConfirm = null;
   }
 
   onFileSelected(event: Event) {

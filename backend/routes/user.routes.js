@@ -11,10 +11,12 @@ router.use(authenticateToken);
 router.get('/profile', userController.getProfile);
 router.post('/profile/picture', upload.single('profilePicture'), userController.uploadProfilePicture);
 
-// Nuevas rutas para actualizar el perfil y cambiar la contraseña
+// --- Flujo de actualización segura ---
+// FASE 1: Solicitar un código de verificación para cualquier cambio sensible (perfil o contraseña)
+router.post('/request-update-code', userController.requestUpdateCode);
+
+// FASE 2: Confirmar los cambios usando el código
 router.put('/profile', userController.updateProfile);
-router.post('/profile/password', userController.changePassword);
-
-
+router.put('/password', userController.changePassword);
 
 module.exports = router;

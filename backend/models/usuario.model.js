@@ -55,6 +55,14 @@ module.exports = (sequelize) => {
       type: DataTypes.DATE,
       allowNull: true
     },
+    update_code: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    update_code_expires: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
      ultimo_acceso: {
       type: DataTypes.DATE,
       allowNull: true,

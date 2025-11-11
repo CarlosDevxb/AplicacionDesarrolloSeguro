@@ -122,13 +122,25 @@ export class AuthService {
     return this.http.put(`${this.usersApiUrl}/profile`, profileData, { headers });
   }
 
+  /**
+   * FASE 1: Solicita un código de verificación para cualquier cambio sensible.
+   */
+  requestUpdateCode(contrasena_actual: string): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.post(`${this.usersApiUrl}/request-update-code`, { contrasena_actual }, { headers });
+  }
+
+  /**
+   * FASE 2: Cambia la contraseña usando el código de verificación.
+   */
   changePassword(passwordData: any): Observable<any> {
     const token = this.getToken();
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
-    return this.http.post(`${this.usersApiUrl}/profile/password`, passwordData, { headers });
+    // El backend ahora espera un PUT en /api/users/password
+    return this.http.put(`${this.usersApiUrl}/password`, passwordData, { headers });
   }
 
   // ¡NUEVO MÉTODO!
