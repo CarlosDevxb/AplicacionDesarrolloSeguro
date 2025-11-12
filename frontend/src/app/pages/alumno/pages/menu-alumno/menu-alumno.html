@@ -59,7 +59,7 @@
       <section class="seccion-info">
           <h3>Información Escolar</h3>
           <div class="info-container-grid">
-              <p><strong>N° de control:</strong> {{ alumno.numero_control }}</p>
+              <p><strong>N° de control:</strong> <span class="highlight-tag">{{ alumno.numero_control }}</span></p>
               <div class="info-item-flex">
                 <strong>Estatus:</strong>
                 <ng-container *ngIf="alumno.Alumno?.estatus as status">
@@ -70,7 +70,7 @@
                   </span>
                 </ng-container>
               </div>
-              <p><strong>Semestre:</strong> {{ alumno.Alumno?.semestre || 'N/A' }}</p>
+              <p><strong>Semestre:</strong> <span class="highlight-tag">{{ alumno.Alumno?.semestre || 'N/A' }}</span></p>
               <p><strong>Carrera:</strong> {{ alumno.Alumno?.Carrera?.nombre || 'No asignada' }}</p>
             </div>
       </section>

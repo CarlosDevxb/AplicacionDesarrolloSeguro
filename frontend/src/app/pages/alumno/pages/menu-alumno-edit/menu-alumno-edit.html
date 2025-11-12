@@ -36,13 +36,16 @@
   <!-- Contenido Principal -->
   <main class="main-content" *ngIf="alumno">
     <header class="content-header">
-      <h1>Editar Perfil</h1>
-      <p>Modifica tu información personal y de contacto.</p>
+      <div class="header-content">
+        <h1>Editar Perfil</h1>
+        <p>Modifica tu información personal y de contacto.</p>
+      </div>
+      <a routerLink="/alumno/perfil" class="boton-volver">Atrás</a>
     </header>
 
     <section class="content-area">
       <!-- Contenedor para mensajes de usuario -->
-      <div *ngIf="message" class="message-box visible" [ngClass]="messageType">
+      <div *ngIf="message" class="message-box" [ngClass]="{ 'visible': isMessageVisible, 'success': messageType === 'success', 'error': messageType === 'error' }">
         {{ message }}
       </div>
 
@@ -85,7 +88,10 @@
                 <div class="form-grid-simple">
                   <label>Contraseña Actual<input type="password" formControlName="contrasena_actual" required></label>
                 </div>
-                <button type="submit" class="boton-guardar" [disabled]="verificationForm.get('contrasena_actual')?.invalid">Enviar Código</button>
+                <button type="submit" class="boton-guardar" [disabled]="verificationForm.get('contrasena_actual')?.invalid || isLoading">
+                  <span *ngIf="!isLoading">Enviar Código</span>
+                  <span *ngIf="isLoading" class="loading-spinner"></span>
+                </button>
                 <button type="button" class="boton-cancelar" (click)="cancelUpdate()">Cancelar</button>
               </form>
             </div>
@@ -101,7 +107,10 @@
                 <div *ngIf="verificationForm.get('update_code')?.hasError('pattern')" class="error-text">
                   <small>El código debe tener 6 dígitos.</small>
                 </div>
-                <button type="submit" class="boton-guardar" [disabled]="verificationForm.get('update_code')?.invalid">Confirmar y Guardar</button>
+                <button type="submit" class="boton-guardar" [disabled]="verificationForm.get('update_code')?.invalid || isLoading">
+                  <span *ngIf="!isLoading">Confirmar y Guardar</span>
+                  <span *ngIf="isLoading" class="loading-spinner"></span>
+                </button>
                 <button type="button" class="boton-cancelar" (click)="cancelUpdate()">Cancelar</button>
               </form>
             </div>
@@ -123,10 +132,6 @@
             <button type="button" class="boton-guardar" (click)="startUpdateProcess('password')" [disabled]="passwordForm.invalid">Cambiar Contraseña</button>
           </form>
         </section>
-      </div>
-
-      <div id="acciones-editar">
-        <a routerLink="/alumno/perfil" class="boton-volver">Atrás</a>
       </div>
     </section>
   </main>

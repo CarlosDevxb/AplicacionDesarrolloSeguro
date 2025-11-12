@@ -20,8 +20,8 @@ function passwordMatcher(control: AbstractControl): ValidationErrors | null {
   selector: 'app-menu-alumno-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './menu-alumno-edit.html',
-  styleUrl: './menu-alumno-edit.css'
+  templateUrl: './menu-alumno-edit.html', // El HTML no cambia
+  styleUrl: './menu-alumno-edit.css' // Asegúrate de que este archivo exista
 })
 export default class MenuAlumnoEditComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -33,8 +33,10 @@ export default class MenuAlumnoEditComponent implements OnInit {
   isSidebarCollapsed = false;
   alumno: any = null;
   message: string | null = null;
+  isMessageVisible = false; // Nuevo estado para controlar la animación
   messageType: 'success' | 'error' = 'success';
   // Máquina de estados para el flujo de actualización del perfil
+  isLoading = false; // Estado para la animación de carga
   updateState: 'editing' | 'confirmingPassword' | 'verifyingCode' = 'editing';
   // Variable para saber qué acción se está confirmando ('profile' o 'password')
   actionToConfirm: 'profile' | 'password' | null = null;
@@ -84,9 +86,14 @@ export default class MenuAlumnoEditComponent implements OnInit {
   }
   logout() { this.authService.logout(); }
   private showMessage(msg: string, type: 'success' | 'error') {
-    this.message = msg;
     this.messageType = type;
-    setTimeout(() => this.message = null, 4000);
+    this.message = msg;
+    this.isMessageVisible = true; // Activa la animación de entrada
+
+    setTimeout(() => {
+      this.isMessageVisible = false; // Activa la animación de salida
+      setTimeout(() => this.message = null, 300); // Borra el mensaje después de la animación
+    }, 4000);
   }
 
   // --- Métodos del Formulario de Perfil (Flujo de 2 Pasos) ---
@@ -105,17 +112,22 @@ export default class MenuAlumnoEditComponent implements OnInit {
   requestUpdateCode() {
     this.message = null;
     if (this.verificationForm.get('contrasena_actual')?.invalid) return;
+    this.isLoading = true; // Inicia la carga
 
     const { contrasena_actual } = this.verificationForm.value;
     this.authService.requestUpdateCode(contrasena_actual).subscribe({
       next: (res) => {
         this.showMessage(res.message, 'success');
         this.updateState = 'verifyingCode';
+        this.isLoading = false; // Finaliza la carga
         // Hacemos el campo del código requerido para el siguiente paso
         this.verificationForm.get('update_code')?.setValidators([Validators.required, Validators.pattern(/^\d{6}$/)]);
         this.verificationForm.get('update_code')?.updateValueAndValidity();
       },
-      error: (err: HttpErrorResponse) => this.showMessage(err.error.message || 'Error al solicitar el código.', 'error')
+      error: (err: HttpErrorResponse) => {
+        this.showMessage(err.error.message || 'Error al solicitar el código.', 'error');
+        this.isLoading = false; // Finaliza la carga en caso de error
+      }
     });
   }
 
@@ -123,6 +135,7 @@ export default class MenuAlumnoEditComponent implements OnInit {
   confirmAndSubmit() {
     this.message = null;
     if (this.verificationForm.get('update_code')?.invalid) return;
+    this.isLoading = true; // Inicia la carga
 
     const { update_code } = this.verificationForm.value;
 
@@ -141,6 +154,7 @@ export default class MenuAlumnoEditComponent implements OnInit {
         this.showMessage(res.message, 'success');
         this.editForm.markAsPristine();
         this.cancelUpdate(); // Volvemos al estado inicial
+        this.isLoading = false;
       },
       error: (err: HttpErrorResponse) => {
         this.showMessage(err.error.message || 'Error al actualizar el perfil.', 'error');
@@ -149,6 +163,7 @@ export default class MenuAlumnoEditComponent implements OnInit {
           this.updateState = 'confirmingPassword';
           this.verificationForm.get('update_code')?.reset();
         }
+        this.isLoading = false;
       }
     });
   }
@@ -159,6 +174,7 @@ export default class MenuAlumnoEditComponent implements OnInit {
         this.showMessage(res.message, 'success');
         this.passwordForm.reset();
         this.cancelUpdate(); // Volvemos al estado inicial
+        this.isLoading = false;
       },
       error: (err: HttpErrorResponse) => {
         this.showMessage(err.error.message || 'Error al cambiar la contraseña.', 'error');
@@ -167,6 +183,7 @@ export default class MenuAlumnoEditComponent implements OnInit {
           this.updateState = 'confirmingPassword';
           this.verificationForm.get('update_code')?.reset();
         }
+        this.isLoading = false;
       }
     });
   }

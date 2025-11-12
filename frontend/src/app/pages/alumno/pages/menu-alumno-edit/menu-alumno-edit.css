@@ -1,252 +1,287 @@
-/* Reutilizamos los estilos base del dashboard del docente para mantener la consistencia */
+/*
+  Estilos para la página de Edición de Perfil del Alumno
+*/
 @import url('../../../docente/pages/dashboard/dashboard.css');
 
-/* --- Estilos específicos para la página de edición de perfil del alumno --- */
-
-:host {
-    background-color: #f0f4f8; /* Un fondo ligeramente más azulado para el alumno */
+.main-content {
+  background-color: transparent;
 }
-/* Grid para secciones del perfil en dos columnas */
+
+.content-area {
+  background-color: transparent;
+  padding: 0;
+}
+
 .profile-sections-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-    margin-bottom: 25px; /* Espacio debajo del grid */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
 }
 
-/* Sección de formulario de datos */
+@media (min-width: 1024px) {
+  .profile-sections-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .seccion-form {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    padding: 25px;
-    border: 1px solid #e2e8f0;
+  background-color: var(--container-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--container-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden; /* Para contener el borde superior */
+  position: relative;
 }
 
-/* Título de cada sección de formulario */
+/* Borde de color en la parte superior de la tarjeta */
+.seccion-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--button-gradient-start), var(--text-accent));
+}
 .seccion-form h3 {
-    color: #1e293b;
-    font-size: 1.5em;
-    margin-top: 0;
-    border-bottom: 1px solid #e2e8f0;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--container-border);
+  padding-bottom: 10px;
+  font-weight: 700;
 }
 
-/* Texto de instrucciones en formularios */
-.instrucciones {
-    font-size: 0.9em;
-    color: #64748b;
-    margin-top: -10px;
-    margin-bottom: 25px;
+.seccion-form .instrucciones {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
-/* Grid para campos de formulario */
-.form-grid {
-    gap: 20px;
-    display: flex;
-    flex-direction: column;
+[ngSwitchCase="'confirmingPassword'"] h3,
+[ngSwitchCase="'verifyingCode'"] h3 {
+  text-align: center;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
-/* Etiquetas de campos de formulario */
-.form-grid label {
-    display: flex;
-    flex-direction: column;
-    font-weight: 500;
-    color: #334155;
-    max-width: 350px;
-    width: 100%;
+[ngSwitchCase="'confirmingPassword'"] .instrucciones,
+[ngSwitchCase="'verifyingCode'"] .instrucciones {
+  text-align: center;
 }
 
-/* Campos de entrada y select en formularios */
+[ngSwitchCase="'confirmingPassword'"] h3::before,
+[ngSwitchCase="'verifyingCode'"] h3::before {
+  content: '\f3ed';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  display: block;
+  font-size: 2.5rem;
+  background: linear-gradient(45deg, var(--button-gradient-start), var(--text-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.form-grid-simple {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-grid-simple label {
+  font-weight: 600;
+}
+
 .form-grid input,
-.form-grid select {
-    padding: 10px;
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
-    background-color: #f8fafc;
-    margin-top: 5px;
-    font-size: 1em;
-    color: #1e293b;
+.form-grid-simple input {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 10px 15px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  transition: all 0.2s ease-in-out;
 }
 
-/* Efecto al enfocar campos de formulario */
-.form-grid input:focus,
-.form-grid select:focus {
-    border-color: #0077b6;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.2);
+.form-grid-simple input {
+  text-align: center;
+  font-size: 1.8rem;
+  letter-spacing: 8px;
 }
 
-/* Contenedor para foto de perfil en formulario */
+.form-grid input:focus, .form-grid-simple input:focus {
+  outline: none;
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+[ngSwitchCase="'confirmingPassword'"] .boton-guardar,
+[ngSwitchCase="'confirmingPassword'"] .boton-cancelar,
+[ngSwitchCase="'verifyingCode'"] .boton-guardar,
+[ngSwitchCase="'verifyingCode'"] .boton-cancelar {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1.5rem;
+}
+
+.boton-guardar {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: var(--text-accent); /* Usamos un color sólido para más impacto */
+  color: var(--button-text);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 128, 255, 0.2);
+  margin-top: 1.5rem;
+  position: relative;
+  min-height: 50px; /* Altura mínima para contener el spinner */
+}
+
+.boton-guardar:hover:not(:disabled) {
+  background: var(--button-gradient-start); /* Cambiamos a otro color del tema en hover */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 128, 255, 0.3);
+}
+
+.boton-guardar:disabled {
+  background: var(--button-disabled-bg);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.boton-cancelar {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.75rem;
+}
+
+.boton-cancelar:hover {
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--text-accent);
+}
+
+.form-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
 .campo-foto {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
-/* Imagen de perfil en edición */
 .foto-perfil-editar img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 2px solid var(--azul-detalles);
-    object-fit: cover;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--container-border);
 }
 
-/* Texto de ayuda para foto */
 .ayuda-foto {
-    font-size: 0.8em;
-    color: #64748b;
-    margin-top: 5px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
 }
 
-/* Botones principales de acción */
-.boton-flotante,
-.boton-volver,
-.boton-guardar {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: center;
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
-/* Contenedor de botones de acción en formularios */
-#acciones-editar {
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    margin-top: 25px;
-}
-
-/* Botón para volver */
 .boton-volver {
-    background-color: #cbd5e1;
-    color: var(--azul-barra-superior);
-    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, outline 0.3s;
-    outline: none;
+  padding: 10px 20px;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-/* Cambia el fondo a rojo y muestra contorno al hacer clic o tener foco */
-.boton-volver:active,
-.boton-volver:focus {
-    background-color: #ef4444; /* Un rojo más moderno */
-    color: #fff;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
-}
-
-/* Botón para guardar cambios */
-.boton-guardar {
-    background-color: #0077b6;
-    color: white;
-    box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
-}
-
-/* Hover para botones */
-/* Hover para botones principales */
-.boton-flotante:hover,
-.boton-guardar:hover {
-    background-color: var(--azul-detalles);
-}
-
-/* Hover para botón volver */
 .boton-volver:hover {
-    background-color: #ef4444;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.2);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--input-border);
 }
 
-.boton-guardar:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
+/* --- Animación de Carga --- */
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
-/* Adaptabilidad para pantallas pequeñas */
-@media (max-width: 900px) {
-    .barra-superior {
-        padding: 15px 20px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .profile-sections-grid {
-        grid-template-columns: 1fr;
-        align-items: center;
-        text-align: center;
-    }
-
-    .info-detalles p strong {
-        display: inline;
-        min-width: auto;
-    }
-
-    .seccion-form {
-        padding: 15px;
-    }
-
-    .campo-foto {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .ayuda-foto {
-        text-align: center;
-    }
-
-    #acciones-editar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .boton-volver, .boton-guardar {
-        width: 100%;
-    }
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Mensaje flotante de notificación */
+/* --- Estilos para Mensajes de Notificación --- */
 .message-box {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 15px 25px;
-    border-radius: 8px;
-    font-weight: bold;
-    color: white;
-    z-index: 9999;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: opacity 0.3s ease-in-out;
-    opacity: 0;
-    visibility: hidden;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, -20px); /* Posición inicial fuera de la pantalla */
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--button-text);
+  z-index: 1001; /* Por encima del contenido */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  border-left: 5px solid;
 }
 
-/* Mensaje de éxito */
-.message-box.success {
-    background-color: var(--verde-exito);
-}
-
-/* Mensaje de error */
-.message-box.error {
-    background-color: var(--rojo-alerta);
-}
-
-/* Mostrar mensaje flotante */
 .message-box.visible {
-    opacity: 1;
-    visibility: visible;
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0); /* Posición final */
 }
 
-/* Ajuste para el ícono de perfil del alumno */
-.profile-picture-container {
-  background: linear-gradient(145deg, #0077b6, #005691);
-  border-color: #0077b6;
+.message-box.success {
+  background-color: var(--message-success-bg);
+  color: var(--message-success-text);
+  border-color: var(--status-activo-text);
+}
+
+.message-box.error {
+  background-color: var(--message-error-bg);
+  color: var(--message-error-text);
+  border-color: var(--status-inactivo-text);
 }
