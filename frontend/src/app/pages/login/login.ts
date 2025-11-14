@@ -36,7 +36,6 @@ export default class LoginComponent implements OnInit {
   errorMessage: string | null = null;
   // Esta es la variable clave que controla el mensaje en el HTML
   userNotFound = false;
-  selectedRole: 'alumno' | 'personal' | 'aspirante' = 'alumno'; // Rol por defecto
   currentTheme: 'dark' | 'light' = 'dark';
 
   ngOnInit(): void {
@@ -61,11 +60,7 @@ export default class LoginComponent implements OnInit {
     this.errorMessage = null;
     this.userNotFound = false;
 
-    // Creamos el objeto de credenciales que incluye el rol seleccionado
-    const credentials = {
-      ...this.loginForm.value,
-      rol: this.selectedRole
-    };
+    const credentials = this.loginForm.value;
 
     this.authService.login(credentials).subscribe({
        next: (response) => {
@@ -109,10 +104,6 @@ export default class LoginComponent implements OnInit {
     });
   }
 
-  selectRole(role: 'alumno' | 'personal' | 'aspirante'): void {
-    this.selectedRole = role;
-  }
-
   toggleTheme(): void {
     this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
     this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
@@ -120,9 +111,6 @@ export default class LoginComponent implements OnInit {
 
   // Función para obtener el texto de la etiqueta y el placeholder dinámicamente
   get userFieldLabel(): string {
-    if (this.selectedRole === 'alumno') return 'Número de Control';
-    if (this.selectedRole === 'personal') return 'ID de Empleado';
-    if (this.selectedRole === 'aspirante') return 'Usuario (Correo)';
-    return 'Usuario';
+    return 'Correo / No. de Control';
   }
 }

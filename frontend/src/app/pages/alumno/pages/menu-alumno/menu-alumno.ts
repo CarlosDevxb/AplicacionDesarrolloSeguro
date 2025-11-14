@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../services/auth';
-import { SessionTimerService } from '../../services/session-timer.service';
+import { AuthService } from '../../../../services/auth';
+import { SessionTimerService } from '../../../../services/session-timer.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -10,7 +10,7 @@ import { Title } from '@angular/platform-browser';
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, TitleCasePipe],
   templateUrl: './menu-alumno.html',
-  styleUrl: './menu-alumno.css'
+  styleUrls: ['./menu-alumno.css']
 })
 export default class MenuAlumnoComponent implements OnInit {
   private authService = inject(AuthService);

@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { AdminService } from '../../../../services/admin.service';
 import { CarreraService } from '../../../../services/carrera.service';
@@ -8,11 +8,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-gestion-usuarios',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe],
   templateUrl: './gestion-usuarios.html',
-  styleUrl: './gestion-usuarios.css',
+  styleUrls: ['./gestion-usuarios.css', './gestion-usuarios-list.css'] // Añadimos los estilos para la lista
 })
-export default class GestionUsuariosComponent {
+export default class GestionUsuariosComponent implements OnInit {
   private fb = inject(FormBuilder);
   private adminService = inject(AdminService);
   private carreraService = inject(CarreraService);
@@ -20,13 +20,14 @@ export default class GestionUsuariosComponent {
   // Control de visibilidad de los bloques
   showCreateBlock: 'alumno' | 'docente' | 'administrativo' | null = null;
   showSearchBlock = false;
+  showListBlock = false; // Para el nuevo bloque de listado
 
   // Formularios
-  alumnoForm: FormGroup;
-  docenteForm: FormGroup;
-  adminForm: FormGroup;
+  alumnoForm!: FormGroup;
+  docenteForm!: FormGroup;
+  adminForm!: FormGroup;
   searchControl = new FormControl('');
-  editForm: FormGroup;
+  editForm!: FormGroup;
 
   // Datos y mensajes
   carreras: any[] = [];
@@ -35,7 +36,12 @@ export default class GestionUsuariosComponent {
   createMessage: string | null = null;
   updateMessage: string | null = null;
 
-  constructor() {
+  // Para la lista de usuarios
+  allUsers: any[] = [];
+  listIsLoading = false;
+  listErrorMessage: string | null = null;
+
+  ngOnInit(): void {
     this.alumnoForm = this.fb.group({
       id: ['', Validators.required],
       nombre_completo: ['', Validators.required],
@@ -61,9 +67,9 @@ export default class GestionUsuariosComponent {
       correo: ['', [Validators.required, Validators.email]],
       telefono: [''],
       direccion: [''],
-      rol: ['', Validators.required], // Campo para el rol del usuario
-      estado: ['', Validators.required], // Campo para el estado de la cuenta
-      estatus: [''] // Campo para el estatus académico del alumno
+      rol: ['', Validators.required],
+      estado: ['activo', Validators.required], // Cambiado a string para coincidir con el modelo
+      estatus: ['']
     });
 
     this.carreraService.getCarreras().subscribe(data => this.carreras = data);
@@ -79,6 +85,29 @@ export default class GestionUsuariosComponent {
     this.searchMessage = null;
   }
 
+  toggleListBlock() {
+    this.showListBlock = !this.showListBlock;
+    // Si abrimos el bloque y la lista está vacía, la cargamos.
+    if (this.showListBlock && this.allUsers.length === 0) {
+      this.loadAllUsers();
+    }
+  }
+
+  loadAllUsers() {
+    this.listIsLoading = true;
+    this.listErrorMessage = null;
+    this.adminService.getAllUsers().subscribe({
+      next: (data: any[]) => {
+        this.allUsers = data;
+        this.listIsLoading = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        this.listErrorMessage = 'No se pudieron cargar los usuarios.';
+        this.listIsLoading = false;
+      }
+    });
+  }
+
   createUser(role: 'alumno' | 'docente' | 'administrativo') {
     const form = role === 'alumno' ? this.alumnoForm : (role === 'docente' ? this.docenteForm : this.adminForm);
     if (form.invalid) {
@@ -87,9 +116,10 @@ export default class GestionUsuariosComponent {
     }
     const userData = { ...form.value, rol: role };
     this.adminService.createUser(userData).subscribe({
-      next: res => {
+      next: (res: any) => {
         this.createMessage = res.message;
         form.reset();
+        this.loadAllUsers(); // Recargamos la lista
         setTimeout(() => this.createMessage = null, 5000);
       },
       error: (err: HttpErrorResponse) => this.createMessage = err.error.message || 'Error al crear usuario.'
@@ -102,11 +132,10 @@ export default class GestionUsuariosComponent {
     this.searchMessage = 'Buscando...';
     this.searchedUser = null;
     this.adminService.findUserById(id).subscribe({
-      next: user => {
+      next: (user: any) => {
         this.searchedUser = user;
         this.searchMessage = null;
-        this.editForm.patchValue(user); // Carga datos de la tabla 'usuarios'
-        // Si el usuario es un alumno, también cargamos su estatus en el form
+        this.editForm.patchValue(user);
         if (user.Alumno) {
           this.editForm.patchValue({ estatus: user.Alumno.estatus });
         }
@@ -118,10 +147,10 @@ export default class GestionUsuariosComponent {
   updateUser() {
     if (this.editForm.invalid || !this.searchedUser) return;
     this.adminService.updateUser(this.searchedUser.id, this.editForm.value).subscribe({
-      next: res => {
+      next: (res: any) => {
         this.updateMessage = res.message;
-        // Volvemos a buscar al usuario para refrescar los datos en la pantalla
-        this.searchUser();
+        this.searchUser(); // Refrescamos los datos del usuario editado
+        if (this.showListBlock) { this.loadAllUsers(); } // Recargamos la lista si está visible
         setTimeout(() => this.updateMessage = null, 5000);
       },
       error: (err: HttpErrorResponse) => this.updateMessage = err.error.message || 'Error al actualizar.'

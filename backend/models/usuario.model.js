@@ -54,6 +54,19 @@ module.exports = (sequelize) => {
     password_reset_expires: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    update_code: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    update_code_expires: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+     ultimo_acceso: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      comment: 'Registra la fecha y hora del último inicio de sesión exitoso.'
     }
   }, {  
     tableName: 'usuarios',

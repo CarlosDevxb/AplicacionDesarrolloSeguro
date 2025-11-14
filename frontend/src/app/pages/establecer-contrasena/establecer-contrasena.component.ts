@@ -1,52 +1,57 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../services/auth';
-import { HttpErrorResponse } from '@angular/common/http';
-
-// Validador personalizado para asegurar que las contraseñas coincidan
-function passwordMatcher(control: AbstractControl): ValidationErrors | null {
-  const nueva = control.get('password');
-  const confirmar = control.get('confirmPassword');
-  return nueva && confirmar && nueva.value !== confirmar.value ? { mismatch: true } : null;
-}
 
 @Component({
   selector: 'app-establecer-contrasena',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink], // RouterLink para el enlace a /login
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './establecer-contrasena.component.html',
-  styleUrls: ['./establecer-contrasena.component.css']
+  styleUrls: ['./establecer-contrasena.component.css', '../login/login.css'] // Reutilizamos estilos
 })
 export default class EstablecerContrasenaComponent implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
-  private titleService = inject(Title);
+  private router = inject(Router);
   private authService = inject(AuthService);
+  private titleService = inject(Title);
 
-  passwordForm: FormGroup;
+  passwordForm!: FormGroup;
   token: string | null = null;
-  message: string | null = null;
-  messageType: 'success' | 'error' = 'success';
-  isSuccess = false;
-
-  constructor() {
-    this.passwordForm = this.fb.group({
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required]
-    }, { validators: passwordMatcher });
-  }
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
+  isLoading = false;
+  showForm = false; // Controla la visibilidad del formulario
 
   ngOnInit(): void {
     this.titleService.setTitle('Establecer Contraseña - CHAFATEC');
     this.token = this.route.snapshot.paramMap.get('token');
 
     if (!this.token) {
-      this.showMessage('Token no válido o ausente. Por favor, utiliza el enlace de tu correo.', 'error');
-      this.passwordForm.disable();
+      this.errorMessage = 'Token no proporcionado. El enlace puede estar roto.';
+      return;
     }
+
+    // Validamos el token al cargar el componente
+    this.authService.validarTokenEstablecimiento(this.token).subscribe({
+      next: () => {
+        this.showForm = true; // El token es válido, mostramos el formulario
+      },
+      error: (err) => {
+        this.errorMessage = err.error.message || 'El enlace es inválido, ha expirado o ya fue utilizado.';
+        this.showForm = false; // El token no es válido, no mostramos el formulario
+      }
+    });
+
+    this.passwordForm = this.fb.group({
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validator: this.mustMatch('password', 'confirmPassword')
+    });
   }
 
   onSubmit(): void {
@@ -54,28 +59,38 @@ export default class EstablecerContrasenaComponent implements OnInit {
       return;
     }
 
-    // Extraemos los valores del formulario
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
     const { password } = this.passwordForm.value;
 
-    // Llamamos al servicio de autenticación para enviar el token y la nueva contraseña
-    this.authService.resetPassword(this.token, password).subscribe({
-      next: (res) => {
-        // Si la respuesta es exitosa, mostramos el mensaje y deshabilitamos el formulario
-        this.showMessage(res.message, 'success');
-        this.isSuccess = true;
-        this.passwordForm.disable();
+    this.authService.establecerContrasena(this.token, password).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.successMessage = response.message + ' Serás redirigido al login en 5 segundos.';
+        setTimeout(() => this.router.navigate(['/login']), 5000);
       },
-      error: (err: HttpErrorResponse) => {
-        // Si hay un error (ej: token inválido), mostramos el mensaje de error del backend
-        const errorMessage = err.error?.message || 'Ocurrió un error. Inténtalo de nuevo.';
-        this.showMessage(errorMessage, 'error');
-        this.passwordForm.disable(); // También deshabilitamos el formulario si el token es inválido para evitar reintentos
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err.error.message || 'Ocurrió un error. Por favor, inténtalo de nuevo.';
       }
     });
   }
 
-  private showMessage(msg: string, type: 'success' | 'error') {
-    this.message = msg;
-    this.messageType = type;
+  // Validador personalizado para confirmar que las contraseñas coinciden
+  private mustMatch(controlName: string, matchingControlName: string) {
+    return (formGroup: FormGroup) => {
+      const control = formGroup.controls[controlName];
+      const matchingControl = formGroup.controls[matchingControlName];
+      if (matchingControl.errors && !matchingControl.errors['mustMatch']) {
+        return;
+      }
+      if (control.value !== matchingControl.value) {
+        matchingControl.setErrors({ mustMatch: true });
+      } else {
+        matchingControl.setErrors(null);
+      }
+    }
   }
 }

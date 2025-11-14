@@ -1,0 +1,75 @@
+/* Estilos para la tabla de listado de usuarios */
+.table-responsive {
+  max-height: 60vh;
+  overflow: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.table {
+  min-width: 800px; /* Evita que la tabla se comprima demasiado */
+}
+
+.table thead {
+  background-color: #f8fafc;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.table th {
+  font-weight: 600;
+  color: #475569;
+}
+
+.table-hover tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.badge {
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  padding: 0.4em 0.7em;
+  font-weight: 600;
+}
+
+.role-alumno {
+  background-color: #e7f3ff;
+  color: #0056b3;
+}
+
+.role-docente {
+  background-color: #fff0e4;
+  color: #c05600;
+}
+
+.role-administrativo {
+  background-color: #e4f8f0;
+  color: #006a4e;
+}
+
+.status-active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-inactive {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.status-blocked {
+  background-color: #fef3c7; /* Amarillo claro */
+  color: #92400e; /* Amarillo oscuro */
+}
+
+.last-access {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.btn-sm i {
+  font-size: 0.9rem;
+}

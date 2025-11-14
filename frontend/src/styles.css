@@ -4,52 +4,82 @@
   padding: 0;
   box-sizing: border-box;
 }
-
-/* --- VARIABLES DE TEMA --- */
 /* Tema Oscuro (por defecto) */
-body[data-theme="dark"] {
-  --bg-gradient-start: #192f4a;
-  --bg-gradient-end: #005691;
-  --container-bg: #192f4a;
-  --container-border: rgba(173, 216, 230, 0.2);
-  --text-primary: #add8e6;
-  --text-secondary: #a0b8c2;
-  --text-accent: #0077b6;
-  --input-bg: #003366;
-  --input-border: #005691;
-  --input-focus-border: #0077b6;
-  --input-focus-shadow: rgba(0, 119, 182, 0.4);
-  --icon-color: #0077b6;
-  --icon-focus-color: #add8e6;
-  --button-gradient-start: #0077b6;
-  --button-gradient-end: #005691;
+body[data-theme="light"] {
+  --bg-gradient-start: #f0f8ff; /* AliceBlue, un fondo muy claro */
+  --bg-gradient-end: #e6f7ff;
+  --container-bg: #ffffff;
+  --container-border: rgba(0, 128, 255, 0.3);
+  --text-primary: #0a1931; /* Un azul muy oscuro para el texto */
+  --text-secondary: #5b6475;
+  --text-accent: #0080ff; /* Azul principal para enlaces */
+  --input-bg: #f7f9fc;
+  --input-border: #cce5ff;
+  --input-focus-border: #0080ff;
+  --input-focus-shadow: rgba(0, 128, 255, 0.25);
+  --icon-color: #00bfff; /* Azul cielo para iconos */
+  --icon-focus-color: #0080ff;
+  --button-gradient-start: #00bfff;
+  --button-gradient-end: #0080ff;
   --button-text: #ffffff;
-  --button-disabled-bg: #003366;
-  --role-selector-bg: #003366;
-  --role-selector-active-bg: #0077b6;
+  --button-disabled-bg: #b3e0ff;
+  --role-selector-bg: #e6f7ff;
+  --role-selector-active-bg: #0080ff;
+
+  /* Variables para estados y mensajes */
+  --status-activo-bg: #dcfce7; --status-activo-text: #166534;
+  --status-inactivo-bg: #fee2e2; --status-inactivo-text: #991b1b;
+  --status-baja-temporal-bg: #fef3c7; --status-baja-temporal-text: #92400e;
+  --status-con-especiales-bg: #e0e7ff; --status-con-especiales-text: #3730a3;
+  --status-egresado-bg: #e5e7eb; --status-egresado-text: #1f2937;
+  --status-desconocido-bg: #f3f4f6; --status-desconocido-text: #4b5563;
+
+  --message-success-bg: var(--status-activo-bg);
+  --message-success-text: var(--status-activo-text);
+  --message-error-bg: var(--status-inactivo-bg);
+  --message-error-text: var(--status-inactivo-text);
+
+  --btn-delete-bg: #dc2626;
+  --btn-delete-text: #ffffff;
 }
 
-/* Tema Claro (mejorado) */
-body[data-theme="light"] {
-  --bg-gradient-start: #e9f1f6;
-  --bg-gradient-end: #d1e0e8;
-  --container-bg: #ffffff;
-  --container-border: rgba(0, 86, 145, 0.2);
-  --text-primary: #192f4a;
-  --text-secondary: #003366;
-  --text-accent: #005691;
-  --input-bg: #eaf2f7;
-  --input-border: #c1d3e0;
-  --input-focus-border: #0077b6;
-  --input-focus-shadow: rgba(0, 119, 182, 0.3);
-  --icon-color: #90a4ae;
-  --icon-focus-color: #0077b6;
-  --button-gradient-start: #0077b6;
-  --button-gradient-end: #005691;
+/* Tema Oscuro (con la nueva paleta de azules) */
+body[data-theme="dark"] {
+  --bg-gradient-start: #0d1b2a; /* Azul noche oscuro */
+  --bg-gradient-end: #001f3f; /* Azul marino */
+  --container-bg: #0d1b2a;
+  --container-border: rgba(0, 128, 255, 0.2);
+  --text-primary: #e0e0e0; /* Un blanco suave para el texto */
+  --text-secondary: #a0b8c2;
+  --text-accent: #00bfff; /* Azul cielo brillante para acentos */
+  --input-bg: #001f3f;
+  --input-border: #0040ff; /* Azul más oscuro para bordes */
+  --input-focus-border: #00bfff;
+  --input-focus-shadow: rgba(0, 191, 255, 0.25);
+  --icon-color: #0080ff;
+  --icon-focus-color: #e0e0e0;
+  --button-gradient-start: #00bfff;
+  --button-gradient-end: #0080ff;
   --button-text: #ffffff;
-  --button-disabled-bg: #a9b8d0;
-  --role-selector-bg: #e9f1f6;
-  --role-selector-active-bg: #0077b6;
+  --button-disabled-bg: #0040ff;
+  --role-selector-bg: #001f3f;
+  --role-selector-active-bg: #0080ff;
+
+  /* Variables para estados y mensajes (Modo Oscuro) */
+  --status-activo-bg: #14532d; --status-activo-text: #bbf7d0;
+  --status-inactivo-bg: #7f1d1d; --status-inactivo-text: #fecaca;
+  --status-baja-temporal-bg: #78350f; --status-baja-temporal-text: #fde68a;
+  --status-con-especiales-bg: #312e81; --status-con-especiales-text: #c7d2fe;
+  --status-egresado-bg: #374151; --status-egresado-text: #d1d5db;
+  --status-desconocido-bg: #4b5563; --status-desconocido-text: #e5e7eb;
+
+  --message-success-bg: var(--status-activo-bg);
+  --message-success-text: var(--status-activo-text);
+  --message-error-bg: var(--status-inactivo-bg);
+  --message-error-text: var(--status-inactivo-text);
+
+  --btn-delete-bg: #991b1b;
+  --btn-delete-text: #fecaca;
 }
 :root {
   --primary-color: #3498db;

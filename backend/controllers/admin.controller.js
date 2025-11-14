@@ -148,4 +148,22 @@ console.log(userData);
   }
 };
 
-module.exports = { createUser, findUserById, updateUser };
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await Usuario.findAll({
+      attributes: ['id', 'nombre_completo', 'correo', 'rol', 'estado', 'ultimo_acceso'], // Seleccionamos los campos principales
+      include: [{
+        model: Alumno,
+        as: 'Alumno',
+        attributes: ['carrera_id'], // Incluimos solo el ID de la carrera
+        include: [{ model: Carrera, as: 'Carrera', attributes: ['nombre'] }] // Y el nombre de la carrera
+      }],
+      order: [['nombre_completo', 'ASC']]
+    });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error en el servidor al obtener los usuarios.' });
+  }
+};
+
+module.exports = { createUser, findUserById, updateUser, getAllUsers };

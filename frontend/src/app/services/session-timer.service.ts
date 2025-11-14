@@ -71,6 +71,10 @@ export class SessionTimerService {
 
   private logout(expired: boolean) {
     this.clearTimers();
-    this.authService.logout(expired); // Pasamos el flag de expiración
+    this.authService.logout({ sessionExpired: expired });
+  }
+
+  ngOnDestroy() {
+    this.clearTimers();
   }
 }

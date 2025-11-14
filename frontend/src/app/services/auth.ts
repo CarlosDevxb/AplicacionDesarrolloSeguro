@@ -23,11 +23,20 @@ export class AuthService {
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.authApiUrl}/login`, credentials).pipe(
       tap((response: any) => {
-        // Al hacer login, guardamos el token en localStorage
-        localStorage.setItem('token', response.token);
+        // Unificamos la clave del token a 'authToken'
+        localStorage.setItem('authToken', response.token);
       })
     );
     
+  }
+
+  aspiranteLogin(credentials: any): Observable<any> {
+    // Llama al endpoint específico para el login de aspirantes
+    return this.http.post(`${this.authApiUrl}/aspirante-login`, credentials).pipe(
+      tap((response: any) => {
+        localStorage.setItem('authToken', response.token);
+      })
+    );
   }
 
   refreshToken(): Observable<any> {
@@ -37,26 +46,37 @@ export class AuthService {
     });
     return this.http.post(`${this.authApiUrl}/refresh`, {}, { headers }).pipe(
       tap((response: any) => {
-        // Al refrescar, también actualizamos el token
-        localStorage.setItem('token', response.token);
+        // Al refrescar, también actualizamos el token con la clave correcta
+        localStorage.setItem('authToken', response.token);
       })
     );
   }
 
-  logout(sessionExpired = false): void {
-    localStorage.removeItem('token');
+  logout(options: { sessionExpired?: boolean; redirectPath?: string } = {}): void {
+    // 1. Obtenemos el rol ANTES de borrar el token.
+    const userRole = this.getUserRole();
 
-    // Solo añadimos el parámetro a la URL si la sesión realmente expiró.
+    // 2. Borramos el token del almacenamiento local.
+    localStorage.removeItem('authToken');
+
+    // 3. Determinamos la ruta de redirección.
+    let { sessionExpired = false, redirectPath } = options;
+
+    // Si no se proveyó una ruta específica, la decidimos según el rol.
+    if (!redirectPath) {
+      redirectPath = userRole === 'aspirante' ? '/login/aspirante' : '/login';
+    }
+
+    // 4. Navegamos a la ruta correcta.
     if (sessionExpired) {
-      this.router.navigate(['/login'], { queryParams: { sessionExpired: true } });
+      this.router.navigate([redirectPath], { queryParams: { sessionExpired: true } });
     } else {
-      // Si es un logout manual, navegamos sin parámetros.
-      this.router.navigate(['/login']);
+      this.router.navigate([redirectPath]);
     }
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem('authToken');
   }
 
   isAuthenticated(): boolean {
@@ -102,13 +122,25 @@ export class AuthService {
     return this.http.put(`${this.usersApiUrl}/profile`, profileData, { headers });
   }
 
+  /**
+   * FASE 1: Solicita un código de verificación para cualquier cambio sensible.
+   */
+  requestUpdateCode(contrasena_actual: string): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.post(`${this.usersApiUrl}/request-update-code`, { contrasena_actual }, { headers });
+  }
+
+  /**
+   * FASE 2: Cambia la contraseña usando el código de verificación.
+   */
   changePassword(passwordData: any): Observable<any> {
     const token = this.getToken();
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
-    return this.http.post(`${this.usersApiUrl}/profile/password`, passwordData, { headers });
+    // El backend ahora espera un PUT en /api/users/password
+    return this.http.put(`${this.usersApiUrl}/password`, passwordData, { headers });
   }
 
   // ¡NUEVO MÉTODO!
@@ -116,5 +148,17 @@ export class AuthService {
     // No se necesita token de autenticación, el token de reseteo va en la URL
     return this.http.post(`${this.authApiUrl}/reset-password/${token}`, { password });
   }
+  // ¡NUEVO MÉTODO!
+  establecerContrasena(token: string, password: string): Observable<any> {
+    return this.http.post(`${this.authApiUrl}/establecer-contrasena/${token}`, { password });
+  }
+  
+  // ¡NUEVO MÉTODO!
+  validarTokenEstablecimiento(token: string): Observable<any> {
+    return this.http.get(`${this.authApiUrl}/validar-token-establecimiento/${token}`);
+  }
+  
 
+  
+  
 }

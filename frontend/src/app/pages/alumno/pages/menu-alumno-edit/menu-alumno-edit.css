@@ -1,0 +1,287 @@
+/*
+  Estilos para la página de Edición de Perfil del Alumno
+*/
+@import url('../../../docente/pages/dashboard/dashboard.css');
+
+.main-content {
+  background-color: transparent;
+}
+
+.content-area {
+  background-color: transparent;
+  padding: 0;
+}
+
+.profile-sections-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .profile-sections-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.seccion-form {
+  background-color: var(--container-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--container-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden; /* Para contener el borde superior */
+  position: relative;
+}
+
+/* Borde de color en la parte superior de la tarjeta */
+.seccion-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--button-gradient-start), var(--text-accent));
+}
+.seccion-form h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--container-border);
+  padding-bottom: 10px;
+  font-weight: 700;
+}
+
+.seccion-form .instrucciones {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+[ngSwitchCase="'confirmingPassword'"] h3,
+[ngSwitchCase="'verifyingCode'"] h3 {
+  text-align: center;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+[ngSwitchCase="'confirmingPassword'"] .instrucciones,
+[ngSwitchCase="'verifyingCode'"] .instrucciones {
+  text-align: center;
+}
+
+[ngSwitchCase="'confirmingPassword'"] h3::before,
+[ngSwitchCase="'verifyingCode'"] h3::before {
+  content: '\f3ed';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  display: block;
+  font-size: 2.5rem;
+  background: linear-gradient(45deg, var(--button-gradient-start), var(--text-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.form-grid-simple {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-grid-simple label {
+  font-weight: 600;
+}
+
+.form-grid input,
+.form-grid-simple input {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 10px 15px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  transition: all 0.2s ease-in-out;
+}
+
+.form-grid-simple input {
+  text-align: center;
+  font-size: 1.8rem;
+  letter-spacing: 8px;
+}
+
+.form-grid input:focus, .form-grid-simple input:focus {
+  outline: none;
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+[ngSwitchCase="'confirmingPassword'"] .boton-guardar,
+[ngSwitchCase="'confirmingPassword'"] .boton-cancelar,
+[ngSwitchCase="'verifyingCode'"] .boton-guardar,
+[ngSwitchCase="'verifyingCode'"] .boton-cancelar {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1.5rem;
+}
+
+.boton-guardar {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: var(--text-accent); /* Usamos un color sólido para más impacto */
+  color: var(--button-text);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 128, 255, 0.2);
+  margin-top: 1.5rem;
+  position: relative;
+  min-height: 50px; /* Altura mínima para contener el spinner */
+}
+
+.boton-guardar:hover:not(:disabled) {
+  background: var(--button-gradient-start); /* Cambiamos a otro color del tema en hover */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 128, 255, 0.3);
+}
+
+.boton-guardar:disabled {
+  background: var(--button-disabled-bg);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.boton-cancelar {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.75rem;
+}
+
+.boton-cancelar:hover {
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--text-accent);
+}
+
+.form-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.campo-foto {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.foto-perfil-editar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--container-border);
+}
+
+.ayuda-foto {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.boton-volver {
+  padding: 10px 20px;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.boton-volver:hover {
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--input-border);
+}
+
+/* --- Animación de Carga --- */
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* --- Estilos para Mensajes de Notificación --- */
+.message-box {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, -20px); /* Posición inicial fuera de la pantalla */
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--button-text);
+  z-index: 1001; /* Por encima del contenido */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  border-left: 5px solid;
+}
+
+.message-box.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0); /* Posición final */
+}
+
+.message-box.success {
+  background-color: var(--message-success-bg);
+  color: var(--message-success-text);
+  border-color: var(--status-activo-text);
+}
+
+.message-box.error {
+  background-color: var(--message-error-bg);
+  color: var(--message-error-text);
+  border-color: var(--status-inactivo-text);
+}

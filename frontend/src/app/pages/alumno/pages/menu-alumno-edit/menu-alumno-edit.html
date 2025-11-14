@@ -1,0 +1,138 @@
+<div class="dashboard-container fade-in" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <!-- Menú Lateral (Sidebar) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="title">Portal Alumno</h2>
+    </div>
+
+    <div class="profile-section">
+      <div class="profile-picture-container">
+        <img *ngIf="alumno?.foto" [src]="alumno.foto" alt="Foto de perfil" class="profile-picture-img" (error)="$event.target.src='assets/default-profile.png'">
+        <i *ngIf="!alumno?.foto" class="fas fa-user-graduate"></i>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name" *ngIf="alumno">{{ alumno.nombre_completo }}</span>
+        <span class="profile-role">Rol: {{ alumno?.rol | titlecase }}</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/alumno/dashboard" routerLinkActive="active" class="menu-item"><i class="fas fa-home"></i><span class="menu-text">Inicio</span></a>
+      <a routerLink="/alumno/perfil" routerLinkActive="active" class="menu-item"><i class="fas fa-user-circle"></i><span class="menu-text">Mi Perfil</span></a>
+      <a routerLink="/alumno/carrera" routerLinkActive="active" class="menu-item"><i class="fas fa-graduation-cap"></i><span class="menu-text">Mi Carrera</span></a>
+      <a routerLink="/alumno/reticula" routerLinkActive="active" class="menu-item"><i class="fas fa-book"></i><span class="menu-text">Retícula</span></a>
+      <a routerLink="/alumno/calificaciones" routerLinkActive="active" class="menu-item"><i class="fas fa-tasks"></i><span class="menu-text">Calificaciones</span></a>
+      <a routerLink="/alumno/horario" routerLinkActive="active" class="menu-item"><i class="fas fa-calendar-alt"></i><span class="menu-text">Horario</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="menu-item logout-button">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="menu-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="main-content" *ngIf="alumno">
+    <header class="content-header">
+      <div class="header-content">
+        <h1>Editar Perfil</h1>
+        <p>Modifica tu información personal y de contacto.</p>
+      </div>
+      <a routerLink="/alumno/perfil" class="boton-volver">Atrás</a>
+    </header>
+
+    <section class="content-area">
+      <!-- Contenedor para mensajes de usuario -->
+      <div *ngIf="message" class="message-box" [ngClass]="{ 'visible': isMessageVisible, 'success': messageType === 'success', 'error': messageType === 'error' }">
+        {{ message }}
+      </div>
+
+      <div class="profile-sections-grid">
+        <!-- Formulario de Datos Personales -->
+        <section class="seccion-form">
+          <!-- Usamos ngSwitch para cambiar el contenido de esta sección dinámicamente -->
+          <div [ngSwitch]="updateState">
+
+            <!-- ESTADO 1: Editando el perfil (vista inicial) -->
+            <div *ngSwitchCase="'editing'">
+              <h3>Datos personales</h3>
+              <p class="instrucciones">Modifica tu información y haz clic en "Guardar Datos" para iniciar la verificación.</p>
+              <form [formGroup]="editForm">
+                <div class="form-grid">
+                  <div class="campo-foto">
+                    <div class="foto-perfil-editar">
+                      <img [src]="alumno.foto || 'assets/default-profile.png'" alt="Foto de perfil" (error)="$event.target.src='assets/default-profile.png'">
+                    </div>
+                    <div>
+                      <label for="foto">Fotografía <a href="#" (click)="triggerFileInput($event)">Elegir archivo</a></label>
+                      <input type="file" id="foto" (change)="onFileSelected($event)" style="display: none;">
+                      <p class="ayuda-foto">Sube una foto personal, de frente, con el rostro reconocible.</p>
+                    </div>
+                  </div>
+                  <label>Nombre completo<input type="text" formControlName="nombre_completo"></label>
+                  <label>Correo electrónico<input type="email" formControlName="correo"></label>
+                  <label>Teléfono<input type="tel" formControlName="telefono"></label>
+                  <label>Dirección<input type="text" formControlName="direccion" placeholder="Calle, número, colonia, etc."></label>
+                </div>
+                <button type="button" class="boton-guardar" (click)="startUpdateProcess('profile')" [disabled]="editForm.invalid || !editForm.dirty">Guardar Datos</button>
+              </form>
+            </div>
+
+            <!-- ESTADO 2: Pidiendo la contraseña actual -->
+            <div *ngSwitchCase="'confirmingPassword'">
+              <h3>Confirmar Identidad</h3>
+              <p class="instrucciones">Para proteger tu cuenta, ingresa tu contraseña actual para continuar.</p>
+              <form [formGroup]="verificationForm" (ngSubmit)="requestUpdateCode()">
+                <div class="form-grid-simple">
+                  <label>Contraseña Actual<input type="password" formControlName="contrasena_actual" required></label>
+                </div>
+                <button type="submit" class="boton-guardar" [disabled]="verificationForm.get('contrasena_actual')?.invalid || isLoading">
+                  <span *ngIf="!isLoading">Enviar Código</span>
+                  <span *ngIf="isLoading" class="loading-spinner"></span>
+                </button>
+                <button type="button" class="boton-cancelar" (click)="cancelUpdate()">Cancelar</button>
+              </form>
+            </div>
+
+            <!-- ESTADO 3: Verificando el código del correo -->
+            <div *ngSwitchCase="'verifyingCode'">
+              <h3>Verificar Código</h3>
+              <p class="instrucciones">Hemos enviado un código a tu correo. Ingrésalo para confirmar los cambios.</p>
+              <form [formGroup]="verificationForm" (ngSubmit)="confirmAndSubmit()">
+                <div class="form-grid-simple">
+                  <label>Código de Verificación<input type="text" formControlName="update_code" placeholder="Código de 6 dígitos" required></label>
+                </div>
+                <div *ngIf="verificationForm.get('update_code')?.hasError('pattern')" class="error-text">
+                  <small>El código debe tener 6 dígitos.</small>
+                </div>
+                <button type="submit" class="boton-guardar" [disabled]="verificationForm.get('update_code')?.invalid || isLoading">
+                  <span *ngIf="!isLoading">Confirmar y Guardar</span>
+                  <span *ngIf="isLoading" class="loading-spinner"></span>
+                </button>
+                <button type="button" class="boton-cancelar" (click)="cancelUpdate()">Cancelar</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- Formulario de Contraseña -->
+        <!-- Este formulario solo se muestra si no estamos en medio de un proceso de verificación -->
+        <section class="seccion-form" *ngIf="updateState === 'editing'">
+          <h3>Contraseña</h3>
+          <form [formGroup]="passwordForm">
+            <div class="form-grid">
+              <label>Nueva contraseña<input type="password" formControlName="nueva_contrasena"></label>
+              <label>Confirmar nueva contraseña<input type="password" formControlName="confirmar_contrasena"></label>
+            </div>
+            <div *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('confirmar_contrasena')?.touched" class="error-text">
+              <small>Las nuevas contraseñas no coinciden.</small>
+            </div>
+            <button type="button" class="boton-guardar" (click)="startUpdateProcess('password')" [disabled]="passwordForm.invalid">Cambiar Contraseña</button>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>

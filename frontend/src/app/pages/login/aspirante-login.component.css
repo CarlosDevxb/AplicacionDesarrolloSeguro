@@ -1,0 +1,11 @@
+/* Reutilizamos los estilos del login principal para mantener la consistencia */
+@import '../login/login.css';
+
+.aspirante-actions {
+  margin-top: 25px;
+  border-top: 1px solid var(--container-border);
+  padding-top: 20px;
+}
+.aspirante-actions p {
+  margin-bottom: 15px;
+}

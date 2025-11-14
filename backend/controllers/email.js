@@ -13,7 +13,7 @@ const sendEmail = async (options) => {
     },
     subject: options.subject,
     text: options.message,
-    // html: '<strong>y texto en negrita</strong>', // También puedes enviar HTML
+    html: options.html, // Añadimos la opción para enviar contenido HTML
   };
 
   // 3. Enviar el correo usando la API de SendGrid
