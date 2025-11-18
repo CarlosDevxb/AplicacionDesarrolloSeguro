@@ -36,30 +36,35 @@ Repositorio para el proyecto de la materia de Desarrollo Seguro de Software.
 -   **Login por Roles**: Sistema de inicio de sesión que diferencia entre Alumno, Personal y Aspirante.
 -   **Registro de Aspirantes**: Flujo de creación de cuentas para nuevos usuarios.
 -   **Sesiones con JWT**: Uso de JSON Web Tokens para una gestión de sesiones segura y stateless.
--   **Hashing de Contraseñas**: Almacenamiento seguro de credenciales usando `bcrypt`.
 -   **Rutas Protegidas**: Implementación de `RoleGuard` en Angular para proteger el acceso a las vistas según el rol del usuario.
+-   **Seguridad de Datos del Usuario**:
+    -   **Hashing de Contraseñas**: Almacenamiento seguro de credenciales usando `bcrypt`.
+    -   **Verificación de Múltiples Pasos**: Para acciones sensibles como la actualización de datos personales, se requiere confirmación de contraseña y un código de verificación enviado al correo del usuario.
 
 ### 🎨 Interfaz de Usuario
 -   **Diseño Responsivo**: Interfaz de login adaptable a diferentes tamaños de pantalla.
 -   **Formularios Reactivos**: Uso de formularios de Angular con validaciones en tiempo real.
 -   **Selector de Tema**: Opción para cambiar entre modo claro y oscuro.
+-   **Paneles por Rol**: Dashboards funcionales para `alumnos` y `personal`, con menús y opciones específicas para cada uno.
 
 ### ⚙️ Backend
 -   **API RESTful**: Endpoints para registro (`/register`) y login (`/login`).
 -   **Conexión Segura a BD**: Uso de Sequelize para interactuar de forma segura con la base de datos MySQL.
+-   **Validación de Entradas**: Reglas de validación en el backend para proteger la API contra datos maliciosos.
 
 ---
 
 ## 📋 Roadmap
 
--   **🖥️ Desarrollo de Dashboards**:
-    -   [x] Crear el panel de control para `alumnos`.
-    -   [x] Crear el panel de control para `personal` (docentes y administrativos).
--   **🛡️ Mejoras de Seguridad**:
-    -   [x] Implementar validación de entradas en el **backend** para todos los endpoints.
-    -   [x] Añadir reglas de validación más robustas en los formularios del **frontend**.
--   **🔄 Sincronización de Roles**:
-    -   [x] Alinear el rol de registro en el backend con el flujo de 'aspirante'.
+-   **📚 Gestión Académica Completa**:
+    -   [ ] Desarrollar las vistas de `Retícula`, `Calificaciones` y `Horario` para alumnos.
+    -   [ ] Implementar el panel de `personal` para que los docentes gestionen cursos y califiquen.
+-   **🔔 Notificaciones en Tiempo Real**:
+    -   [ ] Integrar WebSockets para notificar a los usuarios sobre calificaciones, anuncios, etc.
+-   **📁 Gestión de Archivos**:
+    -   [ ] Permitir la subida de tareas por parte de alumnos y material de clase por docentes.
+-   **📄 Generación de Reportes**:
+    -   [ ] Crear endpoints para generar PDFs como historiales académicos o constancias.
 
 ---
 
