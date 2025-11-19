@@ -1,4 +1,3 @@
-// backend/models/usuario.model.js
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
@@ -15,7 +14,6 @@ module.exports = (sequelize) => {
     },
     contrasena: {
       type: DataTypes.STRING(255),
-      allowNull: true, // Coincide con el schema que permite NULL
     },
     nombre_completo: {
       type: DataTypes.STRING(100),
@@ -24,55 +22,32 @@ module.exports = (sequelize) => {
       type: DataTypes.ENUM('alumno', 'docente', 'administrativo', 'aspirante'),
       allowNull: false,
     },
+    correo: {
+      type: DataTypes.STRING(100),
+      unique: true,
+    },
+    telefono: DataTypes.STRING(20),
+    direccion: DataTypes.STRING(255),
+    foto: DataTypes.STRING(255),
     numero_control: {
       type: DataTypes.STRING(20),
       unique: true,
-      allowNull: true, // Es nulo para aspirantes
-    },
-    correo: {
-      type: DataTypes.STRING(100),
-      validate: { isEmail: true },
-    },
-    direccion: {
-      type: DataTypes.STRING(255),
-    },
-    telefono: {
-      type: DataTypes.STRING(20),
-    },
-    foto: {
-      type: DataTypes.STRING(255),
     },
     estado: {
       type: DataTypes.ENUM('activo', 'no activo', 'bloqueado'),
       allowNull: false,
-      defaultValue: 'activo'
+      defaultValue: 'activo',
     },
-    password_reset_token: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    password_reset_expires: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    update_code: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    update_code_expires: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-     ultimo_acceso: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      comment: 'Registra la fecha y hora del último inicio de sesión exitoso.'
-    }
-  }, {  
+    password_reset_token: DataTypes.STRING(255),
+    password_reset_expires: DataTypes.DATE,
+    ultimo_acceso: DataTypes.DATE,
+    update_code: DataTypes.STRING(255),
+    update_code_expires: DataTypes.DATE,
+  }, {
     tableName: 'usuarios',
-    timestamps: false, // Tu esquema no tiene createdAt/updatedAt
+    timestamps: false,
     defaultScope: {
-      attributes: { exclude: ['contrasena', 'password_reset_token', 'password_reset_expires'] },
+      attributes: { exclude: ['contrasena', 'password_reset_token', 'password_reset_expires', 'update_code', 'update_code_expires'] },
     },
     scopes: {
       withPassword: {
@@ -82,8 +57,10 @@ module.exports = (sequelize) => {
   });
 
   Usuario.associate = (models) => {
-    // Un usuario tiene un registro de alumno si su rol es 'alumno'
-    Usuario.hasOne(models.Alumno, { foreignKey: 'id' });
+    Usuario.hasOne(models.Alumno, { foreignKey: 'id', as: 'perfilAlumno' });
+    Usuario.hasOne(models.Docente, { foreignKey: 'id', as: 'perfilDocente' });
+    Usuario.hasOne(models.Administrativo, { foreignKey: 'id', as: 'perfilAdministrativo' });
+    Usuario.hasMany(models.Grupo, { foreignKey: 'id_docente', as: 'gruposImpartidos' });
   };
 
   return Usuario;

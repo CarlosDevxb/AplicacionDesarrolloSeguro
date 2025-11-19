@@ -1,0 +1,215 @@
+/* Importamos los estilos base para mantener la consistencia */
+@import url('../../../alumno/pages/menu-alumno-edit/menu-alumno-edit.css');
+
+/*
+  Dado que la estructura y clases son idénticas a la de "menu-alumno-edit",
+  la mayoría de los estilos se heredarán directamente con el @import.
+  Añadimos aquí solo los ajustes específicos o necesarios para el contexto del docente.
+*/
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.content-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+  Ajustamos el padding del header y content-area para que coincida con el
+  estilo del dashboard del docente.
+*/
+.content-header {
+  padding: 0 40px 20px 40px;
+  color: #1a202c;
+  flex-shrink: 0; /* Evita que se encoja */
+}
+
+.content-header h1 {
+  margin: 0 0 5px 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.content-header p {
+  margin: 0;
+  font-size: 1rem;
+  color: #718096;
+}
+
+.content-area {
+  padding: 0 40px 40px 40px;
+  flex-grow: 1;
+}
+
+/* --- Tarjeta de Resumen de Usuario --- */
+.user-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  background-color: #f8fafc;
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 30px;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-details .user-name {
+  margin: 0 0 5px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.user-details .user-email {
+  margin: 0;
+  font-size: 1rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/*
+  Reutilizamos los estilos de las secciones de formulario del perfil del alumno.
+  Estos selectores ya existen en el CSS importado.
+*/
+.profile-sections-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+@media (min-width: 1024px) {
+  .profile-sections-grid {
+    /* En pantallas grandes, podemos ponerlos en 2 columnas si queremos */
+    /* grid-template-columns: 1fr 1fr; */
+  }
+}
+
+.seccion-form {
+  background-color: #f8fafc;
+  padding: 25px 30px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.seccion-form h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.25rem;
+  color: #1e293b;
+}
+
+.seccion-form .instrucciones {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 0;
+  margin-bottom: 25px;
+  max-width: 600px;
+}
+
+.form-grid, .form-grid-simple {
+  display: grid;
+  gap: 20px;
+}
+
+.form-grid {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/*
+  Los estilos para inputs, labels, botones (boton-guardar, boton-cancelar),
+  mensajes de error, etc., se heredarán del CSS importado.
+  No es necesario re-declararlos a menos que quieras un estilo diferente
+  específicamente para el docente.
+*/
+
+/* Adaptación para el campo de dirección del docente */
+input[formControlName="direccion"]::placeholder {
+  color: #9ca3af;
+}
+
+input[readonly] {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+/* Mensajes de feedback */
+.message-box {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.message-box.visible {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 100px; /* O un valor suficiente */
+}
+
+.message-box.success {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+.message-box.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+
+@media (max-width: 768px) {
+  .content-header, .content-area {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .user-summary-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+}
