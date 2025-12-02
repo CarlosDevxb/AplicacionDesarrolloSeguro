@@ -8,6 +8,9 @@ import { AuthService } from '../../services/auth';
 import { Title } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
 
+// 1. IMPORTAMOS LOS MÓDULOS DE RECAPTCHA
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha'; // <--- NUEVO
+
 const decodeToken = (token: string): any => {
   try {
     return JSON.parse(atob(token.split('.')[1]));
@@ -15,13 +18,17 @@ const decodeToken = (token: string): any => {
     return null;
   }
 };
+
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink // Asegúrate de que RouterLink está importado
+    RouterLink,
+    // 2. AGREGAMOS LOS MÓDULOS AQUÍ
+    RecaptchaModule,      // <--- NUEVO
+    RecaptchaFormsModule  // <--- NUEVO (Vital para que funcione con formGroup)
   ],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
@@ -34,21 +41,19 @@ export default class LoginComponent implements OnInit {
   private titleService = inject(Title);
 
   errorMessage: string | null = null;
-  // Esta es la variable clave que controla el mensaje en el HTML
   userNotFound = false;
   currentTheme: 'dark' | 'light' = 'dark';
 
   ngOnInit(): void {
     this.titleService.setTitle('Iniciar Sesión - CHAFATEC');
-    // Opcional: podrías guardar la preferencia del usuario en localStorage
-    // y cargarla aquí. Por ahora, inicia en oscuro.
     this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
   }
 
-
+  // 3. AGREGAMOS EL CONTROL 'recaptcha' AL FORMULARIO
   loginForm: FormGroup = this.fb.group({
     usuario: ['', [Validators.required]],
-    password: ['', [Validators.required]]
+    password: ['', [Validators.required]],
+    recaptcha: ['', [Validators.required]] // <--- NUEVO: Validación requerida
   });
 
   onSubmit(): void {
@@ -56,50 +61,44 @@ export default class LoginComponent implements OnInit {
       return;
     }
 
-    // Reiniciamos las variables antes de cada intento
     this.errorMessage = null;
     this.userNotFound = false;
 
-    const credentials = this.loginForm.value;
+    // Al tomar .value, ahora incluirá { usuario, password, recaptcha }
+    // Asegúrate de que tu AuthService maneje este objeto o extráelo si necesitas formatearlo diferente.
+    const credentials = this.loginForm.value; 
+
+    console.log('Enviando credenciales y token:', credentials); // <--- LOG PARA DEPURAR
 
     this.authService.login(credentials).subscribe({
        next: (response) => {
-        // 1. Decodificamos el token que acabamos de recibir
         const decodedToken = decodeToken(response.token);
         const userRole = decodedToken?.rol;
 
-        // 2. Redirigimos basándonos en los roles de TU base de datos
         if (userRole === 'alumno') {
-          // Redirige al dashboard del alumno
           this.router.navigate(['/alumno/dashboard']);
         } else if (userRole === 'docente') {
-          // Redirige al dashboard del docente
           this.router.navigate(['/docente/dashboard']);
         } else if (userRole === 'administrativo') {
-          // Redirige al dashboard del administrativo (admin)
           this.router.navigate(['/admin/dashboard']);
         } else if (userRole === 'aspirante') {
-          // Redirige al dashboard del aspirante
           this.router.navigate(['/aspirante/dashboard']);
         } else {
-          // Si el rol no es reconocido, lo mandamos a una página por defecto
           this.router.navigate(['/login']);
         }
       },
       error: (err: HttpErrorResponse) => {
-        // Esta es la lógica crucial
         if (err.status === 404) {
-          // Usuario no encontrado
           this.userNotFound = true;
         } else if (err.status === 403) {
-          // Rol incorrecto
           this.errorMessage = err.error.message || 'El rol seleccionado no es correcto.';
         } else {
-          // Para cualquier otro error (ej. 401 Contraseña incorrecta), mostramos un mensaje general
           this.errorMessage = 'Credenciales incorrectas.';
         }
-        // Este console.log es la prueba de que este bloque se está ejecutando
         console.error('Error en el login:', err);
+        
+        // OPCIONAL: Resetear el captcha si falla el login para obligar a validarlo de nuevo
+        // this.loginForm.get('recaptcha')?.reset(); 
       }
     });
   }
@@ -109,7 +108,6 @@ export default class LoginComponent implements OnInit {
     this.renderer.setAttribute(document.body, 'data-theme', this.currentTheme);
   }
 
-  // Función para obtener el texto de la etiqueta y el placeholder dinámicamente
   get userFieldLabel(): string {
     return 'Correo / No. de Control';
   }
