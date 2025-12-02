@@ -1,4 +1,7 @@
 export interface Carrera {
-  id: string;
+  id: number;
   nombre: string;
+  clave?: string;
+  descripcion?: string;
+  // Puedes añadir más campos si tu API los devuelve
 }

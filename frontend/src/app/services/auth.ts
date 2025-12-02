@@ -92,6 +92,15 @@ export class AuthService {
     return decodeToken(token)?.rol;
   }
 
+  getUserId(): number | null {
+    const token = this.getToken();
+    if (!token) {
+      return null;
+    }
+    // 'sub' es el nombre estándar para el ID de usuario en un JWT
+    return decodeToken(token)?.sub;
+  }
+
   getProfile(): Observable<any> {
     const token = this.getToken();
     const headers = new HttpHeaders({

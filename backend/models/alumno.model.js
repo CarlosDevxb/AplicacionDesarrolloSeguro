@@ -1,4 +1,3 @@
-// backend/models/alumno.model.js
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
@@ -9,35 +8,34 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     carrera_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(20),
       allowNull: false,
-      references: {
-        model: 'carreras', // Nombre de la tabla de carreras
-        key: 'id',
-      }
     },
     fecha_ingreso: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
     },
-    semestre: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+    semestre: DataTypes.STRING(2),
+    especialidad_id: DataTypes.INTEGER,
     estatus: {
       type: DataTypes.ENUM('activo', 'activo con especiales', 'baja temporal', 'baja definitiva', 'egresado'),
-      defaultValue: 'activo',
       allowNull: false,
-    }
+      defaultValue: 'activo',
+    },
   }, {
     tableName: 'alumnos',
     timestamps: false,
   });
 
   Alumno.associate = (models) => {
-    // Un alumno pertenece a un usuario y a una carrera
-    Alumno.belongsTo(models.Usuario, { foreignKey: 'id' });
-    Alumno.belongsTo(models.Carrera, { foreignKey: 'carrera_id' });
+    Alumno.belongsTo(models.Usuario, { foreignKey: 'id', as: 'usuario' });
+    Alumno.belongsTo(models.Carrera, { foreignKey: 'carrera_id', as: 'carrera' });
+    Alumno.belongsTo(models.Especialidad, { foreignKey: 'especialidad_id', as: 'especialidad' });
+    Alumno.hasMany(models.CargaAcademica, { foreignKey: 'alumno_id', as: 'cargaAcademica' });
+    Alumno.belongsToMany(models.Grupo, { through: models.CargaAcademica, foreignKey: 'alumno_id', otherKey: 'grupo_id', as: 'grupos' });
+    Alumno.hasMany(models.Kardex, { foreignKey: 'alumno_id', as: 'kardex' });
+    Alumno.hasMany(models.KardexTemporal, { foreignKey: 'alumno_id', as: 'kardexTemporal' });
+    Alumno.hasMany(models.EntregaTarea, { foreignKey: 'alumno_id', as: 'entregas' });
   };
 
   return Alumno;

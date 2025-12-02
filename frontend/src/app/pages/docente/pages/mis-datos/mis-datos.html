@@ -1,0 +1,105 @@
+<div class="content-container">
+  <header class="content-header">
+    <div class="header-content">
+      <h1>Editar Perfil</h1>
+      <p>Modifica tu información personal y de contacto.</p>
+    </div>
+  </header>
+
+  <section class="content-area">
+    <!-- Contenedor para mensajes de usuario -->
+    <div *ngIf="message" class="message-box" [ngClass]="{ 'visible': isMessageVisible, 'success': messageType === 'success', 'error': messageType === 'error' }">
+      {{ message }}
+    </div>
+
+    <!-- Tarjeta de Resumen de Usuario -->
+    <div class="user-summary-card" *ngIf="docente">
+      <div class="user-avatar">
+        <img [src]="docente.foto || 'assets/default-profile.png'" alt="Foto de perfil" (error)="$event.target.src='assets/default-profile.png'">
+      </div>
+      <div class="user-details">
+        <h2 class="user-name">{{ docente.nombre_completo }}</h2>
+        <p class="user-email">
+          <i class="fas fa-envelope"></i>
+          {{ docente.correo }}
+        </p>
+      </div>
+    </div>
+
+    <div class="profile-sections-grid">
+      <!-- Formulario de Datos Personales -->
+      <section class="seccion-form">
+        <!-- Usamos ngSwitch para cambiar el contenido de esta sección dinámicamente -->
+        <div [ngSwitch]="updateState">
+
+          <!-- ESTADO 1: Editando el perfil (vista inicial) -->
+          <div *ngSwitchCase="'editing'">
+            <h3>Datos personales</h3>
+            <p class="instrucciones">Modifica tu información y haz clic en "Guardar Datos" para iniciar la verificación.</p>
+            <form [formGroup]="editForm" *ngIf="docente">
+              <div class="form-grid">
+                <!-- El campo de foto se maneja desde el menú lateral, aquí solo mostramos los datos -->
+                <label>Nombre completo<input type="text" formControlName="nombre_completo" readonly title="El nombre completo no se puede modificar."></label>
+                <label>Correo electrónico<input type="email" formControlName="correo" readonly title="El correo electrónico no se puede modificar."></label>
+                <label>Teléfono<input type="tel" formControlName="telefono"></label>
+                <label>Oficina/Cubiculo<input type="text" formControlName="direccion" placeholder="Ej: Edificio A, Planta Baja"></label>
+              </div>
+              <button type="button" class="boton-guardar" (click)="startUpdateProcess('profile')" [disabled]="editForm.invalid || !editForm.dirty">Guardar Datos</button>
+            </form>
+          </div>
+
+          <!-- ESTADO 2: Pidiendo la contraseña actual -->
+          <div *ngSwitchCase="'confirmingPassword'">
+            <h3>Confirmar Identidad</h3>
+            <p class="instrucciones">Para proteger tu cuenta, ingresa tu contraseña actual para continuar.</p>
+            <form [formGroup]="verificationForm" (ngSubmit)="requestUpdateCode()">
+              <div class="form-grid-simple">
+                <label>Contraseña Actual<input type="password" formControlName="contrasena_actual" required></label>
+              </div>
+              <button type="submit" class="boton-guardar" [disabled]="verificationForm.get('contrasena_actual')?.invalid || isLoading">
+                <span *ngIf="!isLoading">Enviar Código</span>
+                <span *ngIf="isLoading" class="loading-spinner"></span>
+              </button>
+              <button type="button" class="boton-cancelar" (click)="cancelUpdate()">Cancelar</button>
+            </form>
+          </div>
+
+          <!-- ESTADO 3: Verificando el código del correo -->
+          <div *ngSwitchCase="'verifyingCode'">
+            <h3>Verificar Código</h3>
+            <p class="instrucciones">Hemos enviado un código a tu correo. Ingrésalo para confirmar los cambios.</p>
+            <form [formGroup]="verificationForm" (ngSubmit)="confirmAndSubmit()">
+              <div class="form-grid-simple">
+                <label>Código de Verificación<input type="text" formControlName="update_code" placeholder="Código de 6 dígitos" required></label>
+              </div>
+              <div *ngIf="verificationForm.get('update_code')?.hasError('pattern')" class="error-text">
+                <small>El código debe tener 6 dígitos.</small>
+              </div>
+              <button type="submit" class="boton-guardar" [disabled]="verificationForm.get('update_code')?.invalid || isLoading">
+                <span *ngIf="!isLoading">Confirmar y Guardar</span>
+                <span *ngIf="isLoading" class="loading-spinner"></span>
+              </button>
+              <button type="button" class="boton-cancelar" (click)="cancelUpdate()">Cancelar</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Formulario de Contraseña -->
+      <!-- Este formulario solo se muestra si no estamos en medio de un proceso de verificación -->
+      <section class="seccion-form" *ngIf="updateState === 'editing'">
+        <h3>Contraseña</h3>
+        <form [formGroup]="passwordForm">
+          <div class="form-grid">
+            <label>Nueva contraseña<input type="password" formControlName="nueva_contrasena"></label>
+            <label>Confirmar nueva contraseña<input type="password" formControlName="confirmar_contrasena"></label>
+          </div>
+          <div *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('confirmar_contrasena')?.touched" class="error-text">
+            <small>Las nuevas contraseñas no coinciden.</small>
+          </div>
+          <button type="button" class="boton-guardar" (click)="startUpdateProcess('password')" [disabled]="passwordForm.invalid">Cambiar Contraseña</button>
+        </form>
+      </section>
+    </div>
+  </section>
+</div>
