@@ -44,11 +44,18 @@
         </div>
       }
 
-      @if (userNotFound) {
+    @if (userNotFound) {
         <div class="info-message">
           <span>No existe una cuenta con ese número de control.</span>
         </div>
       }
+
+      <div class="form-group captcha-container" style="display: flex; justify-content: center; margin-bottom: 15px;">
+        <re-captcha
+          formControlName="recaptcha"
+          siteKey="6Ld2WRwsAAAAAD-zCfH56rEzTzl2MUBGeACrTjEX"> </re-captcha>
+      </div>
+  
 
       <button type="submit" [disabled]="loginForm.invalid">
         Ingresar
